@@ -1,18 +1,11 @@
 package CNCProgram;
 
-import CNCHardware.CNCCannedCycleReturnMode.ReturnMode;
-import CNCHardware.CNCCoolant.CoolantCommand;
-import CNCHardware.CNCHardwareState;
-import CNCHardware.CNCOverrideSwitch.Overrides;
 import Coordinate.CoordinateSystem.DistanceMode;
-import Coordinate.CoordinateSystem.Motion;
-import Coordinate.CoordinateSystem.Offset;
 import Coordinate.CoordinateSystem.Plane;
 import Coordinate.LengthUnits.Units;
 import Exceptions.GcodeRuntimeException;
 import Feed.FeedRateMode;
 import Feed.MotionControlMode;
-import Spindle.Spindle.SpindleRotation;
 import Tools.ToolRadius.Compensation;
 import Tools.ToolHeight.ToolHeightOffset;
 

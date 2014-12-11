@@ -3,14 +3,12 @@ package CNCProgram;
 import CNCExpression.CNCCommandSequence;
 import CNCExpression.CNCVarAssignment;
 import CNCExpression.CNCWord;
-import CNCHardware.CNCCannedCycleReturnMode.ReturnMode;
 import Coordinate.CoordinateSystem.DistanceMode;
 import Coordinate.CoordinateSystem.Plane;
 import Exceptions.GcodeRuntimeException;
 import Exceptions.LexerException;
 import Feed.FeedRateMode;
 import Feed.MotionControlMode;
-import Spindle.Spindle.SpindleRotation;
 import Tools.ToolRadius.Compensation;
 import Tools.ToolHeight.ToolHeightOffset;
 

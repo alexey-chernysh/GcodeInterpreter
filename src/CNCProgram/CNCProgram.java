@@ -42,12 +42,17 @@ public class CNCProgram {
 			}
 			inputStream.close();
 			f.close();
-			this.execute();
+			this.evalute();
 		}
 		catch (FileNotFoundException e){
 		}
 		catch (IOException e){
 		}
+	}
+
+	private void evalute() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
