@@ -1,0 +1,8 @@
+package Feed;
+
+public enum FeedRateMode{
+	INVERSE_TIME_FEED_MODE,
+	FEED_PER_MINUTE_MODE,
+	FED_PER_REV_MODE,
+	UNDEFINED;
+}
