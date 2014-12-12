@@ -1,4 +1,4 @@
-package Tools;
+package InterpreterCommands.Tools;
 
 public class ToolSet {
 	

@@ -1,4 +1,4 @@
-package Feed;
+package InterpreterCommands.FeedRate;
 
 public enum MotionControlMode {
 	EXACT_STOP,

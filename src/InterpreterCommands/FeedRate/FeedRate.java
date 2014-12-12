@@ -1,8 +1,8 @@
-package Feed;
+package InterpreterCommands.FeedRate;
 
-import InterpreterCommands.CNCOverrideSwitch;
+import InterpreterCommands.OverrideSwitch;
 
-public class FeedRate extends CNCOverrideSwitch {
+public class FeedRate extends OverrideSwitch {
 
 	private FeedRateMode feedRateMode_ = FeedRateMode.FEED_PER_MINUTE_MODE;
 	private MotionControlMode motionMode = MotionControlMode.EXACT_STOP;

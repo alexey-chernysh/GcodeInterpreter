@@ -4,10 +4,17 @@ import Coordinate.CoordinateSystem.DistanceMode;
 import Coordinate.CoordinateSystem.Plane;
 import Coordinate.LengthUnits.Units;
 import Exceptions.GcodeRuntimeException;
-import Feed.FeedRateMode;
-import Feed.MotionControlMode;
-import Tools.ToolRadius.Compensation;
-import Tools.ToolHeight.ToolHeightOffset;
+import InterpreterCommands.CoolantCommand;
+import InterpreterCommands.Motion;
+import InterpreterCommands.Overrides;
+import InterpreterCommands.InterpreterState;
+import InterpreterCommands.ReturnMode;
+import InterpreterCommands.FeedRate.FeedRateMode;
+import InterpreterCommands.FeedRate.MotionControlMode;
+import InterpreterCommands.MotionAttributes.Offset;
+import InterpreterCommands.Spindle.SpindleRotation;
+import InterpreterCommands.Tools.ToolHeight.ToolHeightOffset;
+import InterpreterCommands.Tools.ToolRadius.Compensation;
 
 public class CNCSequenciveBlock {
 	
@@ -31,7 +38,7 @@ public class CNCSequenciveBlock {
 	private DistanceMode distanceMode_ = DistanceMode.UNDEFINED;
 	private ReturnMode returnMode_ = ReturnMode.UNDEFINED;
 	private Offset offset_ = Offset.UNDEFINED;
-	private Motion motion_ = CNCHardwareState.coordinateSystem.getCurrentMotion();
+	private Motion motion_ = InterpreterState.coordinateSystem.getCurrentMotion();
 	public final CNCBlockValueList valueList_ = new CNCBlockValueList();
 
 	public CNCSequenciveBlock(){
@@ -45,7 +52,7 @@ public class CNCSequenciveBlock {
 		
 		// set feed rate mode
 		if(this.feedRateMode_ != FeedRateMode.UNDEFINED) 
-			CNCHardwareState.feedRate.setMode(this.feedRateMode_);
+			InterpreterState.feedRate.setMode(this.feedRateMode_);
 		
 		// set feed rate
 		if(this.feedRate_ > 0.0){

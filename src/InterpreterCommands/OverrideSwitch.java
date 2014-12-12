@@ -1,6 +1,6 @@
 package InterpreterCommands;
 
-public class CNCOverrideSwitch {
+public class OverrideSwitch {
 
 	private boolean override_ = false; 
 	private boolean overrideEnabled_ = false;
@@ -9,8 +9,8 @@ public class CNCOverrideSwitch {
 		return override_;
 	}
 
-	public void setOverride(boolean feedRateOverride) {
-		this.override_ = feedRateOverride;
+	public void setOverride(boolean override) {
+		this.override_ = override;
 	}
 
 	public boolean OverrideEnabled() {

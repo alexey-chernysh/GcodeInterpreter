@@ -7,10 +7,11 @@ import Coordinate.CoordinateSystem.DistanceMode;
 import Coordinate.CoordinateSystem.Plane;
 import Exceptions.GcodeRuntimeException;
 import Exceptions.LexerException;
-import Feed.FeedRateMode;
-import Feed.MotionControlMode;
-import Tools.ToolRadius.Compensation;
-import Tools.ToolHeight.ToolHeightOffset;
+import InterpreterCommands.FeedRate.FeedRateMode;
+import InterpreterCommands.FeedRate.MotionControlMode;
+import InterpreterCommands.Spindle.SpindleRotation;
+import InterpreterCommands.Tools.ToolHeight.ToolHeightOffset;
+import InterpreterCommands.Tools.ToolRadius.Compensation;
 
 public class CNCProgramFrame extends CNCCommandSequence {
 

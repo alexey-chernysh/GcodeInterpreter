@@ -1,7 +1,9 @@
 package InterpreterCommands;
 
-import Tools.ToolSet;
 import CNCExpression.CNCVariables;
+import InterpreterCommands.MotionAttributes.DistanceMode;
+import InterpreterCommands.MotionAttributes.MesurementUnits;
+import InterpreterCommands.Tools.ToolSet;
 
 public class InterpreterState {
 
@@ -17,6 +19,10 @@ public class InterpreterState {
 	private static double currentFeedRate_ = 0.0; // max velocity mm in sec
 
 	public static ToolSet toolSet_;
+
+	public static Object feedRate;
+
+	public static MesurementUnits coordinateSystem;
 
 	public static double getCurrentFeedRate() {
 		return InterpreterState.currentFeedRate_;
@@ -41,13 +47,13 @@ public class InterpreterState {
 		InterpreterState.controlPoint.setY(InterpreterState.controlPoint.getY() - Y);
 	}
 
-	public static CoordinateSystem getCoorinateSystem() {
-		if(InterpreterState.coorinateScale == 1.0) return CoordinateSystem.METRIC;
-		else return CoordinateSystem.IMPERIAL;
+	public static MesurementUnits getCoorinateSystem() {
+		if(InterpreterState.coorinateScale == 1.0) return MesurementUnits.METRIC;
+		else return MesurementUnits.IMPERIAL;
 	}
 
-	public static void setCoorinateSystem(CoordinateSystem coordinateSystem) {
-		if(coordinateSystem == CoordinateSystem.METRIC) InterpreterState.coorinateScale = 1.0;
+	public static void setCoorinateSystem(MesurementUnits coordinateSystem) {
+		if(coordinateSystem == MesurementUnits.METRIC) InterpreterState.coorinateScale = 1.0;
 		else InterpreterState.coorinateScale = 25.4;
 	}
 

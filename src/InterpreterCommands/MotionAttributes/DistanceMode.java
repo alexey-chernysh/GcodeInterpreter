@@ -1,4 +1,4 @@
-package InterpreterCommands;
+package InterpreterCommands.MotionAttributes;
 
 public enum DistanceMode {
 

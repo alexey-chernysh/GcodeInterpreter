@@ -1,13 +1,13 @@
-package Spindle;
+package InterpreterCommands.Spindle;
 
-import InterpreterCommands.CNCOverrideSwitch;
+import InterpreterCommands.OverrideSwitch;
 
-public class Spindle extends CNCOverrideSwitch {
+public class Spindle extends OverrideSwitch {
 
 	private double max_ = 2000; 
 	private double default_ = 2000; 
 	private double current_ = default_; 
-	private SpindleDirection state =  SpindleDirection.OFF;
+	private SpindleRotation state =  SpindleRotation.OFF;
 	
 	public Spindle(){
 		//TODO save & restore
@@ -48,11 +48,11 @@ public class Spindle extends CNCOverrideSwitch {
 		}
 	}
 
-	public  SpindleDirection getState() {
+	public  SpindleRotation getState() {
 		return this.state;
 	}
 
-	public void setState(SpindleDirection newState) {
+	public void setState(SpindleRotation newState) {
 		this.state = newState;
 	}
 

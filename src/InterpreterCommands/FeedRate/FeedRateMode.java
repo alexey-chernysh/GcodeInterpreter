@@ -1,4 +1,4 @@
-package Feed;
+package InterpreterCommands.FeedRate;
 
 public enum FeedRateMode{
 	INVERSE_TIME_FEED_MODE,
