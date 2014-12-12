@@ -1,7 +1,7 @@
 package GeneralDriver;
 
 import Exceptions.HWCException;
-import InterpreterCommands.Point;
+import Interpreter.Motion.Point;
 
 public class G02_G03 extends G00_G01 {
 	

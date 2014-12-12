@@ -6,7 +6,7 @@ import HAL.ExternalEventController.ExternalEventController;
 import HAL.InvertorController.InvertorController;
 import HAL.MotionController.MotionController;
 import HAL.TorchHeightController.TorchHeightController;
-import InterpreterCommands.Point;
+import Interpreter.Motion.Point;
 
 public class HALMashine implements Runnable {
 

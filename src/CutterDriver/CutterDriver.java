@@ -14,7 +14,7 @@ import GeneralDriver.M7cutter;
 import GeneralDriver.M8cutter;
 import HAL.MotionController.MCCommandArcMotion;
 import HAL.MotionController.MCCommandStraightMotion;
-import InterpreterCommands.Point;
+import Interpreter.Motion.Point;
 import Settings.Settings;
 
 public class CutterDriver implements GeneralDriver {

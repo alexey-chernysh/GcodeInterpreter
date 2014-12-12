@@ -3,7 +3,7 @@ package HAL.MotionController;
 import Exceptions.HWCException;
 import GeneralDriver.G00_G01;
 import GeneralDriver.OffsetMode;
-import InterpreterCommands.Point;
+import Interpreter.Motion.Point;
 
 public class MCCommandStraightMotion 
 		extends G00_G01 

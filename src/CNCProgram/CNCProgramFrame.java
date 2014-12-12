@@ -3,15 +3,15 @@ package CNCProgram;
 import CNCExpression.CNCCommandSequence;
 import CNCExpression.CNCVarAssignment;
 import CNCExpression.CNCWord;
-import Coordinate.CoordinateSystem.DistanceMode;
-import Coordinate.CoordinateSystem.Plane;
 import Exceptions.GcodeRuntimeException;
 import Exceptions.LexerException;
-import InterpreterCommands.FeedRate.FeedRateMode;
-import InterpreterCommands.FeedRate.MotionControlMode;
-import InterpreterCommands.Spindle.SpindleRotation;
-import InterpreterCommands.Tools.ToolHeight.ToolHeightOffset;
-import InterpreterCommands.Tools.ToolRadius.Compensation;
+import Interpreter.Motion.Motion.CoordinateSystem.DistanceMode;
+import Interpreter.Motion.Motion.CoordinateSystem.Plane;
+import Interpreter.Motion.Motion.FeedRate.FeedRateMode;
+import Interpreter.Motion.Motion.FeedRate.MotionControlMode;
+import Interpreter.Spindle.SpindleRotation;
+import Interpreter.Tools.ToolHeight.ToolHeightOffset;
+import Interpreter.Tools.ToolRadius.Compensation;
 
 public class CNCProgramFrame extends CNCCommandSequence {
 

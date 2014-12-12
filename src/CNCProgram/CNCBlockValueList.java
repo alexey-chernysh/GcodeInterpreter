@@ -1,7 +1,7 @@
 package CNCProgram;
 
 import Exceptions.GcodeRuntimeException;
-import InterpreterCommands.InterpreterState;
+import Interpreter.InterpreterState;
 
 public class CNCBlockValueList {
 	

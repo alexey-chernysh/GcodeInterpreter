@@ -6,7 +6,7 @@ import GeneralDriver.G00_G01;
 import GeneralDriver.G02_G03;
 import GeneralDriver.OffsetMode;
 import GeneralDriver.Velocity;
-import InterpreterCommands.Point;
+import Interpreter.Motion.Point;
 
 public class MCCommandArcMotion 
 			extends G02_G03 

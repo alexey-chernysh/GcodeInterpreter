@@ -1,7 +1,7 @@
 package CNCExpression;
 
 import Exceptions.GcodeRuntimeException;
-import InterpreterCommands.InterpreterState;
+import Interpreter.InterpreterState;
 
 public class CNCExpVariable extends CNCExpGeneral  {
 

@@ -1,6 +1,6 @@
 package HAL.MotionController;
 
-import InterpreterCommands.Point;
+import Interpreter.Motion.Point;
 
 public class MotionController implements Runnable {
 	

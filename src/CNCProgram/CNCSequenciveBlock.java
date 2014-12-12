@@ -1,20 +1,20 @@
 package CNCProgram;
 
-import Coordinate.CoordinateSystem.DistanceMode;
-import Coordinate.CoordinateSystem.Plane;
-import Coordinate.LengthUnits.Units;
 import Exceptions.GcodeRuntimeException;
-import InterpreterCommands.CoolantCommand;
-import InterpreterCommands.Motion;
-import InterpreterCommands.Overrides;
-import InterpreterCommands.InterpreterState;
-import InterpreterCommands.ReturnMode;
-import InterpreterCommands.FeedRate.FeedRateMode;
-import InterpreterCommands.FeedRate.MotionControlMode;
-import InterpreterCommands.MotionAttributes.Offset;
-import InterpreterCommands.Spindle.SpindleRotation;
-import InterpreterCommands.Tools.ToolHeight.ToolHeightOffset;
-import InterpreterCommands.Tools.ToolRadius.Compensation;
+import Interpreter.CoolantCommand;
+import Interpreter.InterpreterState;
+import Interpreter.Overrides;
+import Interpreter.ReturnMode;
+import Interpreter.Motion.Motion;
+import Interpreter.Motion.Motion.CoordinateSystem.DistanceMode;
+import Interpreter.Motion.Motion.CoordinateSystem.Plane;
+import Interpreter.Motion.Motion.FeedRate.FeedRateMode;
+import Interpreter.Motion.Motion.FeedRate.MotionControlMode;
+import Interpreter.Motion.Motion.LengthUnits.Units;
+import Interpreter.Motion.Motion.Offset.Offset;
+import Interpreter.Spindle.SpindleRotation;
+import Interpreter.Tools.ToolHeight.ToolHeightOffset;
+import Interpreter.Tools.ToolRadius.Compensation;
 
 public class CNCSequenciveBlock {
 	
