@@ -1,4 +1,4 @@
-package Interpreter.Motion.Offset;
+package Interpreter.Motion;
 
 public enum Offset {
 	UNDEFINED

@@ -1,7 +1,5 @@
 package Interpreter.Motion;
 
-import Exceptions.GcodeRuntimeException;
-
 
 public class ControlPoint {
 	

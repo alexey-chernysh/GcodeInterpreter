@@ -2,8 +2,6 @@ package Interpreter;
 
 import CNCExpression.CNCVariables;
 import Interpreter.Motion.Point;
-import Interpreter.Motion.Motion.Attributes.DistanceMode;
-import Interpreter.Motion.Motion.Attributes.MesurementUnits;
 import Interpreter.Tools.ToolSet;
 
 public class InterpreterState {
