@@ -1,14 +1,15 @@
-package CNCProgram;
+package Interpreter.Parser;
 
 import CNCExpression.CNCCommandSequence;
 import CNCExpression.CNCVarAssignment;
 import CNCExpression.CNCWord;
 import Exceptions.GcodeRuntimeException;
 import Exceptions.LexerException;
-import Interpreter.Motion.Motion.CoordinateSystem.DistanceMode;
-import Interpreter.Motion.Motion.CoordinateSystem.Plane;
-import Interpreter.Motion.Motion.FeedRate.FeedRateMode;
-import Interpreter.Motion.Motion.FeedRate.MotionControlMode;
+import Interpreter.ReturnMode;
+import Interpreter.Motion.Attributes.DistanceMode;
+import Interpreter.Motion.Attributes.Plane;
+import Interpreter.Motion.FeedRate.FeedRateMode;
+import Interpreter.Motion.FeedRate.MotionControlMode;
 import Interpreter.Spindle.SpindleRotation;
 import Interpreter.Tools.ToolHeight.ToolHeightOffset;
 import Interpreter.Tools.ToolRadius.Compensation;
@@ -59,13 +60,13 @@ public class CNCProgramFrame extends CNCCommandSequence {
 				case 160:
 					break;
 				case 170:
-					executionBlock.setPlane(Plane.PLANE_XY);
+					executionBlock.setPlane(Plane.XY);
 					break;
 				case 180:
-					executionBlock.setPlane(Plane.PLANE_XZ);
+					executionBlock.setPlane(Plane.XZ);
 					break;
 				case 190:
-					executionBlock.setPlane(Plane.PLANE_YZ);
+					executionBlock.setPlane(Plane.YZ);
 					break;
 				case 200:
 					executionBlock.setUnitsImperial();
@@ -164,7 +165,7 @@ public class CNCProgramFrame extends CNCCommandSequence {
 					executionBlock.setDistanceMode(DistanceMode.ABSOLUTE);
 					break;
 				case 910:
-					executionBlock.setDistanceMode(DistanceMode.RELATIVE);
+					executionBlock.setDistanceMode(DistanceMode.INCREMENTAL);
 					break;
 				case 920:
 					break;

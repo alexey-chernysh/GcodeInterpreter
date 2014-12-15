@@ -1,4 +1,4 @@
-package CNCProgram;
+package Interpreter.Parser;
 
 import java.util.ArrayList;
 

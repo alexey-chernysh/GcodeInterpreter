@@ -1,6 +1,6 @@
 package Interpreter.Motion.Attributes;
 
 public enum DistanceMode {
-	ABSOLURE,
+	ABSOLUTE,
 	INCREMENTAL;
 }

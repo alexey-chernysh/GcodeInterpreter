@@ -3,14 +3,14 @@ package CNCExpression;
 import CNCExpression.CNCWord.CNCWordEnum;
 import Exceptions.GcodeRuntimeException;
 import Exceptions.LexerException;
-import Token.TokenSequence;
-import Token.Token;
-import Token.TokenAlfa;
-import Token.TokenComment;
-import Token.TokenEnum;
-import Token.TokenEnum.EnumTokenGroup;
-import Token.TokenList;
-import Token.TokenValue;
+import Interpreter.Lexer.Token;
+import Interpreter.Lexer.TokenAlfa;
+import Interpreter.Lexer.TokenComment;
+import Interpreter.Lexer.TokenEnum;
+import Interpreter.Lexer.TokenList;
+import Interpreter.Lexer.TokenSequence;
+import Interpreter.Lexer.TokenValue;
+import Interpreter.Lexer.TokenEnum.EnumTokenGroup;
 
 public class CNCCommandSequence extends TokenSequence {
 

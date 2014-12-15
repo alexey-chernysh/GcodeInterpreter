@@ -1,4 +1,4 @@
-package Interpreter.Motion;
+package Interpreter.Motion.Attributes;
 
 public class LengthUnits {
 	

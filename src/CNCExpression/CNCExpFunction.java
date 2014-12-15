@@ -1,7 +1,7 @@
 package CNCExpression;
 
 import Exceptions.GcodeRuntimeException;
-import Token.TokenEnum;
+import Interpreter.Lexer.TokenEnum;
 
 public class CNCExpFunction extends CNCExpGeneral {
 

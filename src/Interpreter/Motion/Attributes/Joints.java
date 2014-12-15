@@ -1,6 +1,5 @@
 package Interpreter.Motion.Attributes;
 
-public class DistanceState {
-	
+public class Joints {
 
 }

@@ -1,17 +1,16 @@
-package CNCProgram;
+package Interpreter.Parser;
 
 import Exceptions.GcodeRuntimeException;
 import Interpreter.CoolantCommand;
 import Interpreter.InterpreterState;
 import Interpreter.Overrides;
 import Interpreter.ReturnMode;
-import Interpreter.Motion.Motion;
-import Interpreter.Motion.Motion.CoordinateSystem.DistanceMode;
-import Interpreter.Motion.Motion.CoordinateSystem.Plane;
-import Interpreter.Motion.Motion.FeedRate.FeedRateMode;
-import Interpreter.Motion.Motion.FeedRate.MotionControlMode;
-import Interpreter.Motion.Motion.LengthUnits.Units;
-import Interpreter.Motion.Motion.Offset.Offset;
+import Interpreter.Motion.Offset;
+import Interpreter.Motion.Attributes.DistanceMode;
+import Interpreter.Motion.Attributes.Plane;
+import Interpreter.Motion.Attributes.LengthUnits.Units;
+import Interpreter.Motion.FeedRate.FeedRateMode;
+import Interpreter.Motion.FeedRate.MotionControlMode;
 import Interpreter.Spindle.SpindleRotation;
 import Interpreter.Tools.ToolHeight.ToolHeightOffset;
 import Interpreter.Tools.ToolRadius.Compensation;
@@ -56,7 +55,7 @@ public class CNCSequenciveBlock {
 		
 		// set feed rate
 		if(this.feedRate_ > 0.0){
-			double fr = this.feedRate_ * CNCHardwareState.lengthUnits.getScale();
+			double fr = this.feedRate_ * InterpreterState.lengthUnits.getScale();
 			CNCHardwareState.feedRate.set(fr);
 		}
 		

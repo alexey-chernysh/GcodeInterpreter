@@ -2,6 +2,8 @@ package Interpreter;
 
 import CNCExpression.CNCVariables;
 import Interpreter.Motion.Point;
+import Interpreter.Motion.Attributes.DistanceMode;
+import Interpreter.Motion.Attributes.MesurementUnits;
 import Interpreter.Tools.ToolSet;
 
 public class InterpreterState {
@@ -22,6 +24,8 @@ public class InterpreterState {
 	public static Object feedRate;
 
 	public static MesurementUnits coordinateSystem;
+
+	public static MesurementUnits lengthUnits;
 
 	public static double getCurrentFeedRate() {
 		return InterpreterState.currentFeedRate_;

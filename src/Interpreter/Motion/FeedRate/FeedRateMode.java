@@ -1,8 +1,8 @@
 package Interpreter.Motion.FeedRate;
 
 public enum FeedRateMode{
-	INVERSE_TIME_FEED_MODE,
+	UNDEFINED,
 	FEED_PER_MINUTE_MODE,
-	FED_PER_REV_MODE,
-	UNDEFINED;
+	INVERSE_TIME_FEED_MODE,
+	FED_PER_REV_MODE;
 }

@@ -1,8 +1,8 @@
 package GcodeInterpreter;
 
-import CNCProgram.CNCProgram;
 import Exceptions.GcodeRuntimeException;
 import Exceptions.LexerException;
+import Interpreter.Parser.CNCProgram;
 
 
 public class GcodeInterpreter {

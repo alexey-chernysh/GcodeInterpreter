@@ -1,4 +1,4 @@
-package Token;
+package Interpreter.Lexer;
 
 import Exceptions.GcodeRuntimeException;
 

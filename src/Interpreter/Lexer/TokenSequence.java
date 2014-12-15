@@ -1,8 +1,8 @@
-package Token;
+package Interpreter.Lexer;
 
 import Exceptions.LexerException;
 import Interpreter.InterpreterState;
-import Token.TokenComment.CommentKeyWord;
+import Interpreter.Lexer.TokenComment.CommentKeyWord;
 
 public class TokenSequence {
 	

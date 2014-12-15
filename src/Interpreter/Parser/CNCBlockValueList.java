@@ -1,4 +1,4 @@
-package CNCProgram;
+package Interpreter.Parser;
 
 import Exceptions.GcodeRuntimeException;
 import Interpreter.InterpreterState;

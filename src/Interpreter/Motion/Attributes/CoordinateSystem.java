@@ -1,11 +1,12 @@
-package Interpreter.Motion;
+package Interpreter.Motion.Attributes;
+
 
 public class CoordinateSystem {
 	
-	private DistanceMode distanceMode = DistanceMode.RELATIVE;
+	private DistanceMode distanceMode = DistanceMode.INCREMENTAL;
 	private CoordinateMode coordinateMode = CoordinateMode.NORMAL;
 	public CNCCoordinateRotation rotation = new CNCCoordinateRotation();
-	private Plane currentPlane_ = Plane.PLANE_XY;
+	private Plane currentPlane_ = Plane.XY;
 /*
 	private Motion currentMotion_ = Motion.UNDEFINED;
 	
@@ -46,19 +47,6 @@ public class CoordinateSystem {
 
 	public DistanceMode get() {	return this.distanceMode; }
 	public void set(DistanceMode mode_) { this.distanceMode = mode_; };
-
-	public enum DistanceMode{
-		ABSOLUTE,
-		RELATIVE,
-		UNDEFINED;
-	}
-
-	public enum Plane {
-		PLANE_XY,
-		PLANE_XZ,
-		PLANE_YZ,
-		UNDEFINED;
-	}
 
 	public enum CoordinateMode {
 		NORMAL,

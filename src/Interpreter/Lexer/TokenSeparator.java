@@ -1,4 +1,5 @@
-package Token;
+package Interpreter.Lexer;
+
 
 public class TokenSeparator extends Token {
 	

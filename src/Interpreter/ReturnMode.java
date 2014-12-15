@@ -1,6 +1,7 @@
 package Interpreter;
 
 public enum ReturnMode {
-	UNDEFINED
-
+	UNDEFINED, 
+	RETURN_NO_LOWER_THEN_R, 
+	RETURN_TO_R
 }
