@@ -1,6 +1,6 @@
 package Interpreter.Spindle;
 
-import Interpreter.OverrideSwitch;
+import Interpreter.Overrides.OverrideSwitch;
 
 public class Spindle extends OverrideSwitch {
 

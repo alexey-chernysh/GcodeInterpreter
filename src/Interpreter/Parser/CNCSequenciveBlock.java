@@ -1,16 +1,17 @@
 package Interpreter.Parser;
 
 import Exceptions.GcodeRuntimeException;
-import Interpreter.CoolantCommand;
 import Interpreter.InterpreterState;
-import Interpreter.Overrides;
-import Interpreter.ReturnMode;
+import Interpreter.CannedCycle.ReturnMode;
+import Interpreter.Coolant.CoolantState;
+import Interpreter.Motion.Motion;
+import Interpreter.Motion.MotionControlMode;
 import Interpreter.Motion.Offset;
 import Interpreter.Motion.Attributes.DistanceMode;
 import Interpreter.Motion.Attributes.Plane;
 import Interpreter.Motion.Attributes.LengthUnits.Units;
 import Interpreter.Motion.FeedRate.FeedRateMode;
-import Interpreter.Motion.FeedRate.MotionControlMode;
+import Interpreter.Overrides.Overrides;
 import Interpreter.Spindle.SpindleRotation;
 import Interpreter.Tools.ToolHeight.ToolHeightOffset;
 import Interpreter.Tools.ToolRadius.Compensation;
@@ -24,7 +25,7 @@ public class CNCSequenciveBlock {
 	private int tool_ = -1;
 	private boolean M6_ = false;
 	private SpindleRotation spindleRotation_ = SpindleRotation.UNDEFINED;
-	private CoolantCommand coolant_ = CoolantCommand.UNDEFINED;
+	private CoolantState coolant_ = CoolantState.UNDEFINED;
 	private Overrides overrides_ = Overrides.UNDEFINED;
 	private boolean dwell_ = false;
 	private Plane plane_ = Plane.UNDEFINED;
@@ -56,16 +57,16 @@ public class CNCSequenciveBlock {
 		// set feed rate
 		if(this.feedRate_ > 0.0){
 			double fr = this.feedRate_ * InterpreterState.lengthUnits.getScale();
-			CNCHardwareState.feedRate.set(fr);
+			InterpreterState.feedRate.set(fr);
 		}
 		
 		// set spindel speed
 		if(this.spindelSpeed_ > 0.0)
-			CNCHardwareState.spindle.set(this.spindelSpeed_);
+			InterpreterState.spindle.set(this.spindelSpeed_);
 		
 		// select tool
 		if(this.tool_ >= 0)
-			CNCHardwareState.tool.setToolNum(this.tool_);
+			InterpreterState.tool.setToolNum(this.tool_);
 		
 		// tool change macro
 		if(this.M6_){
@@ -74,18 +75,18 @@ public class CNCSequenciveBlock {
 		
 		// set spindel rotation
 		if(this.spindleRotation_ != SpindleRotation.UNDEFINED) 
-			CNCHardwareState.spindle.setState(this.spindleRotation_);
+			InterpreterState.spindle.setState(this.spindleRotation_);
 		
 		// set coolant state
 		switch(this.coolant_){
 		case M7:
-			CNCHardwareState.coolant.mistOn();
+			InterpreterState.coolant.mistOn();
 			break;
 		case M8:
-			CNCHardwareState.coolant.floodOn();
+			InterpreterState.coolant.floodOn();
 			break;
 		case M9:
-			CNCHardwareState.coolant.off();
+			InterpreterState.coolant.off();
 			break;
 		default:
 		}
@@ -93,12 +94,12 @@ public class CNCSequenciveBlock {
 		// set overrides
 		switch(this.overrides_){
 		case ON:
-			CNCHardwareState.feedRate.enableOverride();
-			CNCHardwareState.spindle.enableOverride();
+			InterpreterState.feedRate.enableOverride();
+			InterpreterState.spindle.enableOverride();
 			break;
 		case OFF:
-			CNCHardwareState.feedRate.disableOverride();
-			CNCHardwareState.spindle.disableOverride();
+			InterpreterState.feedRate.disableOverride();
+			InterpreterState.spindle.disableOverride();
 			break;
 		default:
 		}
@@ -107,7 +108,7 @@ public class CNCSequenciveBlock {
 		if(dwell_){
 			double delay = this.valueList_.getP();
 			if(delay>0.0){
-				delay = CNCHardwareState.timeFormat.scaleToMillis(delay);
+				delay = InterpreterState.timeFormat.scaleToMillis(delay);
 				try {
 					Thread.currentThread();
 					Thread.sleep((long) delay);
@@ -121,26 +122,26 @@ public class CNCSequenciveBlock {
 		
 		// set active plane
 		if(this.plane_ != Plane.UNDEFINED) 
-			CNCHardwareState.coordinateSystem.setPlane(this.plane_);
+			InterpreterState.coordinateSystem.setPlane(this.plane_);
 		
 		// set length units
 		if(this.lengthUnits_ != Units.UNDEFINED) 
-			CNCHardwareState.lengthUnits.set(this.lengthUnits_);
+			InterpreterState.lengthUnits.set(this.lengthUnits_);
 		
 		// set cutter radius compensation
 		if(this.compensation_ != Compensation.UNDEFINED) { 
-			if(CNCHardwareState.coordinateSystem.getPlane() != Plane.PLANE_XY)
+			if(InterpreterState.coordinateSystem.getPlane() != Plane.XY)
 				throw new GcodeRuntimeException("Cutter radius compensation available in XY plane only!");
-			CNCHardwareState.cutterRadius.setState(this.compensation_);
+			InterpreterState.cutterRadius.setState(this.compensation_);
 			double radius = this.valueList_.getP();
-			if(radius>0.0){
-				radius *= CNCHardwareState.lengthUnits.getScale();
-				CNCHardwareState.cutterRadius.setRadius(radius);
+			if(radius > 0.0){
+				radius *= InterpreterState.lengthUnits.getScale();
+				InterpreterState.cutterRadius.setRadius(radius);
 			} else {
 				int toolNum = this.valueList_.getD();
 				if(toolNum >= 0){
-					radius = CNCHardwareState.toolSet_.getToolRadius(toolNum);
-					CNCHardwareState.cutterRadius.setRadius(radius);
+					radius = InterpreterState.toolSet_.getToolRadius(toolNum);
+					InterpreterState.cutterRadius.setRadius(radius);
 				}
 			}
 			// TODO move tool at compensation offset from current point
@@ -151,15 +152,15 @@ public class CNCSequenciveBlock {
 		case ON:
 			int toolNum = this.valueList_.getH();
 			if(toolNum < 0){
-				toolNum = CNCHardwareState.toolSet_.getCurrentTool();
+				toolNum = InterpreterState.toolSet_.getCurrentTool();
 			};
-			double height = CNCHardwareState.toolSet_.getToolHeight(toolNum);
-			CNCHardwareState.toolHeight.setOffset(height);
-			CNCHardwareState.toolHeight.setState(ToolHeightOffset.ON);
+			double height = InterpreterState.toolSet_.getToolHeight(toolNum);
+			InterpreterState.toolHeight.setOffset(height);
+			InterpreterState.toolHeight.setState(ToolHeightOffset.ON);
 			// TODO move tool at compensation offset from current point
 			break;
 		case OFF:
-			CNCHardwareState.toolHeight.setState(ToolHeightOffset.OFF);
+			InterpreterState.toolHeight.setState(ToolHeightOffset.OFF);
 			// TODO move tool at compensation offset from current point
 			break;
 		default:
@@ -167,33 +168,33 @@ public class CNCSequenciveBlock {
 		
 		// fixture table select
 		if(this.fixtureToolOffset_ > 0){
-			if(CNCHardwareState.cutterRadius.compensationIsOn())
+			if(InterpreterState.cutterRadius.compensationIsOn())
 				throw new GcodeRuntimeException("Fixture offset unavailable while cutter radius compensation is on!");
 			int toolNum = fixtureToolOffset_;
 			int tmpP = (int) this.valueList_.getP();
 			if((toolNum == CNCSequenciveBlock.G59_SELECTED)&&(tmpP>0)) toolNum = tmpP;
-			double X = CNCHardwareState.vars_.getOffsetX(toolNum);
-			double Y = CNCHardwareState.vars_.getOffsetY(toolNum);
-			double Z = CNCHardwareState.vars_.getOffsetZ(toolNum);
-			double A = CNCHardwareState.vars_.getOffsetA(toolNum);
-			double B = CNCHardwareState.vars_.getOffsetB(toolNum);
-			double C = CNCHardwareState.vars_.getOffsetC(toolNum);
+			double X = InterpreterState.vars_.getOffsetX(toolNum);
+			double Y = InterpreterState.vars_.getOffsetY(toolNum);
+			double Z = InterpreterState.vars_.getOffsetZ(toolNum);
+			double A = InterpreterState.vars_.getOffsetA(toolNum);
+			double B = InterpreterState.vars_.getOffsetB(toolNum);
+			double C = InterpreterState.vars_.getOffsetC(toolNum);
 			// TODO something with this shit	
 		}
 		
 		// set path control mode
 		if(this.motionMode_ != MotionControlMode.UNDEFINED)
-			CNCHardwareState.feedRate.setMotionMode(motionMode_);
+			InterpreterState.feedRate.setMotionMode(motionMode_);
 		
 		// set distance mode
 		if(this.distanceMode_ != DistanceMode.UNDEFINED)
-			CNCHardwareState.coordinateSystem.set(distanceMode_);
+			InterpreterState.coordinateSystem.set(distanceMode_);
 		
 		// set canned cycle return level mode
 		if(this.returnMode_ != ReturnMode.UNDEFINED){
-			CNCHardwareState.cycleReturnMode.setMode(returnMode_);
+			InterpreterState.cycleReturnMode.setMode(returnMode_);
 			double tmpR = this.valueList_.getR();
-			if(tmpR > 0.0) CNCHardwareState.cycleReturnMode.setR(tmpR);
+			if(tmpR > 0.0) InterpreterState.cycleReturnMode.setR(tmpR);
 		}
 		
 		// set coordinate system offset
@@ -203,7 +204,7 @@ public class CNCSequenciveBlock {
 			switch (tmpL) {
 			case 1:
 				int tmpP = (int) this.valueList_.getP();
-				CNCHardwareState.vars_.setWorkingToolOffset(tmpP, 
+				InterpreterState.vars_.setWorkingToolOffset(tmpP, 
 															this.valueList_.getX(), 
 															this.valueList_.getY(), 
 															this.valueList_.getZ(), 
@@ -219,7 +220,7 @@ public class CNCSequenciveBlock {
 			break;
 		case G52:
 		case G92:
-			CNCHardwareState.vars_.setG92Offset(this.valueList_.getX(), 
+			InterpreterState.vars_.setG92Offset(this.valueList_.getX(), 
 												this.valueList_.getY(), 
 												this.valueList_.getZ(), 
 												this.valueList_.getA(), 
@@ -227,7 +228,7 @@ public class CNCSequenciveBlock {
 												this.valueList_.getC());
 			break;
 		case G92_1:
-			CNCHardwareState.vars_.setG92Offset(0.0, 
+			InterpreterState.vars_.setG92Offset(0.0, 
 												0.0, 
 												0.0, 
 												0.0, 
@@ -310,15 +311,15 @@ public class CNCSequenciveBlock {
 	}
 
 	public void M7() {
-		this.coolant_ = CoolantCommand.M7;
+		this.coolant_ = CoolantState.M7;
 	}
 
 	public void M8() {
-		this.coolant_ = CoolantCommand.M8;
+		this.coolant_ = CoolantState.M8;
 	}
 
 	public void M9() {
-		this.coolant_ = CoolantCommand.M9;
+		this.coolant_ = CoolantState.M9;
 	}
 	
 	public void G48() {

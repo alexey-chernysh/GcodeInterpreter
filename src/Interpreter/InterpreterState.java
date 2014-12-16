@@ -1,18 +1,24 @@
 package Interpreter;
 
 import CNCExpression.CNCVariables;
+import Interpreter.CannedCycle.CannedCycleReturnMode;
+import Interpreter.Coolant.Coolant;
 import Interpreter.Motion.Point;
+import Interpreter.Motion.Attributes.CoordinateSystem;
 import Interpreter.Motion.Attributes.DistanceMode;
-import Interpreter.Motion.Attributes.MesurementUnits;
+import Interpreter.Motion.Attributes.LengthUnits;
+import Interpreter.Motion.Attributes.TimeFormat;
+import Interpreter.Motion.FeedRate.FeedRate;
+import Interpreter.Spindle.Spindle;
+import Interpreter.Tools.Tool;
+import Interpreter.Tools.ToolHeight;
+import Interpreter.Tools.ToolRadius;
 import Interpreter.Tools.ToolSet;
 
 public class InterpreterState {
 
 	public static CNCVariables vars_ = new CNCVariables();
 
-	private static double coorinateScale = 1.0;
-	private static DistanceMode distanceMode;
-	private static double kerfOffsetRadius = 0.0;
 	public static boolean IsBlockDelete = true;
 
 	private static Point referencePoint = new Point(0.0,0.0);
@@ -20,12 +26,20 @@ public class InterpreterState {
 	private static double currentFeedRate_ = 0.0; // max velocity mm in sec
 
 	public static ToolSet toolSet_;
+	public static Tool tool;
+	public static ToolRadius cutterRadius;
+	public static ToolHeight toolHeight;
 
-	public static Object feedRate;
+	public static Spindle spindle;
+	public static Coolant coolant;
 
-	public static MesurementUnits coordinateSystem;
+	public static FeedRate feedRate;
+	public static DistanceMode distanceMode;
+	public static LengthUnits lengthUnits;
+	public static CoordinateSystem coordinateSystem;
 
-	public static MesurementUnits lengthUnits;
+	public static TimeFormat timeFormat;
+	public static CannedCycleReturnMode cycleReturnMode;
 
 	public static double getCurrentFeedRate() {
 		return InterpreterState.currentFeedRate_;
@@ -50,16 +64,6 @@ public class InterpreterState {
 		InterpreterState.controlPoint.setY(InterpreterState.controlPoint.getY() - Y);
 	}
 
-	public static MesurementUnits getCoorinateSystem() {
-		if(InterpreterState.coorinateScale == 1.0) return MesurementUnits.METRIC;
-		else return MesurementUnits.IMPERIAL;
-	}
-
-	public static void setCoorinateSystem(MesurementUnits coordinateSystem) {
-		if(coordinateSystem == MesurementUnits.METRIC) InterpreterState.coorinateScale = 1.0;
-		else InterpreterState.coorinateScale = 25.4;
-	}
-
 	public static DistanceMode getDistanceMode() {
 		return InterpreterState.distanceMode;
 	}
@@ -68,11 +72,4 @@ public class InterpreterState {
 		InterpreterState.distanceMode = newMode;
 	}
 
-	public static double getKerfOffsetRadius() {
-		return InterpreterState.kerfOffsetRadius;
-	}
-
-	public static void setKerfOffsetRadius(double newRadius) {
-		InterpreterState.kerfOffsetRadius = newRadius;
-	}
 }

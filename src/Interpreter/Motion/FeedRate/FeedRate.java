@@ -1,6 +1,7 @@
 package Interpreter.Motion.FeedRate;
 
-import Interpreter.OverrideSwitch;
+import Interpreter.Motion.MotionControlMode;
+import Interpreter.Overrides.OverrideSwitch;
 
 public class FeedRate extends OverrideSwitch {
 

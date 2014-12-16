@@ -1,4 +1,4 @@
-package Interpreter;
+package Interpreter.CannedCycle;
 
 public enum ReturnMode {
 	UNDEFINED, 

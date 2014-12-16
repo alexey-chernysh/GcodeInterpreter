@@ -1,5 +1,7 @@
 package Interpreter.Motion.Attributes;
 
+import Interpreter.Motion.Motion;
+
 
 public class CoordinateSystem {
 	
@@ -7,7 +9,7 @@ public class CoordinateSystem {
 	private CoordinateMode coordinateMode = CoordinateMode.NORMAL;
 	public CNCCoordinateRotation rotation = new CNCCoordinateRotation();
 	private Plane currentPlane_ = Plane.XY;
-/*
+
 	private Motion currentMotion_ = Motion.UNDEFINED;
 	
 	public Motion getCurrentMotion() {
@@ -17,7 +19,7 @@ public class CoordinateSystem {
 	public void setCurrentMotion(Motion currentMotion_) {
 		this.currentMotion_ = currentMotion_;
 	}
-*/
+
 	public Plane getPlane() { 
 		return currentPlane_;	
 	}
@@ -52,34 +54,5 @@ public class CoordinateSystem {
 		NORMAL,
 		POLAR;
 	}
-/*	
-	public enum Offset {
-		G10,
-		G52,
-		G92,
-		G92_1,
-		G92_2,
-		G92_3,
-		UNDEFINED;
-	}
-	
-	public enum Motion {
-		G0,
-		G1,
-		G2,
-		G3,
-		G12,
-		G13,
-		G80,
-		G81,
-		G82,
-		G83,
-		G84,
-		G85,
-		G86,
-		G87,
-		G88,
-		UNDEFINED;
-	}
-*/
+
 }

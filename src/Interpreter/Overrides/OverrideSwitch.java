@@ -1,4 +1,4 @@
-package Interpreter;
+package Interpreter.Overrides;
 
 public class OverrideSwitch {
 
