@@ -5,5 +5,4 @@ public enum CoolantState {
 	M7, 
 	M8, 
 	M9
-
 }

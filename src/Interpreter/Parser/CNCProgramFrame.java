@@ -22,11 +22,8 @@ public class CNCProgramFrame extends CNCCommandSequence {
 	
 	public void evalute(CNCProgramModule cncSubProgram) throws GcodeRuntimeException{
 		int size = this.commandSet_.size();
-		CNCSequenciveBlock executionBlock = new CNCSequenciveBlock();
-//		final int execBlockSize = ExecutionEnum.STOP_OR_REPEAT.ordinal()+1;
-//		boolean[] flag = new boolean[execBlockSize];
+		CNCSequenciveBlock evalutionSequenciveBlock = new CNCSequenciveBlock();
 		int i;
-//		for(i=0; i<execBlockSize; i++) flag[i] = false;
 		for(i=0; i<size; i++){
 			CNCWord currentCommand = this.commandSet_.get(i);
 			currentCommand.evalute();
@@ -34,7 +31,7 @@ public class CNCProgramFrame extends CNCCommandSequence {
 			int commandNum = (int) (10*value);
 			switch(currentCommand.getType()){
 			case F:
-				executionBlock.setFeedRate(value);
+				evalutionSequenciveBlock.setFeedRate(value);
 				break;
 			case G:
 				switch(commandNum){
@@ -47,7 +44,7 @@ public class CNCProgramFrame extends CNCCommandSequence {
 				case 30:
 					break;
 				case 40:
-					executionBlock.setDwell();
+					evalutionSequenciveBlock.setDwell();
 					break;
 				case 100:
 					break;
@@ -60,19 +57,19 @@ public class CNCProgramFrame extends CNCCommandSequence {
 				case 160:
 					break;
 				case 170:
-					executionBlock.setPlane(Plane.XY);
+					evalutionSequenciveBlock.setPlane(Plane.XY);
 					break;
 				case 180:
-					executionBlock.setPlane(Plane.XZ);
+					evalutionSequenciveBlock.setPlane(Plane.XZ);
 					break;
 				case 190:
-					executionBlock.setPlane(Plane.YZ);
+					evalutionSequenciveBlock.setPlane(Plane.YZ);
 					break;
 				case 200:
-					executionBlock.setUnitsImperial();
+					evalutionSequenciveBlock.setUnitsImperial();
 					break;
 				case 210:
-					executionBlock.setUnitsMetric();
+					evalutionSequenciveBlock.setUnitsMetric();
 					break;
 				case 280:
 					break;
@@ -83,19 +80,19 @@ public class CNCProgramFrame extends CNCCommandSequence {
 				case 310:
 					break;
 				case 400:
-					executionBlock.setCompensation(Compensation.OFF);
+					evalutionSequenciveBlock.setCompensation(Compensation.OFF);
 					break;
 				case 410:
-					executionBlock.setCompensation(Compensation.LEFT);
+					evalutionSequenciveBlock.setCompensation(Compensation.LEFT);
 					break;
 				case 420:
-					executionBlock.setCompensation(Compensation.RIGHT);
+					evalutionSequenciveBlock.setCompensation(Compensation.RIGHT);
 					break;
 				case 430:
-					executionBlock.setHeightOffset(ToolHeightOffset.ON);
+					evalutionSequenciveBlock.setHeightOffset(ToolHeightOffset.ON);
 					break;
 				case 490:
-					executionBlock.setHeightOffset(ToolHeightOffset.OFF);
+					evalutionSequenciveBlock.setHeightOffset(ToolHeightOffset.OFF);
 					break;
 				case 500:
 					break;
@@ -106,38 +103,38 @@ public class CNCProgramFrame extends CNCCommandSequence {
 				case 530:
 					break;
 				case 540:
-					executionBlock.setFixtureToolOffset(1);
+					evalutionSequenciveBlock.setFixtureToolOffset(1);
 					break;
 				case 550:
-					executionBlock.setFixtureToolOffset(2);
+					evalutionSequenciveBlock.setFixtureToolOffset(2);
 					break;
 				case 560:
-					executionBlock.setFixtureToolOffset(3);
+					evalutionSequenciveBlock.setFixtureToolOffset(3);
 					break;
 				case 570:
-					executionBlock.setFixtureToolOffset(4);
+					evalutionSequenciveBlock.setFixtureToolOffset(4);
 					break;
 				case 580:
-					executionBlock.setFixtureToolOffset(5);
+					evalutionSequenciveBlock.setFixtureToolOffset(5);
 					break;
 				case 590:
-					executionBlock.setFixtureToolOffset(CNCSequenciveBlock.G59_SELECTED);
+					evalutionSequenciveBlock.setFixtureToolOffset(CNCSequenciveBlock.G59_SELECTED);
 					break;
 				case 610:
-					executionBlock.setMotionMode(MotionControlMode.EXACT_STOP);
+					evalutionSequenciveBlock.setMotionMode(MotionControlMode.EXACT_STOP);
 					break;
 				case 640:
-					executionBlock.setMotionMode(MotionControlMode.CONTINUOUS_SPEED);
+					evalutionSequenciveBlock.setMotionMode(MotionControlMode.CONTINUOUS_SPEED);
 					break;
 				case 680:
 					break;
 				case 690:
 					break;
 				case 700:
-					executionBlock.setUnitsImperial();
+					evalutionSequenciveBlock.setUnitsImperial();
 					break;
 				case 710:
-					executionBlock.setUnitsMetric();
+					evalutionSequenciveBlock.setUnitsMetric();
 					break;
 				case 730:
 					break;
@@ -162,27 +159,27 @@ public class CNCProgramFrame extends CNCCommandSequence {
 				case 890:
 					break;
 				case 900:
-					executionBlock.setDistanceMode(DistanceMode.ABSOLUTE);
+					evalutionSequenciveBlock.setDistanceMode(DistanceMode.ABSOLUTE);
 					break;
 				case 910:
-					executionBlock.setDistanceMode(DistanceMode.INCREMENTAL);
+					evalutionSequenciveBlock.setDistanceMode(DistanceMode.INCREMENTAL);
 					break;
 				case 920:
 					break;
 				case 930:
-					executionBlock.setFeedRateMode(FeedRateMode.INVERSE_TIME_FEED_MODE);
+					evalutionSequenciveBlock.setFeedRateMode(FeedRateMode.INVERSE_TIME_FEED_MODE);
 					break;
 				case 940:
-					executionBlock.setFeedRateMode(FeedRateMode.FEED_PER_MINUTE_MODE);
+					evalutionSequenciveBlock.setFeedRateMode(FeedRateMode.FEED_PER_MINUTE_MODE);
 					break;
 				case 950:
-					executionBlock.setFeedRateMode(FeedRateMode.FED_PER_REV_MODE);
+					evalutionSequenciveBlock.setFeedRateMode(FeedRateMode.FED_PER_REV_MODE);
 					break;
 				case 980:
-					executionBlock.setReturnMode(ReturnMode.RETURN_NO_LOWER_THEN_R);
+					evalutionSequenciveBlock.setReturnMode(ReturnMode.RETURN_NO_LOWER_THEN_R);
 					break;
 				case 990:
-					executionBlock.setReturnMode(ReturnMode.RETURN_TO_R);
+					evalutionSequenciveBlock.setReturnMode(ReturnMode.RETURN_TO_R);
 					break;
 				default:
 					throw new GcodeRuntimeException("Unsupported G code num");
@@ -197,24 +194,24 @@ public class CNCProgramFrame extends CNCCommandSequence {
 				case 20:
 					break;
 				case 30:
-					executionBlock.setSpindleRotation(SpindleRotation.CLOCKWISE);
+					evalutionSequenciveBlock.setSpindleRotation(SpindleRotation.CLOCKWISE);
 					break;
 				case 40:
-					executionBlock.setSpindleRotation(SpindleRotation.COUNTERCLOCKWISE);
+					evalutionSequenciveBlock.setSpindleRotation(SpindleRotation.COUNTERCLOCKWISE);
 					break;
 				case 50:
-					executionBlock.setSpindleRotation(SpindleRotation.OFF);
+					evalutionSequenciveBlock.setSpindleRotation(SpindleRotation.OFF);
 					break;
 				case 60:
 					break;
 				case 70:
-					executionBlock.M7();
+					evalutionSequenciveBlock.M7();
 					break;
 				case 80:
-					executionBlock.M8();
+					evalutionSequenciveBlock.M8();
 					break;
 				case 90:
-					executionBlock.M9();
+					evalutionSequenciveBlock.M9();
 					break;
 				case 300:
 					break;
@@ -233,10 +230,10 @@ public class CNCProgramFrame extends CNCCommandSequence {
 				};
 				break;
 			case S:
-				executionBlock.setSpindelSpeed(value);
+				evalutionSequenciveBlock.setSpindelSpeed(value);
 				break;
 			case T:
-				executionBlock.setTool((int)value);
+				evalutionSequenciveBlock.setTool((int)value);
 				break;
 			default:
 				throw new GcodeRuntimeException("Unsupported command num");

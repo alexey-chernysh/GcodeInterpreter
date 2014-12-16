@@ -1,4 +1,4 @@
-package Interpreter;
+package Interpreter.State;
 
 import CNCExpression.CNCVariables;
 import Interpreter.CannedCycle.CannedCycleReturnMode;
@@ -25,18 +25,18 @@ public class InterpreterState {
 	private static Point controlPoint = new Point(0.0,0.0);
 	private static double currentFeedRate_ = 0.0; // max velocity mm in sec
 
-	public static ToolSet toolSet_;
-	public static Tool tool;
-	public static ToolRadius cutterRadius;
-	public static ToolHeight toolHeight;
+	public static ToolSet toolSet_ = new ToolSet();
+	public static Tool tool = new Tool();
+	public static ToolRadius cutterRadius = new ToolRadius();
+	public static ToolHeight toolHeight = new ToolHeight();
 
-	public static Spindle spindle;
-	public static Coolant coolant;
+	public static Spindle spindle = new Spindle();
+	public static Coolant coolant = new Coolant();
 
-	public static FeedRate feedRate;
+	public static FeedRate feedRate = new FeedRate();
 	public static DistanceMode distanceMode;
 	public static LengthUnits lengthUnits;
-	public static CoordinateSystem coordinateSystem;
+	public static CoordinateSystem coordinateSystem = new CoordinateSystem();
 
 	public static TimeFormat timeFormat;
 	public static CannedCycleReturnMode cycleReturnMode;

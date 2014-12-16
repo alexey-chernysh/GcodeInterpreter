@@ -1,7 +1,7 @@
 package Interpreter.Parser;
 
 import Exceptions.GcodeRuntimeException;
-import Interpreter.InterpreterState;
+import Interpreter.State.InterpreterState;
 
 public class CNCBlockValueList {
 	

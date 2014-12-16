@@ -10,11 +10,13 @@ import java.util.ArrayList;
 
 import Exceptions.GcodeRuntimeException;
 import Exceptions.LexerException;
+import Interpreter.State.InterpreterState;
 
 public class CNCProgram {
 
 	private String fileName_;
-	public static ArrayList<CNCProgramModule> sub_program_list = new ArrayList<CNCProgramModule>();
+	private static ArrayList<CNCProgramModule> sub_program_list = new ArrayList<CNCProgramModule>();
+	private static InterpreterState interpreterState = new InterpreterState();
 	
 	public  CNCProgram(String fn) throws LexerException, GcodeRuntimeException{
 		fileName_ = fn;
@@ -53,7 +55,17 @@ public class CNCProgram {
 	}
 
 	private void evalute() {
-		// TODO Auto-generated method stub
+		
+		if(this.sub_program_list.size() > 0){
+			// execute "main"/first/number 0 program only
+			CNCProgramModule mainModule = this.sub_program_list.get(0);
+			try {
+				mainModule.evalute();
+			} catch (GcodeRuntimeException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		
 	}
 

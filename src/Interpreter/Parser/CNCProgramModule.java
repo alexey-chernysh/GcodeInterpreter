@@ -6,7 +6,7 @@ import Exceptions.GcodeRuntimeException;
 
 public class CNCProgramModule {
 
-	private int programNum_ = 0;  // "main" program
+	private int programNum_;  
 	private ArrayList<CNCProgramFrame> frameList_ = new ArrayList<CNCProgramFrame>();
 
 	public CNCProgramModule(int n){
@@ -21,7 +21,7 @@ public class CNCProgramModule {
 		frameList_.add(newBlock);
 	}
 	
-	public void execute() throws GcodeRuntimeException{
+	public void evalute() throws GcodeRuntimeException{
 		int programSize = this.frameList_.size();
 		for(int i=0; i<programSize; i++){
 			CNCProgramFrame currentFrame = this.frameList_.get(i);

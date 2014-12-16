@@ -1,7 +1,6 @@
 package Interpreter.Parser;
 
 import Exceptions.GcodeRuntimeException;
-import Interpreter.InterpreterState;
 import Interpreter.CannedCycle.ReturnMode;
 import Interpreter.Coolant.CoolantState;
 import Interpreter.Motion.Motion;
@@ -13,6 +12,7 @@ import Interpreter.Motion.Attributes.LengthUnits.Units;
 import Interpreter.Motion.FeedRate.FeedRateMode;
 import Interpreter.Overrides.Overrides;
 import Interpreter.Spindle.SpindleRotation;
+import Interpreter.State.InterpreterState;
 import Interpreter.Tools.ToolHeight.ToolHeightOffset;
 import Interpreter.Tools.ToolRadius.Compensation;
 
