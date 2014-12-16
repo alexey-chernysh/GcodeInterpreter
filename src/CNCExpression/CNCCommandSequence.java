@@ -19,10 +19,11 @@ public class CNCCommandSequence extends TokenSequence {
 	protected CNCVarAssignmentSet varAssignmentSet_ = new CNCVarAssignmentSet();
 	private String messageString_ = null;
 	private int lineNum_ = 0;
-	private int programNum_ = 0;
+	private int programNum_;
 
-	public CNCCommandSequence(String frameString) throws LexerException, GcodeRuntimeException {
+	public CNCCommandSequence(String frameString, int programNum) throws LexerException, GcodeRuntimeException {
 		super(frameString);
+		this.programNum_ = programNum;
 		this.tokenList.printAllTokens();
 
 		// split tokens in hardware's command sequence

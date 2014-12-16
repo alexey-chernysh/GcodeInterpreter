@@ -16,8 +16,8 @@ import Interpreter.Tools.ToolRadius.Compensation;
 
 public class CNCProgramFrame extends CNCCommandSequence {
 
-	public CNCProgramFrame(String s) throws LexerException, GcodeRuntimeException{
-		super(s);
+	public CNCProgramFrame(String s, int programNumber) throws LexerException, GcodeRuntimeException{
+		super(s, programNumber);
 	}
 	
 	public void evalute(CNCProgramModule cncSubProgram) throws GcodeRuntimeException{

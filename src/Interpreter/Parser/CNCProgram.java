@@ -24,16 +24,18 @@ public class CNCProgram {
 
 			BufferedReader inputStream = new BufferedReader(new InputStreamReader(f));
 			String line;
-			CNCProgramModule current_program = new CNCProgramModule(0);
+			int currentSubNumber = 0;
+			CNCProgramModule current_program = new CNCProgramModule(currentSubNumber);
 			sub_program_list.add(current_program);
 			while ((line = inputStream.readLine()) != null) {
-				CNCProgramFrame currentBlock = new CNCProgramFrame(line);
-				int tmp = currentBlock.getProgramNum();
-				if(tmp == 0) { 
+				CNCProgramFrame currentBlock = new CNCProgramFrame(line, currentSubNumber);
+				int newSubNum = currentBlock.getProgramNum();
+				if(newSubNum == currentSubNumber) { 
 					current_program.add(currentBlock); 
 				}
 				else {
-					current_program = new CNCProgramModule(tmp);
+					currentSubNumber = newSubNum;
+					current_program = new CNCProgramModule(newSubNum);
 					sub_program_list.add(current_program);
 					current_program.add(currentBlock); 
 				}
