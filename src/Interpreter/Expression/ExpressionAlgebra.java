@@ -3,15 +3,15 @@ package Interpreter.Expression;
 import Exceptions.GcodeRuntimeException;
 import Interpreter.Lexer.TokenEnum;
 
-public class CNCExpAlgebra extends CNCExpGeneral {
+public class ExpressionAlgebra extends ExpressionGeneral {
 	
 	private TokenEnum oper_;
-	private CNCExpGeneral arg1 = null;
-	private CNCExpGeneral arg2 = null;
+	private ExpressionGeneral arg1 = null;
+	private ExpressionGeneral arg2 = null;
 
-	public CNCExpAlgebra( TokenEnum o,
-								 CNCExpGeneral a1, 
-								 CNCExpGeneral a2) {
+	public ExpressionAlgebra( TokenEnum o,
+								 ExpressionGeneral a1, 
+								 ExpressionGeneral a2) {
 		this.oper_ = o; 
 		this.arg1 = a1;
 		this.arg2 = a2;

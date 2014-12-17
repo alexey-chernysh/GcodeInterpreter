@@ -1,11 +1,11 @@
 package Interpreter.Expression;
 
 
-public class CNCExpValue extends CNCExpGeneral {
+public class ExpressionValue extends ExpressionGeneral {
 	
 	private double value_;
 	
-	public CNCExpValue(double v){
+	public ExpressionValue(double v){
 		value_ = v;
 		this.setConstant(true);
 	}

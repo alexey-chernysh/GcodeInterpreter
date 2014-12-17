@@ -1,8 +1,8 @@
 package Interpreter.State;
 
+import Interpreter.ProgramVariablesSet;
 import Interpreter.CannedCycle.CannedCycleReturnMode;
 import Interpreter.Coolant.Coolant;
-import Interpreter.Expression.CNCVariables;
 import Interpreter.Motion.Point;
 import Interpreter.Motion.Attributes.CoordinateSystem;
 import Interpreter.Motion.Attributes.DistanceMode;
@@ -17,7 +17,7 @@ import Interpreter.Tools.ToolSet;
 
 public class InterpreterState {
 
-	public static CNCVariables vars_ = new CNCVariables();
+	public static ProgramVariablesSet vars_ = new ProgramVariablesSet();
 
 	public static boolean IsBlockDelete = true;
 

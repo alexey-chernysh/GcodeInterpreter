@@ -4,7 +4,6 @@ import Drivers.CanonicalCommands.ArcDirection;
 import Drivers.CanonicalCommands.G00_G01;
 import Drivers.CanonicalCommands.G02_G03;
 import Drivers.CanonicalCommands.OffsetMode;
-import Drivers.CanonicalCommands.Velocity;
 import Exceptions.HWCException;
 import Interpreter.Motion.Point;
 

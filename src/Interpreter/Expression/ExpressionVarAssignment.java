@@ -3,14 +3,14 @@ package Interpreter.Expression;
 import Exceptions.GcodeRuntimeException;
 import Interpreter.State.InterpreterState;
 
-public class CNCVarAssignment {
+public class ExpressionVarAssignment {
 
-	private CNCExpGeneral varNumExp_;
-	private CNCExpGeneral varValExp_;
+	private ExpressionGeneral varNumExp_;
+	private ExpressionGeneral varValExp_;
 	private int lastNum_ = 0;
 	private double lastValue_ = 0.0;
 	
-	public CNCVarAssignment(CNCExpGeneral en, CNCExpGeneral ev) {
+	public ExpressionVarAssignment(ExpressionGeneral en, ExpressionGeneral ev) {
 		this.varNumExp_ = en;
 		this.varValExp_ = ev;
 	}

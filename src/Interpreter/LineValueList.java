@@ -112,13 +112,48 @@ public class LineValueList {
 			throw new GcodeRuntimeException("D should be positive integer number of existing tool!");
 		return n;
 	}
+	
+	public boolean hasXYZ(){
+		return ((valueList_[ParamList.X.ordinal()] != 0.0)
+			  ||(valueList_[ParamList.Y.ordinal()] != 0.0)
+			  ||(valueList_[ParamList.Z.ordinal()] != 0.0));
+	}
+
+	public boolean hasIJK(){
+		return ((valueList_[ParamList.I.ordinal()] != 0.0)
+			  ||(valueList_[ParamList.J.ordinal()] != 0.0)
+			  ||(valueList_[ParamList.K.ordinal()] != 0.0));
+	}
+
+	public boolean hasABC(){
+		return ((valueList_[ParamList.A.ordinal()] != 0.0)
+			  ||(valueList_[ParamList.B.ordinal()] != 0.0)
+			  ||(valueList_[ParamList.C.ordinal()] != 0.0));
+	}
+
+	public boolean hasUVW(){
+		return ((valueList_[ParamList.U.ordinal()] != 0.0)
+			  ||(valueList_[ParamList.V.ordinal()] != 0.0)
+			  ||(valueList_[ParamList.W.ordinal()] != 0.0));
+	}
+	
+	public int size(){
+		return ParamList.UNUSED.ordinal();
+	}
 
 	public enum ParamList {
 		A,
 		B,
 		C,
+		D,
+		I,
+		J,
+		K,
 		P,
 		R,
+		U,
+		V,
+		W,
 		X,
 		Y,
 		Z,

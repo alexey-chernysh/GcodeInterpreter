@@ -3,26 +3,26 @@ package Interpreter.Expression;
 import Exceptions.GcodeRuntimeException;
 import Interpreter.Lexer.TokenEnum;
 
-public class CNCExpFunction extends CNCExpGeneral {
+public class ExpressionFunction extends ExpressionGeneral {
 
 	private TokenEnum fun_ = null;
-	private CNCExpGeneral arg1 = null;
-	private CNCExpGeneral arg2 = null;
+	private ExpressionGeneral arg1 = null;
+	private ExpressionGeneral arg2 = null;
 
-	public CNCExpFunction(TokenEnum f, CNCExpGeneral a) {
+	public ExpressionFunction(TokenEnum f, ExpressionGeneral a) {
 		this.fun_ = f;
 		this.arg1 = a;
 		this.setConstant(this.arg1.isConstant());
 	}
 
-	public CNCExpFunction(TokenEnum f, CNCExpGeneral a1, CNCExpGeneral a2) {
+	public ExpressionFunction(TokenEnum f, ExpressionGeneral a1, ExpressionGeneral a2) {
 		this.fun_ = f;
 		this.arg1 = a1;
 		this.arg2 = a2;
 		if(this.arg1.isConstant() && this.arg2.isConstant()) this.setConstant(true);
 	}
 
-	public CNCExpFunction(TokenEnum f) {
+	public ExpressionFunction(TokenEnum f) {
 		this.fun_ = f;
 	}
 /*

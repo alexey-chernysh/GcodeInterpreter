@@ -2,9 +2,9 @@ package Interpreter.Expression;
 
 import java.util.ArrayList;
 
-public class CNCCommandSet extends ArrayList<CNCWord> {
+public class CommandPairList extends ArrayList<CommandPair> {
 	
-	public void addCommand(CNCWord e){
+	public void addCommand(CommandPair e){
 		this.add(e);
 	}
 
@@ -13,7 +13,7 @@ public class CNCCommandSet extends ArrayList<CNCWord> {
 		String result = "";
 		
 		for(int i=0; i<this.size(); i++){
-			CNCWord currentCommand = this.get(i);
+			CommandPair currentCommand = this.get(i);
 			result += " " + currentCommand.toString();
 		}
 		

@@ -3,11 +3,11 @@ package Interpreter.Expression;
 import Exceptions.GcodeRuntimeException;
 import Interpreter.State.InterpreterState;
 
-public class CNCExpVariable extends CNCExpGeneral  {
+public class ExpressionVariable extends ExpressionGeneral  {
 
-	private CNCExpGeneral varNumExp_;
+	private ExpressionGeneral varNumExp_;
 	
-	public CNCExpVariable(CNCExpGeneral e) {
+	public ExpressionVariable(ExpressionGeneral e) {
 		this.varNumExp_ = e;
 	}
 

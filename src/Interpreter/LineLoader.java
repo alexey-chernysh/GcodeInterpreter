@@ -3,9 +3,9 @@ package Interpreter;
 import Exceptions.GcodeRuntimeException;
 import Exceptions.LexerException;
 import Interpreter.CannedCycle.ReturnMode;
-import Interpreter.Expression.CNCCommandSequence;
-import Interpreter.Expression.CNCVarAssignment;
-import Interpreter.Expression.CNCWord;
+import Interpreter.Expression.CommandLineLoader;
+import Interpreter.Expression.ExpressionVarAssignment;
+import Interpreter.Expression.CommandPair;
 import Interpreter.Motion.MotionControlMode;
 import Interpreter.Motion.Attributes.DistanceMode;
 import Interpreter.Motion.Attributes.Plane;
@@ -14,9 +14,9 @@ import Interpreter.Spindle.SpindleRotation;
 import Interpreter.Tools.ToolHeight.ToolHeightOffset;
 import Interpreter.Tools.ToolRadius.Compensation;
 
-public class LineParser extends CNCCommandSequence {
+public class LineLoader extends CommandLineLoader {
 
-	public LineParser(String s, int programNumber) throws LexerException, GcodeRuntimeException{
+	public LineLoader(String s, int programNumber) throws LexerException, GcodeRuntimeException{
 		super(s, programNumber);
 	}
 	
@@ -25,9 +25,8 @@ public class LineParser extends CNCCommandSequence {
 		LineEvolutionSequence evalutionSequenciveBlock = new LineEvolutionSequence();
 		int i;
 		for(i=0; i<size; i++){
-			CNCWord currentCommand = this.commandSet_.get(i);
-			currentCommand.evalute();
-			double value = currentCommand.getValue();
+			CommandPair currentCommand = this.commandSet_.get(i);
+			double value = currentCommand.getCurrentValue();
 			int commandNum = (int) (10*value);
 			switch(currentCommand.getType()){
 			case F:
@@ -241,12 +240,11 @@ public class LineParser extends CNCCommandSequence {
 		}
 		size = this.wordList_.getLength();
 		for(i=0; i<size; i++){
-			CNCWord currentWord = this.wordList_.get(i);
-			if(currentWord != null) currentWord.evalute();
+			CommandPair currentWord = this.wordList_.get(i);
 		}
 		size = this.varAssignmentSet_.size();
 		for(i=0; i<size; i++){
-			CNCVarAssignment currentVar = this.varAssignmentSet_.get(i);
+			ExpressionVarAssignment currentVar = this.varAssignmentSet_.get(i);
 			currentVar.evalute();
 		}
 	}

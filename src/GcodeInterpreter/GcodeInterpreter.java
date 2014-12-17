@@ -2,16 +2,16 @@ package GcodeInterpreter;
 
 import Exceptions.GcodeRuntimeException;
 import Exceptions.LexerException;
-import Interpreter.ProgramParser;
+import Interpreter.ProgramLoader;
 
 
 public class GcodeInterpreter {
 	
-	static ProgramParser program;
+	static ProgramLoader program;
 
 	public static void main(String[] args) {
 		try {
-			program = new ProgramParser("D:/Gcode/KKZtest.cnc");
+			program = new ProgramLoader("D:/Gcode/KKZtest.cnc");
 		} catch (LexerException | GcodeRuntimeException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

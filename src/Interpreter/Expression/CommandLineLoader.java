@@ -2,7 +2,7 @@ package Interpreter.Expression;
 
 import Exceptions.GcodeRuntimeException;
 import Exceptions.LexerException;
-import Interpreter.Expression.CNCWord.CNCWordEnum;
+import Interpreter.Expression.CommandPair.CNCWordEnum;
 import Interpreter.Lexer.Token;
 import Interpreter.Lexer.TokenAlfa;
 import Interpreter.Lexer.TokenComment;
@@ -12,16 +12,16 @@ import Interpreter.Lexer.TokenSequence;
 import Interpreter.Lexer.TokenValue;
 import Interpreter.Lexer.TokenEnum.EnumTokenGroup;
 
-public class CNCCommandSequence extends TokenSequence {
+public class CommandLineLoader extends TokenSequence {
 
-	protected CNCWordList wordList_ = new CNCWordList();
-	protected CNCCommandSet commandSet_ = new CNCCommandSet();
-	protected CNCVarAssignmentSet varAssignmentSet_ = new CNCVarAssignmentSet();
+	protected LineCommandPairList wordList_ = new LineCommandPairList();
+	protected CommandPairList commandSet_ = new CommandPairList();
+	protected VarAssignmentList varAssignmentSet_ = new VarAssignmentList();
 	private String messageString_ = null;
 	private int lineNum_ = 0;
 	private int programNum_;
 
-	public CNCCommandSequence(String frameString, int programNum) throws LexerException, GcodeRuntimeException {
+	public CommandLineLoader(String frameString, int programNum) throws LexerException, GcodeRuntimeException {
 		super(frameString);
 		this.programNum_ = programNum;
 		this.tokenList.printAllTokens();
@@ -31,11 +31,11 @@ public class CNCCommandSequence extends TokenSequence {
 		while (index < this.tokenList.size()) {
 			Token t = this.tokenList.get(index).setParsed();
 			if(t instanceof TokenAlfa){
-				CNCExpGeneral numExp = getItem(this.tokenList);
+				ExpressionGeneral numExp = getItem(this.tokenList);
 				TokenEnum currentWord = ((TokenAlfa)t).getType();
 				switch( currentWord.group_ ){
 					case WORD:
-						CNCWord newWord = new CNCWord(currentWord, numExp);
+						CommandPair newWord = new CommandPair(currentWord, numExp);
 						switch( currentWord ){
 						case A:
 							this.wordList_.addWord(CNCWordEnum.A, newWord);
@@ -126,8 +126,8 @@ public class CNCCommandSequence extends TokenSequence {
 						case VAR:
 							t = this.tokenList.get(this.tokenList.getNextIndex()).setParsed();
 							if(((TokenAlfa)t).getType() == TokenEnum.ASSIGN){
-								CNCExpGeneral varValueExp = getItem(this.tokenList);
-								CNCVarAssignment newVarAssign = new CNCVarAssignment(numExp, varValueExp);
+								ExpressionGeneral varValueExp = getItem(this.tokenList);
+								ExpressionVarAssignment newVarAssign = new ExpressionVarAssignment(numExp, varValueExp);
 								this.varAssignmentSet_.add(newVarAssign);
 							} else throw new LexerException("Asigment symbol '=' needed", t.getStart());
 							break;
@@ -152,12 +152,12 @@ public class CNCCommandSequence extends TokenSequence {
 		}
 	}
 	
-	private CNCExpGeneral getExpression(TokenList list) throws LexerException {
+	private ExpressionGeneral getExpression(TokenList list) throws LexerException {
 		// left bracket occurred, so parse token list for Expression until right bracket
-		CNCExpGeneral item1 = getItem(list);
+		ExpressionGeneral item1 = getItem(list);
 		TokenEnum Operator1 = ((TokenAlfa)list.get(list.getNextIndex()).setParsed()).getType();
 		if(Operator1.group_ == EnumTokenGroup.ALGEBRA){
-			CNCExpGeneral item2 = getItem(list);
+			ExpressionGeneral item2 = getItem(list);
 			return getSubExpression(list, Operator1, item1, item2);
 		} else {
 			if(Operator1 == TokenEnum.RIGHT_BRACKET){
@@ -166,35 +166,35 @@ public class CNCCommandSequence extends TokenSequence {
 		}
 	}
 
-	private CNCExpGeneral getSubExpression(TokenList list,
+	private ExpressionGeneral getSubExpression(TokenList list,
 									   	   TokenEnum Operator1, 
-									   	   CNCExpGeneral item1, 
-									   	   CNCExpGeneral item2) throws LexerException {
+									   	   ExpressionGeneral item1, 
+									   	   ExpressionGeneral item2) throws LexerException {
 		TokenEnum Operator2 = ((TokenAlfa)list.get(list.getNextIndex()).setParsed()).getType();
 		if(Operator2.group_ == EnumTokenGroup.ALGEBRA){
-			CNCExpGeneral item3 = getItem(list);
+			ExpressionGeneral item3 = getItem(list);
 			if(Operator1.precedence_ <= Operator2.precedence_){
-				return getSubExpression(list, Operator2, new CNCExpFunction(Operator1, item1, item2), item3);
+				return getSubExpression(list, Operator2, new ExpressionFunction(Operator1, item1, item2), item3);
 			} else {
-				return new CNCExpFunction(Operator1, item1, getSubExpression(list, Operator2, item2, item3));
+				return new ExpressionFunction(Operator1, item1, getSubExpression(list, Operator2, item2, item3));
 			}
 		} else {
 			if(Operator2 == TokenEnum.RIGHT_BRACKET){
-				return new CNCExpFunction(Operator1, item1, item2);
+				return new ExpressionFunction(Operator1, item1, item2);
 			} else throw new LexerException("Binary operator needed", 0);
 		}
 	}
 	
-	private CNCExpGeneral getItem(TokenList list) throws LexerException {
+	private ExpressionGeneral getItem(TokenList list) throws LexerException {
 		// parse token list for expressions and return next unparsed token index
-		CNCExpGeneral result = null;
+		ExpressionGeneral result = null;
 		int index = list.getNextIndex();
 		if(index < list.size()){
 			Token t = list.get(index);
 			t.setParsed();
 			if(t instanceof TokenValue){
 				// if const is last item in expression, then return it as result
-				result = new CNCExpValue(((TokenValue)t).getValue());
+				result = new ExpressionValue(((TokenValue)t).getValue());
 				return result;
 			} else {
 				switch(((TokenAlfa)t).getType().group_){
@@ -204,12 +204,12 @@ public class CNCCommandSequence extends TokenSequence {
 						if(index < list.size()){
 							t = list.get(index);
 							t.setParsed();
-							CNCExpGeneral funArg1 = null;
+							ExpressionGeneral funArg1 = null;
 							if((t instanceof TokenAlfa)&&(((TokenAlfa)t).getType() == TokenEnum.LEFT_BRACKET)){
 								funArg1 = this.getExpression(list);
 							} else throw new LexerException("Left bracket '[' requred", t.getStart());
 							if(funType != TokenEnum.ATAN){
-								result = new CNCExpFunction(funType, funArg1);
+								result = new ExpressionFunction(funType, funArg1);
 								return result;
 							}else{
 								index = list.getNextIndex();
@@ -222,8 +222,8 @@ public class CNCCommandSequence extends TokenSequence {
 											t = list.get(index);
 											t.setParsed();
 											if((t instanceof TokenAlfa)&&(((TokenAlfa)t).getType() == TokenEnum.LEFT_BRACKET)){
-												CNCExpGeneral funArg2 = this.getExpression(list);
-												result = new CNCExpFunction(funType, funArg1, funArg2);
+												ExpressionGeneral funArg2 = this.getExpression(list);
+												result = new ExpressionFunction(funType, funArg1, funArg2);
 												return result;
 											} else throw new LexerException("Left bracket '[' requred", t.getStart());
 										}else throw new LexerException("Unxpected end of frame string", t.getStart());
@@ -234,9 +234,9 @@ public class CNCCommandSequence extends TokenSequence {
 					case ALGEBRA: // unary sign
 						switch(((TokenAlfa)t).getType()){ // unary operations + -
 							case MINUS: // sign -, substitute as expression (0 - x)
-								CNCExpGeneral nextItem = this.getItem(list);
-								CNCExpValue  zero = new CNCExpValue(0.0);
-								result = (CNCExpGeneral) new CNCExpAlgebra(TokenEnum.MINUS, zero, nextItem);
+								ExpressionGeneral nextItem = this.getItem(list);
+								ExpressionValue  zero = new ExpressionValue(0.0);
+								result = (ExpressionGeneral) new ExpressionAlgebra(TokenEnum.MINUS, zero, nextItem);
 								return result;
 							case PLUS: // sign +, nothing to do
 								result = this.getItem(list);
@@ -247,8 +247,8 @@ public class CNCCommandSequence extends TokenSequence {
 					case VARREF:
 						switch(((TokenAlfa)t).getType()){ // reference to variable value
 							case VAR: 
-								CNCExpGeneral varNum = this.getItem(list);
-								result = (CNCExpGeneral) new CNCExpVariable(varNum);
+								ExpressionGeneral varNum = this.getItem(list);
+								result = (ExpressionGeneral) new ExpressionVariable(varNum);
 								return result;
 							default:
 								throw new LexerException("Unsupported var operation", t.getStart());

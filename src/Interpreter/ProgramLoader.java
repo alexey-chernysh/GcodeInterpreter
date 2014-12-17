@@ -12,13 +12,13 @@ import Exceptions.GcodeRuntimeException;
 import Exceptions.LexerException;
 import Interpreter.State.InterpreterState;
 
-public class ProgramParser {
+public class ProgramLoader {
 
 	private String fileName_;
 	private static ArrayList<RoutineParser> sub_program_list = new ArrayList<RoutineParser>();
 	private static InterpreterState interpreterState = new InterpreterState();
 	
-	public  ProgramParser(String fn) throws LexerException, GcodeRuntimeException{
+	public  ProgramLoader(String fn) throws LexerException, GcodeRuntimeException{
 		fileName_ = fn;
 		int stringCounter = 0;
 		try{
@@ -30,7 +30,7 @@ public class ProgramParser {
 			RoutineParser current_program = new RoutineParser(currentSubNumber);
 			sub_program_list.add(current_program);
 			while ((line = inputStream.readLine()) != null) {
-				LineParser currentBlock = new LineParser(line, currentSubNumber);
+				LineLoader currentBlock = new LineLoader(line, currentSubNumber);
 				int newSubNum = currentBlock.getProgramNum();
 				if(newSubNum == currentSubNumber) { 
 					current_program.add(currentBlock); 

@@ -2,7 +2,7 @@ package Interpreter.Expression;
 
 import Exceptions.GcodeRuntimeException;
 
-public class CNCExpGeneral { // general expression used in NGC274 code
+public class ExpressionGeneral { // general expression used in NGC274 code
 	
 	private boolean constant = false;
 
