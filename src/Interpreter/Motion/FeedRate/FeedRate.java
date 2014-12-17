@@ -1,5 +1,8 @@
 package Interpreter.Motion.FeedRate;
 
+import HAL.HALMashine;
+import HAL.Command.HALSetFeedRate;
+import Interpreter.ProgramLoader;
 import Interpreter.Motion.MotionControlMode;
 import Interpreter.Overrides.OverrideSwitch;
 
@@ -43,11 +46,14 @@ public class FeedRate extends OverrideSwitch {
 	}
 
 	public void set(double newCurrentFeedRate) {
-		if( newCurrentFeedRate <= this.max_ ){
-			this.current_ = newCurrentFeedRate;
+		double fr = ProgramLoader.interpreterState.lengthUnits.toMM(newCurrentFeedRate);
+		if( fr <= this.max_ ){
+			this.current_ = fr;
 		} else {
 			this.current_ = this.max_;
 		}
+		HALSetFeedRate feedRateCommand = new HALSetFeedRate(this.current_);
+		HALMashine.commands_.add(feedRateCommand);
 	}
 	
 	public FeedRateMode getMode() {	return feedRateMode_; }

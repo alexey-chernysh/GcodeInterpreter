@@ -15,8 +15,8 @@ import Interpreter.State.InterpreterState;
 public class ProgramLoader {
 
 	private String fileName_;
-	private static ArrayList<RoutineParser> sub_program_list = new ArrayList<RoutineParser>();
-	private static InterpreterState interpreterState = new InterpreterState();
+	private static ArrayList<LineLoaderArray> sub_program_list = new ArrayList<LineLoaderArray>();
+	public static InterpreterState interpreterState = new InterpreterState();
 	
 	public  ProgramLoader(String fn) throws LexerException, GcodeRuntimeException{
 		fileName_ = fn;
@@ -27,7 +27,7 @@ public class ProgramLoader {
 			BufferedReader inputStream = new BufferedReader(new InputStreamReader(f));
 			String line;
 			int currentSubNumber = 0;
-			RoutineParser current_program = new RoutineParser(currentSubNumber);
+			LineLoaderArray current_program = new LineLoaderArray(currentSubNumber);
 			sub_program_list.add(current_program);
 			while ((line = inputStream.readLine()) != null) {
 				LineLoader currentBlock = new LineLoader(line, currentSubNumber);
@@ -37,7 +37,7 @@ public class ProgramLoader {
 				}
 				else {
 					currentSubNumber = newSubNum;
-					current_program = new RoutineParser(newSubNum);
+					current_program = new LineLoaderArray(newSubNum);
 					sub_program_list.add(current_program);
 					current_program.add(currentBlock); 
 				}
@@ -58,7 +58,7 @@ public class ProgramLoader {
 		
 		if(this.sub_program_list.size() > 0){
 			// execute "main"/first/number 0 program only
-			RoutineParser mainModule = this.sub_program_list.get(0);
+			LineLoaderArray mainModule = this.sub_program_list.get(0);
 			try {
 				mainModule.evalute();
 			} catch (GcodeRuntimeException e) {

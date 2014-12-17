@@ -1,4 +1,4 @@
-package HAL;
+package HAL.Command;
 
 public class HALCommand {
 	

@@ -2,6 +2,7 @@ package HAL;
 
 import java.util.ArrayList;
 
+import HAL.Command.HALCommand;
 import HAL.ExternalEventController.ExternalEventController;
 import HAL.InvertorController.InvertorController;
 import HAL.MotionController.MotionController;
@@ -12,8 +13,7 @@ public class HALMashine implements Runnable {
 
 	private ProgramState programState = ProgramState.PAUSED;
 	private CutterState cutterState = CutterState.UNDEFINED;
-	
-	private static ArrayList<Object> commands_;
+	public static ArrayList<HALCommand> commands_ = new ArrayList<HALCommand>();
 	
 	public static MotionController MC;
 	Thread threadMC;
@@ -46,7 +46,7 @@ public class HALMashine implements Runnable {
 		 
 	}
 	
-	public static void loadNewProgram(ArrayList<Object> commands){
+	public static void loadNewProgram(ArrayList<HALCommand> commands){
 		commands_ = commands;
 	}
 	

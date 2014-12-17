@@ -17,6 +17,10 @@ public class CommandPair { // pair of command indrntifier alfa and associated ex
 		return this.commandExpression_.evalute();
 	}
 
+	public ExpressionGeneral getValueExpression() {
+		return this.commandExpression_;
+	}
+	
 	public TokenEnum getType(){
 		return this.type_;
 	}
@@ -43,4 +47,5 @@ public class CommandPair { // pair of command indrntifier alfa and associated ex
 		Y,
 		Z;
 	}
+
 }
