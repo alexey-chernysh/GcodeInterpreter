@@ -1,8 +1,8 @@
 package Interpreter.State;
 
-import CNCExpression.CNCVariables;
 import Interpreter.CannedCycle.CannedCycleReturnMode;
 import Interpreter.Coolant.Coolant;
+import Interpreter.Expression.CNCVariables;
 import Interpreter.Motion.Point;
 import Interpreter.Motion.Attributes.CoordinateSystem;
 import Interpreter.Motion.Attributes.DistanceMode;

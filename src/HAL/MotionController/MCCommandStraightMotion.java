@@ -1,8 +1,8 @@
 package HAL.MotionController;
 
+import Drivers.CanonicalCommands.G00_G01;
+import Drivers.CanonicalCommands.OffsetMode;
 import Exceptions.HWCException;
-import GeneralDriver.G00_G01;
-import GeneralDriver.OffsetMode;
 import Interpreter.Motion.Point;
 
 public class MCCommandStraightMotion 
