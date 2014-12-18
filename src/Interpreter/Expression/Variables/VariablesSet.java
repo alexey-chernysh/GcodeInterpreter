@@ -197,13 +197,13 @@ public class VariablesSet {
 			}
 		}
 		
-		public int getAssignmentCounter(int num){
+		private int getAssignmentCounter(int num){
 			return this.assigment_counter_[num];
 		};
 		
 		public double get(int num) throws GcodeRuntimeException{
 			if((num>=0)&(num<VariablesSet.arraySize_)){ 
-				if(this.assigment_counter_[num]>0) return this.variables_[num];
+				if(getAssignmentCounter(num) > 0) return this.variables_[num];
 				else throw new GcodeRuntimeException("Reference to non initialized variable");
 			}
 			else throw new GcodeRuntimeException("Illegal parameter number");

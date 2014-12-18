@@ -1,14 +1,15 @@
 package Interpreter.State;
 
+import Exceptions.GcodeRuntimeException;
 import Interpreter.Expression.Variables.VariablesSet;
 import Interpreter.Motion.Point;
 import Interpreter.Motion.Attributes.CoordinateSystem;
 import Interpreter.Motion.Attributes.DistanceMode;
-import Interpreter.Motion.Attributes.LengthUnits;
 import Interpreter.Motion.Attributes.TimeFormat;
 import Interpreter.State.CannedCycle.CannedCycleReturnMode;
 import Interpreter.State.Coolant.Coolant;
 import Interpreter.State.FeedRate.FeedRate;
+import Interpreter.State.ModalState.GModalState;
 import Interpreter.State.Spindle.Spindle;
 import Interpreter.State.Tools.Tool;
 import Interpreter.State.Tools.ToolHeight;
@@ -25,6 +26,8 @@ public class InterpreterState {
 	private static Point controlPoint = new Point(0.0,0.0);
 	private static double currentFeedRate_ = 0.0; // max velocity mm in sec
 
+	public static GModalState gModalState = new GModalState();
+	
 	public static ToolSet toolSet_ = new ToolSet();
 	public static Tool tool = new Tool();
 	public static ToolRadius cutterRadius = new ToolRadius();
@@ -35,11 +38,15 @@ public class InterpreterState {
 
 	public static FeedRate feedRate = new FeedRate();
 	public static DistanceMode distanceMode;
-	public static LengthUnits lengthUnits;
+//	public static LengthUnits lengthUnits;
 	public static CoordinateSystem coordinateSystem = new CoordinateSystem();
 
 	public static TimeFormat timeFormat;
 	public static CannedCycleReturnMode cycleReturnMode;
+	
+	public InterpreterState() throws GcodeRuntimeException{
+		gModalState.initToDefaultState();
+	};
 
 	public static double getCurrentFeedRate() {
 		return InterpreterState.currentFeedRate_;

@@ -8,7 +8,6 @@ public class CoordinateSystem {
 	private DistanceMode distanceMode = DistanceMode.INCREMENTAL;
 	private CoordinateMode coordinateMode = CoordinateMode.NORMAL;
 	public CNCCoordinateRotation rotation = new CNCCoordinateRotation();
-	private Plane currentPlane_ = Plane.XY;
 
 	private Motion currentMotion_ = Motion.UNDEFINED;
 	
@@ -20,14 +19,6 @@ public class CoordinateSystem {
 		this.currentMotion_ = currentMotion_;
 	}
 
-	public Plane getPlane() { 
-		return currentPlane_;	
-	}
-	
-	public void setPlane(Plane plane) {	
-		this.currentPlane_ = plane;	
-	}
-	
 	public class CNCCoordinateRotation {
 		private double coord_x = 0.0;
 		private double coord_y = 0.0;

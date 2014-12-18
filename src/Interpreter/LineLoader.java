@@ -10,12 +10,12 @@ import Interpreter.Motion.Motion;
 import Interpreter.Motion.MotionControlMode;
 import Interpreter.Motion.Offset;
 import Interpreter.Motion.Attributes.DistanceMode;
-import Interpreter.Motion.Attributes.Plane;
-import Interpreter.Motion.Attributes.LengthUnits.Units;
 import Interpreter.State.InterpreterState;
 import Interpreter.State.CannedCycle.ReturnMode;
 import Interpreter.State.Coolant.CoolantState;
 import Interpreter.State.FeedRate.FeedRateMode;
+import Interpreter.State.ModalState.GcommandModalGroupSet;
+import Interpreter.State.ModalState.GcommandSet;
 import Interpreter.State.Overrides.Overrides;
 import Interpreter.State.Spindle.SpindleRotation;
 import Interpreter.State.Tools.ToolHeight.ToolHeightOffset;
@@ -33,8 +33,8 @@ public class LineLoader extends CommandLineLoader {
 	private CoolantState coolant_ = CoolantState.UNDEFINED;
 	private Overrides overrides_ = Overrides.UNDEFINED;
 	private boolean dwell_ = false;
-	private Plane plane_ = Plane.UNDEFINED;
-	private Units lengthUnits_ = Units.UNDEFINED;
+	private GcommandSet G17_G18_G19 = GcommandSet.GDUMMY;
+	private GcommandSet G20_G21 = GcommandSet.GDUMMY;
 	private Compensation compensation_ = Compensation.UNDEFINED;
 	private ToolHeightOffset heightOffset_ = ToolHeightOffset.UNDEFINED; 
 	private int fixtureToolOffset_ = -1;
@@ -83,19 +83,19 @@ public class LineLoader extends CommandLineLoader {
 				case 160:
 					break;
 				case 170:
-					this.setPlane(Plane.XY);
+					this.G17_G18_G19 = GcommandSet.G17;
 					break;
 				case 180:
-					this.setPlane(Plane.XZ);
+					this.G17_G18_G19 = GcommandSet.G18;
 					break;
 				case 190:
-					this.setPlane(Plane.YZ);
+					this.G17_G18_G19 = GcommandSet.G19;
 					break;
 				case 200:
-					this.setUnitsImperial();
+					this.G20_G21 = GcommandSet.G20;
 					break;
 				case 210:
-					this.setUnitsMetric();
+					this.G20_G21 = GcommandSet.G21;
 					break;
 				case 280:
 					break;
@@ -157,10 +157,10 @@ public class LineLoader extends CommandLineLoader {
 				case 690:
 					break;
 				case 700:
-					this.setUnitsImperial();
+					this.G20_G21 = GcommandSet.G70;
 					break;
 				case 710:
-					this.setUnitsMetric();
+					this.G20_G21 = GcommandSet.G71;
 					break;
 				case 730:
 					break;
@@ -324,12 +324,12 @@ public class LineLoader extends CommandLineLoader {
 		// set overrides
 		switch(this.overrides_){
 		case ON:
-			ProgramLoader.interpreterState.feedRate.enableOverride();
-			ProgramLoader.interpreterState.spindle.enableOverride();
+			InterpreterState.feedRate.enableOverride();
+			InterpreterState.spindle.enableOverride();
 			break;
 		case OFF:
-			ProgramLoader.interpreterState.feedRate.disableOverride();
-			ProgramLoader.interpreterState.spindle.disableOverride();
+			InterpreterState.feedRate.disableOverride();
+			InterpreterState.spindle.disableOverride();
 			break;
 		default:
 		}
@@ -351,27 +351,25 @@ public class LineLoader extends CommandLineLoader {
 		}
 		
 		// set active plane
-		if(this.plane_ != Plane.UNDEFINED) 
-			ProgramLoader.interpreterState.coordinateSystem.setPlane(this.plane_);
+		this.G17_G18_G19.evalute();
 		
 		// set length units
-		if(this.lengthUnits_ != Units.UNDEFINED) 
-			ProgramLoader.interpreterState.lengthUnits.set(this.lengthUnits_);
+		this.G20_G21.evalute();
 		
 		// set cutter radius compensation
 		if(this.compensation_ != Compensation.UNDEFINED) { 
-			if(ProgramLoader.interpreterState.coordinateSystem.getPlane() != Plane.XY)
+			if(InterpreterState.gModalState.getGModalState(GcommandModalGroupSet.G_GROUP2_PLANE) != GcommandSet.G17)
 				throw new GcodeRuntimeException("Cutter radius compensation available in XY plane only!");
-			ProgramLoader.interpreterState.cutterRadius.setState(this.compensation_);
+			InterpreterState.cutterRadius.setState(this.compensation_);
 			double radius = this.valueList_.getP();
 			if(radius > 0.0){
-				radius = InterpreterState.lengthUnits.toMM(radius);
-				ProgramLoader.interpreterState.cutterRadius.setRadius(radius);
+				radius = InterpreterState.gModalState.toMM(radius);
+				InterpreterState.cutterRadius.setRadius(radius);
 			} else {
 				int toolNum = this.valueList_.getD();
 				if(toolNum >= 0){
-					radius = ProgramLoader.interpreterState.toolSet_.getToolRadius(toolNum);
-					ProgramLoader.interpreterState.cutterRadius.setRadius(radius);
+					radius = InterpreterState.toolSet_.getToolRadius(toolNum);
+					InterpreterState.cutterRadius.setRadius(radius);
 				}
 			}
 			// TODO move tool at compensation offset from current point
@@ -563,19 +561,19 @@ public class LineLoader extends CommandLineLoader {
 	public void setDwell() {
 		this.dwell_ = true;
 	}
-
+/*
 	public void setPlane(Plane plane) {
-		this.plane_ = plane;
+		this.G17_G18_G19 = plane;
 	}
 
 	public void setUnitsMetric() {
-		this.lengthUnits_ = Units.METRIC;
+		this.G20_G21 = Units.METRIC;
 	}
 
 	public void setUnitsImperial() {
-		this.lengthUnits_ = Units.IMPERIAL;
+		this.G20_G21 = Units.IMPERIAL;
 	}
-
+*/
 	public void setCompensation(Compensation compensation) {
 		this.compensation_ = compensation;
 	}

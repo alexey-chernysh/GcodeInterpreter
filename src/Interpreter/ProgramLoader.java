@@ -16,10 +16,11 @@ public class ProgramLoader {
 
 	private String fileName_;
 	private static ArrayList<LineLoaderArray> sub_program_list = new ArrayList<LineLoaderArray>();
-	public static InterpreterState interpreterState = new InterpreterState();
+	public static InterpreterState interpreterState;
 	
 	public  ProgramLoader(String fn) throws LexerException, GcodeRuntimeException{
 		fileName_ = fn;
+		interpreterState = new InterpreterState();
 		int stringCounter = 0;
 		try{
 			InputStream f = new FileInputStream(fileName_);
