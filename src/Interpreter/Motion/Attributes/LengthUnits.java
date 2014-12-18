@@ -11,11 +11,7 @@ public class LengthUnits {
 	public void set(Units s) { 
 		this.current_ = s; 
 	}
-/*	
-	public double getScale(){ 
-		return this.current_.scale; 
-	}
-*/
+
 	@Override
 	public String toString(){ 
 		return this.current_.name; 

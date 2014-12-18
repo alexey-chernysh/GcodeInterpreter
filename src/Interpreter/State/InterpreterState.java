@@ -1,23 +1,23 @@
 package Interpreter.State;
 
-import Interpreter.ProgramVariablesSet;
-import Interpreter.CannedCycle.CannedCycleReturnMode;
-import Interpreter.Coolant.Coolant;
+import Interpreter.Expression.Variables.VariablesSet;
 import Interpreter.Motion.Point;
 import Interpreter.Motion.Attributes.CoordinateSystem;
 import Interpreter.Motion.Attributes.DistanceMode;
 import Interpreter.Motion.Attributes.LengthUnits;
 import Interpreter.Motion.Attributes.TimeFormat;
-import Interpreter.Motion.FeedRate.FeedRate;
-import Interpreter.Spindle.Spindle;
-import Interpreter.Tools.Tool;
-import Interpreter.Tools.ToolHeight;
-import Interpreter.Tools.ToolRadius;
-import Interpreter.Tools.ToolSet;
+import Interpreter.State.CannedCycle.CannedCycleReturnMode;
+import Interpreter.State.Coolant.Coolant;
+import Interpreter.State.FeedRate.FeedRate;
+import Interpreter.State.Spindle.Spindle;
+import Interpreter.State.Tools.Tool;
+import Interpreter.State.Tools.ToolHeight;
+import Interpreter.State.Tools.ToolRadius;
+import Interpreter.State.Tools.ToolSet;
 
 public class InterpreterState {
 
-	public static ProgramVariablesSet vars_ = new ProgramVariablesSet();
+	public static VariablesSet vars_ = new VariablesSet();
 
 	public static boolean IsBlockDelete = true;
 

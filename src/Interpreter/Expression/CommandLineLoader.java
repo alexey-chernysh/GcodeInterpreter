@@ -3,14 +3,17 @@ package Interpreter.Expression;
 import Exceptions.GcodeRuntimeException;
 import Exceptions.LexerException;
 import Interpreter.Expression.CommandPair.CNCWordEnum;
-import Interpreter.Lexer.Token;
-import Interpreter.Lexer.TokenAlfa;
-import Interpreter.Lexer.TokenComment;
-import Interpreter.Lexer.TokenEnum;
-import Interpreter.Lexer.TokenList;
-import Interpreter.Lexer.TokenSequence;
-import Interpreter.Lexer.TokenValue;
-import Interpreter.Lexer.TokenEnum.EnumTokenGroup;
+import Interpreter.Expression.Tokens.Token;
+import Interpreter.Expression.Tokens.TokenAlfa;
+import Interpreter.Expression.Tokens.TokenComment;
+import Interpreter.Expression.Tokens.TokenEnum;
+import Interpreter.Expression.Tokens.TokenList;
+import Interpreter.Expression.Tokens.TokenSequence;
+import Interpreter.Expression.Tokens.TokenValue;
+import Interpreter.Expression.Tokens.TokenEnum.EnumTokenGroup;
+import Interpreter.Expression.Variables.ExpressionVarAssignment;
+import Interpreter.Expression.Variables.ExpressionVariable;
+import Interpreter.Expression.Variables.VarAssignmentList;
 
 public class CommandLineLoader extends TokenSequence {
 

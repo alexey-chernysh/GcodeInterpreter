@@ -2,34 +2,34 @@ package Interpreter;
 
 import Exceptions.GcodeRuntimeException;
 import Exceptions.LexerException;
-import Interpreter.CannedCycle.ReturnMode;
-import Interpreter.Coolant.CoolantState;
 import Interpreter.Expression.CommandLineLoader;
 import Interpreter.Expression.CommandPair;
 import Interpreter.Expression.ExpressionGeneral;
-import Interpreter.Expression.ExpressionVarAssignment;
+import Interpreter.Expression.Variables.ExpressionVarAssignment;
 import Interpreter.Motion.Motion;
 import Interpreter.Motion.MotionControlMode;
 import Interpreter.Motion.Offset;
 import Interpreter.Motion.Attributes.DistanceMode;
 import Interpreter.Motion.Attributes.Plane;
 import Interpreter.Motion.Attributes.LengthUnits.Units;
-import Interpreter.Motion.FeedRate.FeedRateMode;
-import Interpreter.Overrides.Overrides;
-import Interpreter.Spindle.SpindleRotation;
 import Interpreter.State.InterpreterState;
-import Interpreter.Tools.ToolHeight.ToolHeightOffset;
-import Interpreter.Tools.ToolRadius.Compensation;
+import Interpreter.State.CannedCycle.ReturnMode;
+import Interpreter.State.Coolant.CoolantState;
+import Interpreter.State.FeedRate.FeedRateMode;
+import Interpreter.State.Overrides.Overrides;
+import Interpreter.State.Spindle.SpindleRotation;
+import Interpreter.State.Tools.ToolHeight.ToolHeightOffset;
+import Interpreter.State.Tools.ToolRadius.Compensation;
 
 public class LineLoader extends CommandLineLoader {
 	
 	private String message_ = null;
 	private FeedRateMode feedRateMode_ = FeedRateMode.UNDEFINED;
 	private ExpressionGeneral feedRate_ = null;
-	private double spindelSpeed_ = 0.0;
 	private int tool_ = -1;
 	private boolean M6_ = false;
 	private SpindleRotation spindleRotation_ = SpindleRotation.UNDEFINED;
+	private ExpressionGeneral spindelSpeed_ = null;
 	private CoolantState coolant_ = CoolantState.UNDEFINED;
 	private Overrides overrides_ = Overrides.UNDEFINED;
 	private boolean dwell_ = false;
@@ -57,7 +57,7 @@ public class LineLoader extends CommandLineLoader {
 			int commandNum = (int) (10*value);
 			switch(currentCommand.getType()){
 			case F:
-				this.setFeedRate(commandValueExpressiion);
+				this.feedRate_ = commandValueExpressiion;
 				break;
 			case G:
 				switch(commandNum){
@@ -256,7 +256,7 @@ public class LineLoader extends CommandLineLoader {
 				};
 				break;
 			case S:
-				this.setSpindelSpeed(value);
+				this.spindelSpeed_ = commandValueExpressiion;
 				break;
 			case T:
 				this.setTool((int)value);
@@ -283,14 +283,16 @@ public class LineLoader extends CommandLineLoader {
 			System.out.println(this.message_);
 		
 		// set feed rate mode
-		if(this.feedRateMode_ != FeedRateMode.UNDEFINED) ProgramLoader.interpreterState.feedRate.setMode(this.feedRateMode_);
+		if(this.feedRateMode_ != FeedRateMode.UNDEFINED) 
+			InterpreterState.feedRate.setMode(this.feedRateMode_);
 		
 		// set feed rate
-		if(this.feedRate_ != null) ProgramLoader.interpreterState.feedRate.set(this.feedRate_.evalute());
+		if(this.feedRate_ != null) 
+			InterpreterState.feedRate.set(this.feedRate_.evalute());
 		
 		// set spindel speed
-		if(this.spindelSpeed_ > 0.0)
-			ProgramLoader.interpreterState.spindle.set(this.spindelSpeed_);
+		if(this.spindelSpeed_ != null)
+			InterpreterState.spindle.set(this.spindelSpeed_.evalute());
 		
 		// select tool
 		if(this.tool_ >= 0)
@@ -509,7 +511,7 @@ public class LineLoader extends CommandLineLoader {
 		default:
 		}
 	}
-	
+/*	
 	public void setFeedRate(ExpressionGeneral commandValueExpressiion) {
 		this.feedRate_ = commandValueExpressiion;
 	}
@@ -517,7 +519,7 @@ public class LineLoader extends CommandLineLoader {
 	public void setSpindelSpeed(double spindelSpeed) {
 		this.spindelSpeed_ = spindelSpeed;
 	}
-
+*/
 	public void setTool(int tool) {
 		this.tool_ = tool;
 	}

@@ -1,7 +1,7 @@
 package Interpreter.Expression;
 
 import Exceptions.GcodeRuntimeException;
-import Interpreter.Lexer.TokenEnum;
+import Interpreter.Expression.Tokens.TokenEnum;
 
 public class CommandPair { // pair of command indrntifier alfa and associated expression
 	
