@@ -9,11 +9,10 @@ import Interpreter.Motion.Attributes.TimeFormat;
 import Interpreter.State.CannedCycle.CannedCycleReturnMode;
 import Interpreter.State.Coolant.Coolant;
 import Interpreter.State.FeedRate.FeedRate;
-import Interpreter.State.ModalState.GModalState;
+import Interpreter.State.ModalState.ModalState;
 import Interpreter.State.Spindle.Spindle;
 import Interpreter.State.Tools.Tool;
 import Interpreter.State.Tools.ToolHeight;
-import Interpreter.State.Tools.ToolRadius;
 import Interpreter.State.Tools.ToolSet;
 
 public class InterpreterState {
@@ -26,19 +25,18 @@ public class InterpreterState {
 	private static Point controlPoint = new Point(0.0,0.0);
 	private static double currentFeedRate_ = 0.0; // max velocity mm in sec
 
-	public static GModalState gModalState = new GModalState();
+	public static ModalState gModalState = new ModalState();
 	
 	public static ToolSet toolSet_ = new ToolSet();
 	public static Tool tool = new Tool();
-	public static ToolRadius cutterRadius = new ToolRadius();
 	public static ToolHeight toolHeight = new ToolHeight();
+	public static int G4142_D = 0; // tool number for cutting radius compensation
 
 	public static Spindle spindle = new Spindle();
 	public static Coolant coolant = new Coolant();
 
 	public static FeedRate feedRate = new FeedRate();
 	public static DistanceMode distanceMode;
-//	public static LengthUnits lengthUnits;
 	public static CoordinateSystem coordinateSystem = new CoordinateSystem();
 
 	public static TimeFormat timeFormat;

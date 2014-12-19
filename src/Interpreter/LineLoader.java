@@ -15,17 +15,17 @@ import Interpreter.State.CannedCycle.ReturnMode;
 import Interpreter.State.Coolant.CoolantState;
 import Interpreter.State.ModalState.GcommandModalGroupSet;
 import Interpreter.State.ModalState.GcommandSet;
+import Interpreter.State.ModalState.McommandSet;
 import Interpreter.State.Overrides.Overrides;
 import Interpreter.State.Spindle.SpindleRotation;
 import Interpreter.State.Tools.ToolHeight.ToolHeightOffset;
-import Interpreter.State.Tools.ToolRadius.Compensation;
 
 public class LineLoader extends CommandLineLoader {
 	
 	private String message_ = null;
 	private GcommandSet feedRateMode_ = GcommandSet.GDUMMY;
 	private ExpressionGeneral feedRate_ = null;
-	private int tool_ = -1;
+	private ExpressionGeneral tool_ = null;
 	private boolean M6_ = false;
 	private SpindleRotation spindleRotation_ = SpindleRotation.UNDEFINED;
 	private ExpressionGeneral spindelSpeed_ = null;
@@ -34,7 +34,7 @@ public class LineLoader extends CommandLineLoader {
 	private boolean dwell_ = false;
 	private GcommandSet G17_G18_G19 = GcommandSet.GDUMMY;
 	private GcommandSet G20_G21 = GcommandSet.GDUMMY;
-	private Compensation compensation_ = Compensation.UNDEFINED;
+	private GcommandSet G40_G41_G42 = GcommandSet.GDUMMY;
 	private ToolHeightOffset heightOffset_ = ToolHeightOffset.UNDEFINED; 
 	private int fixtureToolOffset_ = -1;
 	public static final int G59_SELECTED = 6;
@@ -52,14 +52,12 @@ public class LineLoader extends CommandLineLoader {
 		for(i=0; i<size; i++){
 			CommandPair currentCommand = this.commandSet_.get(i);
 			ExpressionGeneral commandValueExpressiion = currentCommand.getValueExpression();
-			double value = currentCommand.getCurrentValue();
-			int commandNum = (int) (10*value);
 			switch(currentCommand.getType()){
 			case F:
 				this.feedRate_ = commandValueExpressiion;
 				break;
 			case G:
-				GcommandSet g_command = this.byNumber(currentCommand.getCurrentValue());
+				GcommandSet g_command = this.GcommandByNumber(currentCommand.getCurrentValue());
 				switch(g_command){
 				case G0:
 					break;
@@ -83,19 +81,24 @@ public class LineLoader extends CommandLineLoader {
 				case G16:
 					break;
 				case G17:
-					this.G17_G18_G19 = GcommandSet.G17;
+					if(this.G17_G18_G19 == GcommandSet.GDUMMY) this.G17_G18_G19 = GcommandSet.G17;
+					else throw new GcodeRuntimeException("Twice plane selection command in same string");
 					break;
 				case G18:
-					this.G17_G18_G19 = GcommandSet.G18;
+					if(this.G17_G18_G19 == GcommandSet.GDUMMY) this.G17_G18_G19 = GcommandSet.G18;
+					else throw new GcodeRuntimeException("Twice plane selection command in same string");
 					break;
 				case G19:
-					this.G17_G18_G19 = GcommandSet.G19;
+					if(this.G17_G18_G19 == GcommandSet.GDUMMY) this.G17_G18_G19 = GcommandSet.G19;
+					else throw new GcodeRuntimeException("Twice plane selection command in same string");
 					break;
 				case G20:
-					this.G20_G21 = GcommandSet.G20;
+					if(this.G20_G21 == GcommandSet.GDUMMY) this.G20_G21 = GcommandSet.G20;
+					else throw new GcodeRuntimeException("Twice units change command in same string");
 					break;
 				case G21:
-					this.G20_G21 = GcommandSet.G21;
+					if(this.G20_G21 == GcommandSet.GDUMMY) this.G20_G21 = GcommandSet.G21;
+					else throw new GcodeRuntimeException("Twice units change command in same string");
 					break;
 				case G28:
 					break;
@@ -106,13 +109,16 @@ public class LineLoader extends CommandLineLoader {
 				case G31:
 					break;
 				case G40:
-					this.setCompensation(Compensation.OFF);
+					if(this.G40_G41_G42 == GcommandSet.GDUMMY) this.G40_G41_G42 = GcommandSet.G40;
+					else throw new GcodeRuntimeException("Twice cut offset compensation change command in same string");
 					break;
 				case G41:
-					this.setCompensation(Compensation.LEFT);
+					if(this.G40_G41_G42 == GcommandSet.GDUMMY) this.G40_G41_G42 = GcommandSet.G41;
+					else throw new GcodeRuntimeException("Twice cut offset compensation change command in same string");
 					break;
 				case G42:
-					this.setCompensation(Compensation.RIGHT);
+					if(this.G40_G41_G42 == GcommandSet.GDUMMY) this.G40_G41_G42 = GcommandSet.G42;
+					else throw new GcodeRuntimeException("Twice cut offset compensation change command in same string");
 					break;
 				case G43:
 					this.setHeightOffset(ToolHeightOffset.ON);
@@ -157,10 +163,12 @@ public class LineLoader extends CommandLineLoader {
 				case G69:
 					break;
 				case G70:
-					this.G20_G21 = GcommandSet.G70;
+					if(this.G20_G21 == GcommandSet.GDUMMY) this.G20_G21 = GcommandSet.G70;
+					else throw new GcodeRuntimeException("Twice units change command in same string");
 					break;
 				case G71:
-					this.G20_G21 = GcommandSet.G71;
+					if(this.G20_G21 == GcommandSet.GDUMMY) this.G20_G21 = GcommandSet.G71;
+					else throw new GcodeRuntimeException("Twice units change command in same string");
 					break;
 				case G73:
 					break;
@@ -194,15 +202,15 @@ public class LineLoader extends CommandLineLoader {
 					break;
 				case G93:
 					if(this.feedRateMode_ == GcommandSet.GDUMMY) this.feedRateMode_ = GcommandSet.G93;
-					else throw new GcodeRuntimeException("Twice feed rate mode change command in sa,e string");
+					else throw new GcodeRuntimeException("Twice feed rate mode change command in same string");
 					break;
 				case G94:
 					if(this.feedRateMode_ == GcommandSet.GDUMMY) this.feedRateMode_ = GcommandSet.G94;
-					else throw new GcodeRuntimeException("Twice feed rate mode change command in sa,e string");
+					else throw new GcodeRuntimeException("Twice feed rate mode change command in same string");
 					break;
 				case G95:
 					if(this.feedRateMode_ == GcommandSet.GDUMMY) this.feedRateMode_ = GcommandSet.G95;
-					else throw new GcodeRuntimeException("Twice feed rate mode change command in sa,e string");
+					else throw new GcodeRuntimeException("Twice feed rate mode change command in same string");
 					break;
 				case G98:
 					this.setReturnMode(ReturnMode.RETURN_NO_LOWER_THEN_R);
@@ -215,44 +223,45 @@ public class LineLoader extends CommandLineLoader {
 				}
 				break;
 			case M:
-				switch(commandNum){
-				case 0:
+				McommandSet m_command = this.McommandByNumber(currentCommand.getCurrentValue());
+				switch(m_command){
+				case M0:
 					break;
-				case 10:
+				case M1:
 					break;
-				case 20:
+				case M2:
 					break;
-				case 30:
+				case M3:
 					this.setSpindleRotation(SpindleRotation.CLOCKWISE);
 					break;
-				case 40:
+				case M4:
 					this.setSpindleRotation(SpindleRotation.COUNTERCLOCKWISE);
 					break;
-				case 50:
+				case M5:
 					this.setSpindleRotation(SpindleRotation.OFF);
 					break;
-				case 60:
+				case M6:
 					break;
-				case 70:
+				case M7:
 					this.M7();
 					break;
-				case 80:
+				case M8:
 					this.M8();
 					break;
-				case 90:
+				case M9:
 					this.M9();
 					break;
-				case 300:
+				case M30:
 					break;
-				case 470:
+				case M47:
 					break;
-				case 480:
+				case M48:
 					break;
-				case 490:
+				case M49:
 					break;
-				case 980:
+				case M98:
 					break;
-				case 990:
+				case M99:
 					break;
 				default:
 					throw new GcodeRuntimeException("Unsupported M code num");
@@ -262,7 +271,7 @@ public class LineLoader extends CommandLineLoader {
 				this.spindelSpeed_ = commandValueExpressiion;
 				break;
 			case T:
-				this.setTool((int)value);
+				this.tool_ = commandValueExpressiion;
 				break;
 			default:
 				throw new GcodeRuntimeException("Unsupported command num");
@@ -286,7 +295,7 @@ public class LineLoader extends CommandLineLoader {
 			System.out.println(this.message_);
 		
 		// set feed rate mode
-		this.feedRateMode_.evalute();
+		this.feedRateMode_.evalute(this.wordList_);
 		
 		// set feed rate
 		if(this.feedRate_ != null) 
@@ -297,8 +306,8 @@ public class LineLoader extends CommandLineLoader {
 			InterpreterState.spindle.set(this.spindelSpeed_.evalute());
 		
 		// select tool
-		if(this.tool_ >= 0)
-			ProgramLoader.interpreterState.tool.setToolNum(this.tool_);
+		if(this.tool_ != null)
+			InterpreterState.tool.setToolNum((int)this.tool_.evalute());
 		
 		// tool change macro
 		if(this.M6_){
@@ -353,29 +362,13 @@ public class LineLoader extends CommandLineLoader {
 		}
 		
 		// set active plane
-		this.G17_G18_G19.evalute();
+		this.G17_G18_G19.evalute(this.wordList_);
 		
 		// set length units
-		this.G20_G21.evalute();
+		this.G20_G21.evalute(this.wordList_);
 		
 		// set cutter radius compensation
-		if(this.compensation_ != Compensation.UNDEFINED) { 
-			if(InterpreterState.gModalState.getGModalState(GcommandModalGroupSet.G_GROUP2_PLANE) != GcommandSet.G17)
-				throw new GcodeRuntimeException("Cutter radius compensation available in XY plane only!");
-			InterpreterState.cutterRadius.setState(this.compensation_);
-			double radius = this.valueList_.getP();
-			if(radius > 0.0){
-				radius = InterpreterState.gModalState.toMM(radius);
-				InterpreterState.cutterRadius.setRadius(radius);
-			} else {
-				int toolNum = this.valueList_.getD();
-				if(toolNum >= 0){
-					radius = InterpreterState.toolSet_.getToolRadius(toolNum);
-					InterpreterState.cutterRadius.setRadius(radius);
-				}
-			}
-			// TODO move tool at compensation offset from current point
-		}
+		this.G40_G41_G42.evalute(this.wordList_);
 		
 		// set tool table offset
 		switch(this.heightOffset_){
@@ -398,7 +391,7 @@ public class LineLoader extends CommandLineLoader {
 		
 		// fixture table select
 		if(this.fixtureToolOffset_ > 0){
-			if(ProgramLoader.interpreterState.cutterRadius.compensationIsOn())
+			if(InterpreterState.gModalState.getGModalState(GcommandModalGroupSet.G_GROUP7_CUTTER_RADIUS_COMPENSATION) != GcommandSet.G40)
 				throw new GcodeRuntimeException("Fixture offset unavailable while cutter radius compensation is on!");
 			int toolNum = fixtureToolOffset_;
 			int tmpP = (int) this.valueList_.getP();
@@ -512,18 +505,10 @@ public class LineLoader extends CommandLineLoader {
 		}
 	}
 
-	public void setTool(int tool) {
-		this.tool_ = tool;
-	}
-
 	public void setMessage(String message) {
 		this.message_ = message;
 	}
-/*
-	public void setFeedRateMode(FeedRateMode feedRateMode) {
-		this.feedRateMode_ = feedRateMode;
-	}
-*/
+
 	public void setM6(boolean m6_) {
 		M6_ = m6_;
 	}
@@ -556,10 +541,6 @@ public class LineLoader extends CommandLineLoader {
 		this.dwell_ = true;
 	}
 
-	public void setCompensation(Compensation compensation) {
-		this.compensation_ = compensation;
-	}
-
 	public void setHeightOffset(ToolHeightOffset heightOffset) {
 		this.heightOffset_ = heightOffset;
 	}
@@ -588,11 +569,20 @@ public class LineLoader extends CommandLineLoader {
 		this.motion_ = m;
 	}
 
-	public GcommandSet byNumber(double x){
+	public GcommandSet GcommandByNumber(double x){
 		int tmp = (int)(10*x);
 		for(int i=0; i<GcommandSet.GDUMMY.ordinal(); i++){
 			if(GcommandSet.values()[i].number == tmp) return GcommandSet.values()[i];
 		};
 		return GcommandSet.GDUMMY;
-	};
+	}
+
+	private McommandSet McommandByNumber(double x) {
+		int tmp = (int)(x);
+		for(int i=0; i<McommandSet.MDUMMY.ordinal(); i++){
+			if(McommandSet.values()[i].number == tmp) return McommandSet.values()[i];
+		};
+		return McommandSet.MDUMMY;
+	}
+
 }

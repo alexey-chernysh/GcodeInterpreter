@@ -1,6 +1,7 @@
 package Interpreter.State.ModalState;
 
 import Exceptions.GcodeRuntimeException;
+import Interpreter.Expression.LineCommandPairList;
 import Interpreter.State.InterpreterState;
 
 public enum GcommandSet {
@@ -13,51 +14,33 @@ public enum GcommandSet {
 	G12(12.0, GcommandModalGroupSet.G_GROUP1_MOTION), // Clockwise circular pocket
 	G13(13.0, GcommandModalGroupSet.G_GROUP1_MOTION), // Counterclockwise circular pocket
 	G15(15.0, GcommandModalGroupSet.G_GROUP17_POLAR_COORDINATES){ // Polar coordinate moves in G0 and G1
-		@Override
-		public void evalute() throws GcodeRuntimeException{
-			InterpreterState.gModalState.set(GcommandModalGroupSet.G_GROUP17_POLAR_COORDINATES, G15);
-		};
 	}, 
 	G16(16.0, GcommandModalGroupSet.G_GROUP17_POLAR_COORDINATES){ // Cancel polar coordinate moves
-		@Override
-		public void evalute() throws GcodeRuntimeException{
-			InterpreterState.gModalState.set(GcommandModalGroupSet.G_GROUP17_POLAR_COORDINATES, G16);
-		};
 	}, 
 	G17(17.0, GcommandModalGroupSet.G_GROUP2_PLANE){ // XY Plane select
-		@Override
-		public void evalute() throws GcodeRuntimeException{
-			InterpreterState.gModalState.set(GcommandModalGroupSet.G_GROUP2_PLANE, G17);
-		};
 	}, 
 	G18(18.0, GcommandModalGroupSet.G_GROUP2_PLANE){ // XZ plane select
-		public void evalute() throws GcodeRuntimeException{
-			InterpreterState.gModalState.set(GcommandModalGroupSet.G_GROUP2_PLANE, G18);
-		};
 	}, 
 	G19(19.0, GcommandModalGroupSet.G_GROUP2_PLANE){ // YZ plane select
-		public void evalute() throws GcodeRuntimeException{
-			InterpreterState.gModalState.set(GcommandModalGroupSet.G_GROUP2_PLANE, G19);
-		};
-	}, // YZ plane select
+	}, 
 	G20(20.0, GcommandModalGroupSet.G_GROUP6_UNITS){ // Inch unit
-		@Override
-		public void evalute() throws GcodeRuntimeException{
-			InterpreterState.gModalState.set(GcommandModalGroupSet.G_GROUP6_UNITS, G20);
-		};
 	}, 
 	G21(21.0, GcommandModalGroupSet.G_GROUP6_UNITS){ // Millimetre unit
-		@Override
-		public void evalute() throws GcodeRuntimeException{
-			InterpreterState.gModalState.set(GcommandModalGroupSet.G_GROUP6_UNITS, G21);
-		};
 	}, 
 	G28(28.0, GcommandModalGroupSet.G_GROUP0_NON_MODAL), // Return home
 	G28_1(28.1, GcommandModalGroupSet.G_GROUP0_NON_MODAL), // Reference axes
 	G30(30.0, GcommandModalGroupSet.G_GROUP0_NON_MODAL), // Return home
 	G31(31.0, GcommandModalGroupSet.G_GROUP1_MOTION), // Straight probe
-	G40(40.0, GcommandModalGroupSet.G_GROUP7_CUTTER_RADIUS_COMPENSATION), // Cancel cutter radius compensation
-	G41(41.0, GcommandModalGroupSet.G_GROUP7_CUTTER_RADIUS_COMPENSATION), // Start cutter radius compensation left
+	G40(40.0, GcommandModalGroupSet.G_GROUP7_CUTTER_RADIUS_COMPENSATION){ // Cancel cutter radius compensation
+	}, 
+	G41(41.0, GcommandModalGroupSet.G_GROUP7_CUTTER_RADIUS_COMPENSATION){ // Start cutter radius compensation left
+		@Override
+		public void evalute(LineCommandPairList words) throws GcodeRuntimeException{ // Start cutter radius compensation left
+			if(InterpreterState.gModalState.getGModalState(GcommandModalGroupSet.G_GROUP2_PLANE) != G17)
+				throw new GcodeRuntimeException("Kerf offset possible in  XY plane only");
+			InterpreterState.gModalState.set(modalGroup, this);
+		}
+	}, // Start cutter radius compensation left
 	G42(42.0, GcommandModalGroupSet.G_GROUP7_CUTTER_RADIUS_COMPENSATION), // Start cutter radius compensation right
 	G43(43.0, GcommandModalGroupSet.G_GROUP8_TOOL_LENGHT_OFFSET), // Apply tool length offset (plus)
 	G49(49.0, GcommandModalGroupSet.G_GROUP8_TOOL_LENGHT_OFFSET), // Cancel tool length offset
@@ -77,16 +60,8 @@ public enum GcommandSet {
 	G68(68.0, GcommandModalGroupSet.G_GROUP16_COORDINATE_ROTATION), // Rotate program coordinate system
 	G69(69.0, GcommandModalGroupSet.G_GROUP16_COORDINATE_ROTATION), // Cancel program coordinate system rotation
 	G70(70.0, GcommandModalGroupSet.G_GROUP6_UNITS){ // Inch unit
-		@Override
-		public void evalute() throws GcodeRuntimeException{
-			InterpreterState.gModalState.set(GcommandModalGroupSet.G_GROUP6_UNITS, G20);
-		};
 	}, 
 	G71(71.0, GcommandModalGroupSet.G_GROUP6_UNITS){ // Millimetre unit
-		@Override
-		public void evalute() throws GcodeRuntimeException{
-			InterpreterState.gModalState.set(GcommandModalGroupSet.G_GROUP6_UNITS, G21);
-		};
 	}, 
 	G73(73.0, GcommandModalGroupSet.G_GROUP1_MOTION), // Canned cycle - peck drilling
 	G80(80.0, GcommandModalGroupSet.G_GROUP1_MOTION), // Cancel motion mode (including canned cycles)
@@ -108,31 +83,24 @@ public enum GcommandSet {
 	G92_2(92.2, GcommandModalGroupSet.G_GROUP0_NON_MODAL), // 
 	G92_3(92.3, GcommandModalGroupSet.G_GROUP0_NON_MODAL), // 
 	G93(93.0, GcommandModalGroupSet.G_GROUP5_FEED_RATE_MODE){ // Inverse time feed mode
-		@Override
-		public void evalute() throws GcodeRuntimeException{
-			InterpreterState.gModalState.set(GcommandModalGroupSet.G_GROUP5_FEED_RATE_MODE, G93);
-		};
 	}, 
 	G94(94.0, GcommandModalGroupSet.G_GROUP5_FEED_RATE_MODE){ // Feed per minute mode
-		@Override
-		public void evalute() throws GcodeRuntimeException{
-			InterpreterState.gModalState.set(GcommandModalGroupSet.G_GROUP5_FEED_RATE_MODE, G94);
-		};
 	}, 
 	G95(95.0, GcommandModalGroupSet.G_GROUP5_FEED_RATE_MODE){ // Feed per rev mode
-		@Override
-		public void evalute() throws GcodeRuntimeException{
-			InterpreterState.gModalState.set(GcommandModalGroupSet.G_GROUP5_FEED_RATE_MODE, G95);
-		};
 	}, 
 	G98(98.0, GcommandModalGroupSet.G_GROUP10_CANNED_CYCLES_RETURN_MODE), // Initial level return after canned cycles
 	G99(99.0, GcommandModalGroupSet.G_GROUP10_CANNED_CYCLES_RETURN_MODE), // R-point level return after canned cycles
-	GDUMMY(-1.0, GcommandModalGroupSet.G_GROUP0_NON_MODAL); // dummy command for initial assignment
+	GDUMMY(-1.0, GcommandModalGroupSet.G_GROUP0_NON_MODAL){
+		@Override
+		public void evalute(LineCommandPairList words) throws GcodeRuntimeException{
+		};
+	}; // dummy command for initial assignment
 	
 	public int number;
 	public GcommandModalGroupSet modalGroup;
-	public void evalute() throws GcodeRuntimeException{
-		throw new GcodeRuntimeException("G-command still not implemented");
+	
+	public void evalute(LineCommandPairList words) throws GcodeRuntimeException{
+		InterpreterState.gModalState.set(modalGroup, this);
 	};
 	
 	
