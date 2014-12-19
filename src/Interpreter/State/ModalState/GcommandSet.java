@@ -107,9 +107,24 @@ public enum GcommandSet {
 	G92_1(92.1, GcommandModalGroupSet.G_GROUP0_NON_MODAL), // Cancel G92 etc.
 	G92_2(92.2, GcommandModalGroupSet.G_GROUP0_NON_MODAL), // 
 	G92_3(92.3, GcommandModalGroupSet.G_GROUP0_NON_MODAL), // 
-	G93(93.0, GcommandModalGroupSet.G_GROUP5_FEED_RATE_MODE), // Inverse time feed mode
-	G94(94.0, GcommandModalGroupSet.G_GROUP5_FEED_RATE_MODE), // Feed per minute mode
-	G95(95.0, GcommandModalGroupSet.G_GROUP5_FEED_RATE_MODE), // Feed per rev mode
+	G93(93.0, GcommandModalGroupSet.G_GROUP5_FEED_RATE_MODE){ // Inverse time feed mode
+		@Override
+		public void evalute() throws GcodeRuntimeException{
+			InterpreterState.gModalState.set(GcommandModalGroupSet.G_GROUP5_FEED_RATE_MODE, G93);
+		};
+	}, 
+	G94(94.0, GcommandModalGroupSet.G_GROUP5_FEED_RATE_MODE){ // Feed per minute mode
+		@Override
+		public void evalute() throws GcodeRuntimeException{
+			InterpreterState.gModalState.set(GcommandModalGroupSet.G_GROUP5_FEED_RATE_MODE, G94);
+		};
+	}, 
+	G95(95.0, GcommandModalGroupSet.G_GROUP5_FEED_RATE_MODE){ // Feed per rev mode
+		@Override
+		public void evalute() throws GcodeRuntimeException{
+			InterpreterState.gModalState.set(GcommandModalGroupSet.G_GROUP5_FEED_RATE_MODE, G95);
+		};
+	}, 
 	G98(98.0, GcommandModalGroupSet.G_GROUP10_CANNED_CYCLES_RETURN_MODE), // Initial level return after canned cycles
 	G99(99.0, GcommandModalGroupSet.G_GROUP10_CANNED_CYCLES_RETURN_MODE), // R-point level return after canned cycles
 	GDUMMY(-1.0, GcommandModalGroupSet.G_GROUP0_NON_MODAL); // dummy command for initial assignment
@@ -117,7 +132,7 @@ public enum GcommandSet {
 	public int number;
 	public GcommandModalGroupSet modalGroup;
 	public void evalute() throws GcodeRuntimeException{
-		throw new GcodeRuntimeException("Command still not implemented");
+		throw new GcodeRuntimeException("G-command still not implemented");
 	};
 	
 	
@@ -126,11 +141,4 @@ public enum GcommandSet {
 		this.modalGroup = g;
 	};
 	
-	public GcommandSet byNumber(double x){
-		int tmp = (int)(10*x);
-		for(int i=0; i<GcommandSet.GDUMMY.ordinal(); i++){
-			if(GcommandSet.values()[i].number == tmp) return GcommandSet.values()[i];
-		};
-		return GcommandSet.GDUMMY;
-	};
 }

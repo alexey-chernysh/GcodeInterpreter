@@ -7,7 +7,6 @@ import Interpreter.State.Overrides.OverrideSwitch;
 
 public class FeedRate extends OverrideSwitch {
 
-	private FeedRateMode feedRateMode_ = FeedRateMode.FEED_PER_MINUTE_MODE;
 	private MotionControlMode motionMode = MotionControlMode.EXACT_STOP;
 	private double max_ = 2000; // mm/sec
 	private double default_ = 2000; 
@@ -53,8 +52,6 @@ public class FeedRate extends OverrideSwitch {
 		}
 	}
 	
-	public FeedRateMode getMode() {	return feedRateMode_; }
-	public void setMode(FeedRateMode feedRateMode) { this.feedRateMode_ = feedRateMode;	}
 	public MotionControlMode getMotionMode() { return motionMode; }
 	public void setMotionMode(MotionControlMode s) { this.motionMode = s;	}
 

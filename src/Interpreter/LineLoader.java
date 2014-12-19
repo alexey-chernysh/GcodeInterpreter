@@ -13,7 +13,6 @@ import Interpreter.Motion.Attributes.DistanceMode;
 import Interpreter.State.InterpreterState;
 import Interpreter.State.CannedCycle.ReturnMode;
 import Interpreter.State.Coolant.CoolantState;
-import Interpreter.State.FeedRate.FeedRateMode;
 import Interpreter.State.ModalState.GcommandModalGroupSet;
 import Interpreter.State.ModalState.GcommandSet;
 import Interpreter.State.Overrides.Overrides;
@@ -24,7 +23,7 @@ import Interpreter.State.Tools.ToolRadius.Compensation;
 public class LineLoader extends CommandLineLoader {
 	
 	private String message_ = null;
-	private FeedRateMode feedRateMode_ = FeedRateMode.UNDEFINED;
+	private GcommandSet feedRateMode_ = GcommandSet.GDUMMY;
 	private ExpressionGeneral feedRate_ = null;
 	private int tool_ = -1;
 	private boolean M6_ = false;
@@ -60,151 +59,155 @@ public class LineLoader extends CommandLineLoader {
 				this.feedRate_ = commandValueExpressiion;
 				break;
 			case G:
-				switch(commandNum){
-				case 0:
+				GcommandSet g_command = this.byNumber(currentCommand.getCurrentValue());
+				switch(g_command){
+				case G0:
 					break;
-				case 10:
+				case G1:
 					break;
-				case 20:
+				case G2:
 					break;
-				case 30:
+				case G3:
 					break;
-				case 40:
+				case G4:
 					this.setDwell();
 					break;
-				case 100:
+				case G10:
 					break;
-				case 120:
+				case G12:
 					break;
-				case 130:
+				case G13:
 					break;
-				case 150:
+				case G15:
 					break;
-				case 160:
+				case G16:
 					break;
-				case 170:
+				case G17:
 					this.G17_G18_G19 = GcommandSet.G17;
 					break;
-				case 180:
+				case G18:
 					this.G17_G18_G19 = GcommandSet.G18;
 					break;
-				case 190:
+				case G19:
 					this.G17_G18_G19 = GcommandSet.G19;
 					break;
-				case 200:
+				case G20:
 					this.G20_G21 = GcommandSet.G20;
 					break;
-				case 210:
+				case G21:
 					this.G20_G21 = GcommandSet.G21;
 					break;
-				case 280:
+				case G28:
 					break;
-				case 281:
+				case G28_1:
 					break;
-				case 300:
+				case G30:
 					break;
-				case 310:
+				case G31:
 					break;
-				case 400:
+				case G40:
 					this.setCompensation(Compensation.OFF);
 					break;
-				case 410:
+				case G41:
 					this.setCompensation(Compensation.LEFT);
 					break;
-				case 420:
+				case G42:
 					this.setCompensation(Compensation.RIGHT);
 					break;
-				case 430:
+				case G43:
 					this.setHeightOffset(ToolHeightOffset.ON);
 					break;
-				case 490:
+				case G49:
 					this.setHeightOffset(ToolHeightOffset.OFF);
 					break;
-				case 500:
+				case G50:
 					break;
-				case 510:
+				case G51:
 					break;
-				case 520:
+				case G52:
 					break;
-				case 530:
+				case G53:
 					break;
-				case 540:
+				case G54:
 					this.setFixtureToolOffset(1);
 					break;
-				case 550:
+				case G55:
 					this.setFixtureToolOffset(2);
 					break;
-				case 560:
+				case G56:
 					this.setFixtureToolOffset(3);
 					break;
-				case 570:
+				case G57:
 					this.setFixtureToolOffset(4);
 					break;
-				case 580:
+				case G58:
 					this.setFixtureToolOffset(5);
 					break;
-				case 590:
+				case G59:
 					this.setFixtureToolOffset(LineLoader.G59_SELECTED);
 					break;
-				case 610:
+				case G61:
 					this.setMotionMode(MotionControlMode.EXACT_STOP);
 					break;
-				case 640:
+				case G64:
 					this.setMotionMode(MotionControlMode.CONTINUOUS_SPEED);
 					break;
-				case 680:
+				case G68:
 					break;
-				case 690:
+				case G69:
 					break;
-				case 700:
+				case G70:
 					this.G20_G21 = GcommandSet.G70;
 					break;
-				case 710:
+				case G71:
 					this.G20_G21 = GcommandSet.G71;
 					break;
-				case 730:
+				case G73:
 					break;
-				case 800:
+				case G80:
 					break;
-				case 810:
+				case G81:
 					break;
-				case 820:
+				case G82:
 					break;
-				case 830:
+				case G83:
 					break;
-				case 840:
+				case G84:
 					break;
-				case 850:
+				case G85:
 					break;
-				case 860:
+				case G86:
 					break;
-				case 870:
+				case G87:
 					break;
-				case 880:
+				case G88:
 					break;
-				case 890:
+				case G89:
 					break;
-				case 900:
+				case G90:
 					this.setDistanceMode(DistanceMode.ABSOLUTE);
 					break;
-				case 910:
+				case G91:
 					this.setDistanceMode(DistanceMode.INCREMENTAL);
 					break;
-				case 920:
+				case G92:
 					break;
-				case 930:
-					this.setFeedRateMode(FeedRateMode.INVERSE_TIME_FEED_MODE);
+				case G93:
+					if(this.feedRateMode_ == GcommandSet.GDUMMY) this.feedRateMode_ = GcommandSet.G93;
+					else throw new GcodeRuntimeException("Twice feed rate mode change command in sa,e string");
 					break;
-				case 940:
-					this.setFeedRateMode(FeedRateMode.FEED_PER_MINUTE_MODE);
+				case G94:
+					if(this.feedRateMode_ == GcommandSet.GDUMMY) this.feedRateMode_ = GcommandSet.G94;
+					else throw new GcodeRuntimeException("Twice feed rate mode change command in sa,e string");
 					break;
-				case 950:
-					this.setFeedRateMode(FeedRateMode.FED_PER_REV_MODE);
+				case G95:
+					if(this.feedRateMode_ == GcommandSet.GDUMMY) this.feedRateMode_ = GcommandSet.G95;
+					else throw new GcodeRuntimeException("Twice feed rate mode change command in sa,e string");
 					break;
-				case 980:
+				case G98:
 					this.setReturnMode(ReturnMode.RETURN_NO_LOWER_THEN_R);
 					break;
-				case 990:
+				case G99:
 					this.setReturnMode(ReturnMode.RETURN_TO_R);
 					break;
 				default:
@@ -283,8 +286,7 @@ public class LineLoader extends CommandLineLoader {
 			System.out.println(this.message_);
 		
 		// set feed rate mode
-		if(this.feedRateMode_ != FeedRateMode.UNDEFINED) 
-			InterpreterState.feedRate.setMode(this.feedRateMode_);
+		this.feedRateMode_.evalute();
 		
 		// set feed rate
 		if(this.feedRate_ != null) 
@@ -509,15 +511,7 @@ public class LineLoader extends CommandLineLoader {
 		default:
 		}
 	}
-/*	
-	public void setFeedRate(ExpressionGeneral commandValueExpressiion) {
-		this.feedRate_ = commandValueExpressiion;
-	}
 
-	public void setSpindelSpeed(double spindelSpeed) {
-		this.spindelSpeed_ = spindelSpeed;
-	}
-*/
 	public void setTool(int tool) {
 		this.tool_ = tool;
 	}
@@ -525,11 +519,11 @@ public class LineLoader extends CommandLineLoader {
 	public void setMessage(String message) {
 		this.message_ = message;
 	}
-
+/*
 	public void setFeedRateMode(FeedRateMode feedRateMode) {
 		this.feedRateMode_ = feedRateMode;
 	}
-
+*/
 	public void setM6(boolean m6_) {
 		M6_ = m6_;
 	}
@@ -561,19 +555,7 @@ public class LineLoader extends CommandLineLoader {
 	public void setDwell() {
 		this.dwell_ = true;
 	}
-/*
-	public void setPlane(Plane plane) {
-		this.G17_G18_G19 = plane;
-	}
 
-	public void setUnitsMetric() {
-		this.G20_G21 = Units.METRIC;
-	}
-
-	public void setUnitsImperial() {
-		this.G20_G21 = Units.IMPERIAL;
-	}
-*/
 	public void setCompensation(Compensation compensation) {
 		this.compensation_ = compensation;
 	}
@@ -605,4 +587,12 @@ public class LineLoader extends CommandLineLoader {
 	public void setMotion(Motion m){
 		this.motion_ = m;
 	}
+
+	public GcommandSet byNumber(double x){
+		int tmp = (int)(10*x);
+		for(int i=0; i<GcommandSet.GDUMMY.ordinal(); i++){
+			if(GcommandSet.values()[i].number == tmp) return GcommandSet.values()[i];
+		};
+		return GcommandSet.GDUMMY;
+	};
 }
