@@ -36,9 +36,9 @@ public enum GcommandSet {
 	G41(41.0, GcommandModalGroupSet.G_GROUP7_CUTTER_RADIUS_COMPENSATION){ // Start cutter radius compensation left
 		@Override
 		public void evalute(LineCommandPairList words) throws GcodeRuntimeException{ // Start cutter radius compensation left
-			if(InterpreterState.gModalState.getGModalState(GcommandModalGroupSet.G_GROUP2_PLANE) != G17)
+			if(InterpreterState.modalState.getGModalState(GcommandModalGroupSet.G_GROUP2_PLANE) != G17)
 				throw new GcodeRuntimeException("Kerf offset possible in  XY plane only");
-			InterpreterState.gModalState.set(modalGroup, this);
+			InterpreterState.modalState.set(modalGroup, this);
 		}
 	}, // Start cutter radius compensation left
 	G42(42.0, GcommandModalGroupSet.G_GROUP7_CUTTER_RADIUS_COMPENSATION), // Start cutter radius compensation right
@@ -100,7 +100,7 @@ public enum GcommandSet {
 	public GcommandModalGroupSet modalGroup;
 	
 	public void evalute(LineCommandPairList words) throws GcodeRuntimeException{
-		InterpreterState.gModalState.set(modalGroup, this);
+		InterpreterState.modalState.set(modalGroup, this);
 	};
 	
 	

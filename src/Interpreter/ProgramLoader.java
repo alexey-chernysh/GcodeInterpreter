@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import Exceptions.GcodeRuntimeException;
 import Exceptions.LexerException;
+import HAL.Command.HALCommand;
 import Interpreter.State.InterpreterState;
 
 public class ProgramLoader {
@@ -17,6 +18,7 @@ public class ProgramLoader {
 	private String fileName_;
 	private static ArrayList<LineLoaderArray> sub_program_list = new ArrayList<LineLoaderArray>();
 	public static InterpreterState interpreterState;
+	public static ArrayList<HALCommand> hal_commands = new ArrayList<HALCommand>();
 	
 	public  ProgramLoader(String fn) throws LexerException, GcodeRuntimeException{
 		fileName_ = fn;

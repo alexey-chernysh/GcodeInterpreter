@@ -108,7 +108,7 @@ public class LineValueList {
 		int n = (int)v;
 		if( ( (v - n) != 0.0)
 			||(n < 0.0)
-			||(n > InterpreterState.toolSet_.getMaxToolNum())) 
+			||(n > InterpreterState.toolSet.getMaxToolNum())) 
 			throw new GcodeRuntimeException("D should be positive integer number of existing tool!");
 		return n;
 	}

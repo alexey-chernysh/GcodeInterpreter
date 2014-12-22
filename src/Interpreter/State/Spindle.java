@@ -1,4 +1,4 @@
-package Interpreter.State.Spindle;
+package Interpreter.State;
 
 import Interpreter.State.Overrides.OverrideSwitch;
 
@@ -56,4 +56,10 @@ public class Spindle extends OverrideSwitch {
 		this.state = newState;
 	}
 
+	public enum SpindleRotation {
+		UNDEFINED,
+		OFF,
+		CLOCKWISE, 
+		COUNTERCLOCKWISE
+	}
 }

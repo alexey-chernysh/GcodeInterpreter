@@ -25,7 +25,7 @@ public enum McommandSet {
 	public int number;
 	public McommandModalGroupSet modalGroup;
 	public void evalute() throws GcodeRuntimeException{
-		InterpreterState.gModalState.set(modalGroup, this);
+		InterpreterState.modalState.set(modalGroup, this);
 	};
 	
 	

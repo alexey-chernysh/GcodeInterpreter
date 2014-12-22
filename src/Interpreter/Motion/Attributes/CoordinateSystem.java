@@ -5,7 +5,6 @@ import Interpreter.Motion.Motion;
 
 public class CoordinateSystem {
 	
-	private DistanceMode distanceMode = DistanceMode.INCREMENTAL;
 	private CoordinateMode coordinateMode = CoordinateMode.NORMAL;
 	public CNCCoordinateRotation rotation = new CNCCoordinateRotation();
 
@@ -37,9 +36,6 @@ public class CoordinateSystem {
 
 	public CoordinateMode getCoordinateMode() { return coordinateMode; }
 	public void setCoordinateMode(CoordinateMode curentMode_) { this.coordinateMode = curentMode_; }
-
-	public DistanceMode get() {	return this.distanceMode; }
-	public void set(DistanceMode mode_) { this.distanceMode = mode_; };
 
 	public enum CoordinateMode {
 		NORMAL,
