@@ -15,5 +15,7 @@ public enum GcommandModalGroupSet {
 	G_GROUP16_COORDINATE_ROTATION, // G68, G69 coordinate rotaton selection
 	G_GROUP17_POLAR_COORDINATES, // G15, G16 polar coordinate mode
 	G_GROUP18_SCALING, // G50, G51 coodinate scale enable/disable
-	G_GROUP0_NON_MODAL;  // G4, G10, G28, G30, G53, G92, G92.1, G92.2, G92.3 non modal group
+	G_GROUP0_NON_MODAL,  // G10, G28, G30, G53, G92, G92.1, G92.2, G92.3 non modal group
+	G_GROUP0_G53_MODIFIER, // G53
+	G_GROUP0_G4_DWELL;  // G4 dwell only
 }

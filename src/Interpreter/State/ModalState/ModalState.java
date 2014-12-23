@@ -28,7 +28,7 @@ public class ModalState {
 		set(GcommandModalGroupSet.G_GROUP7_CUTTER_RADIUS_COMPENSATION, GcommandSet.G40);
 		set(GcommandModalGroupSet.G_GROUP8_TOOL_LENGHT_OFFSET, GcommandSet.G49);
 		set(GcommandModalGroupSet.G_GROUP10_CANNED_CYCLES_RETURN_MODE, GcommandSet.G98);
-		set(GcommandModalGroupSet.G_GROUP12_OFFSET_SELECTION, GcommandSet.G54_DUMMY);
+		set(GcommandModalGroupSet.G_GROUP12_OFFSET_SELECTION, GcommandSet.G54);
 		set(GcommandModalGroupSet.G_GROUP13_PATH_CONTROL_MODE, GcommandSet.G61);
 		set(GcommandModalGroupSet.G_GROUP16_COORDINATE_ROTATION, GcommandSet.G69);
 		set(GcommandModalGroupSet.G_GROUP17_POLAR_COORDINATES, GcommandSet.G16);

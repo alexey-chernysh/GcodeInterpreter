@@ -9,24 +9,17 @@ public enum GcommandSet {
 	G1(1.0, GcommandModalGroupSet.G_GROUP1_MOTION), // Linear interpolation
 	G2(2.0, GcommandModalGroupSet.G_GROUP1_MOTION), // Clockwise circular/helical interpolation
 	G3(3.0, GcommandModalGroupSet.G_GROUP1_MOTION), // Counterclockwise circular/Helical interpolation
-	G4(4.0, GcommandModalGroupSet.G_GROUP0_NON_MODAL), // Dwell
+	G4(4.0, GcommandModalGroupSet.G_GROUP0_G4_DWELL), // Dwell
 	G10(10.0, GcommandModalGroupSet.G_GROUP0_NON_MODAL), // Coordinate system origin setting
 	G12(12.0, GcommandModalGroupSet.G_GROUP1_MOTION), // Clockwise circular pocket
 	G13(13.0, GcommandModalGroupSet.G_GROUP1_MOTION), // Counterclockwise circular pocket
-	G15(15.0, GcommandModalGroupSet.G_GROUP17_POLAR_COORDINATES){ // Polar coordinate moves in G0 and G1
-	}, 
-	G16(16.0, GcommandModalGroupSet.G_GROUP17_POLAR_COORDINATES){ // Cancel polar coordinate moves
-	}, 
-	G17(17.0, GcommandModalGroupSet.G_GROUP2_PLANE){ // XY Plane select
-	}, 
-	G18(18.0, GcommandModalGroupSet.G_GROUP2_PLANE){ // XZ plane select
-	}, 
-	G19(19.0, GcommandModalGroupSet.G_GROUP2_PLANE){ // YZ plane select
-	}, 
-	G20(20.0, GcommandModalGroupSet.G_GROUP6_UNITS){ // Inch unit
-	}, 
-	G21(21.0, GcommandModalGroupSet.G_GROUP6_UNITS){ // Millimetre unit
-	}, 
+	G15(15.0, GcommandModalGroupSet.G_GROUP17_POLAR_COORDINATES), // Polar coordinate moves in G0 and G1
+	G16(16.0, GcommandModalGroupSet.G_GROUP17_POLAR_COORDINATES), // Cancel polar coordinate moves
+	G17(17.0, GcommandModalGroupSet.G_GROUP2_PLANE), // XY Plane select
+	G18(18.0, GcommandModalGroupSet.G_GROUP2_PLANE), // XZ plane select
+	G19(19.0, GcommandModalGroupSet.G_GROUP2_PLANE), // YZ plane select
+	G20(20.0, GcommandModalGroupSet.G_GROUP6_UNITS), // Inch unit
+	G21(21.0, GcommandModalGroupSet.G_GROUP6_UNITS), // Millimetre unit
 	G28(28.0, GcommandModalGroupSet.G_GROUP0_NON_MODAL), // Return home
 	G28_1(28.1, GcommandModalGroupSet.G_GROUP0_NON_MODAL), // Reference axes
 	G30(30.0, GcommandModalGroupSet.G_GROUP0_NON_MODAL), // Return home
@@ -47,8 +40,7 @@ public enum GcommandSet {
 	G50(50.0, GcommandModalGroupSet.G_GROUP18_SCALING), // Reset all scale factors to 1.0
 	G51(51.0, GcommandModalGroupSet.G_GROUP18_SCALING), // Set axis data input scale factors
 	G52(52.0, GcommandModalGroupSet.G_GROUP0_NON_MODAL), // Temporary coordinate system offsets
-	G53(53.0, GcommandModalGroupSet.G_GROUP0_NON_MODAL), // Move in absolute machine coordinate system
-	G54_DUMMY(9999.0, GcommandModalGroupSet.G_GROUP12_OFFSET_SELECTION), // no offset
+	G53(53.0, GcommandModalGroupSet.G_GROUP0_G53_MODIFIER), // Move in absolute machine coordinate system
 	G54(54.0, GcommandModalGroupSet.G_GROUP12_OFFSET_SELECTION), // Use fixture offset 1
 	G55(55.0, GcommandModalGroupSet.G_GROUP12_OFFSET_SELECTION), // Use fixture offset 2
 	G56(56.0, GcommandModalGroupSet.G_GROUP12_OFFSET_SELECTION), // Use fixture offset 3
@@ -59,10 +51,8 @@ public enum GcommandSet {
 	G64(64.0, GcommandModalGroupSet.G_GROUP13_PATH_CONTROL_MODE), // Constant Velocity mode
 	G68(68.0, GcommandModalGroupSet.G_GROUP16_COORDINATE_ROTATION), // Rotate program coordinate system
 	G69(69.0, GcommandModalGroupSet.G_GROUP16_COORDINATE_ROTATION), // Cancel program coordinate system rotation
-	G70(70.0, GcommandModalGroupSet.G_GROUP6_UNITS){ // Inch unit
-	}, 
-	G71(71.0, GcommandModalGroupSet.G_GROUP6_UNITS){ // Millimetre unit
-	}, 
+	G70(70.0, GcommandModalGroupSet.G_GROUP6_UNITS),  // Inch unit
+	G71(71.0, GcommandModalGroupSet.G_GROUP6_UNITS), // Millimetre unit
 	G73(73.0, GcommandModalGroupSet.G_GROUP1_MOTION), // Canned cycle - peck drilling
 	G80(80.0, GcommandModalGroupSet.G_GROUP1_MOTION), // Cancel motion mode (including canned cycles)
 	G81(81.0, GcommandModalGroupSet.G_GROUP1_MOTION), // Canned cycle - drilling

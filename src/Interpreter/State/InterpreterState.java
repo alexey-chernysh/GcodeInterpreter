@@ -6,7 +6,6 @@ import Interpreter.Motion.Point;
 import Interpreter.Motion.Attributes.CoordinateSystem;
 import Interpreter.Motion.Attributes.TimeFormat;
 import Interpreter.State.CannedCycle.CannedCycleReturnMode;
-import Interpreter.State.Coolant.Coolant;
 import Interpreter.State.ModalState.ModalState;
 
 public class InterpreterState {
@@ -25,8 +24,6 @@ public class InterpreterState {
 	public static int G4142_D = 0; // tool number for cutting radius compensation
 
 	public static Spindle spindle = new Spindle();
-	public static Coolant coolant = new Coolant();
-
 	public static FeedRate feedRate = new FeedRate();
 	public static CoordinateSystem coordinateSystem = new CoordinateSystem();
 
