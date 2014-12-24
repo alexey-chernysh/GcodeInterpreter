@@ -19,10 +19,12 @@ public class LineLoader extends CommandLineLoader {
 	private ExpressionGeneral feedRate_     = null;
 	private ExpressionGeneral tool_         = null;
 	private ExpressionGeneral spindelSpeed_ = null;
-	private McommandSet M3_M4_M5 = McommandSet.MDUMMY;
-	private McommandSet M6       = McommandSet.MDUMMY;
-	private McommandSet M7_M8_M9 = McommandSet.MDUMMY;
-	private McommandSet M48_M49  = McommandSet.MDUMMY;
+	private McommandSet M1_M2_M3    = McommandSet.MDUMMY;
+	private McommandSet M3_M4_M5    = McommandSet.MDUMMY;
+	private McommandSet M6          = McommandSet.MDUMMY;
+	private McommandSet M7_M8_M9    = McommandSet.MDUMMY;
+	private McommandSet M48_M49     = McommandSet.MDUMMY;
+	private McommandSet M47_M98_M99 = McommandSet.MDUMMY;
 	private GcommandSet G4          = GcommandSet.GDUMMY;
 	private GcommandSet G_NON_MODAL = GcommandSet.GDUMMY;
 	private GcommandSet G15_G16     = GcommandSet.GDUMMY;
@@ -308,10 +310,16 @@ public class LineLoader extends CommandLineLoader {
 				McommandSet m_command = this.McommandByNumber(currentCommand.getCurrentValue());
 				switch(m_command){
 				case M0:
+					if(this.M1_M2_M3 == McommandSet.MDUMMY) this.M1_M2_M3 = McommandSet.M1;
+					else throw new GcodeRuntimeException("Twice stopping command in same string");
 					break;
 				case M1:
+					if(this.M1_M2_M3 == McommandSet.MDUMMY) this.M1_M2_M3 = McommandSet.M2;
+					else throw new GcodeRuntimeException("Twice stopping command in same string");
 					break;
 				case M2:
+					if(this.M1_M2_M3 == McommandSet.MDUMMY) this.M1_M2_M3 = McommandSet.M3;
+					else throw new GcodeRuntimeException("Twice stopping command in same string");
 					break;
 				case M3:
 					if(this.M3_M4_M5 == McommandSet.MDUMMY) this.M3_M4_M5 = McommandSet.M3;
@@ -342,8 +350,12 @@ public class LineLoader extends CommandLineLoader {
 					else throw new GcodeRuntimeException("Twice coolant mode command in same string");
 					break;
 				case M30:
+					if(this.M1_M2_M3 == McommandSet.MDUMMY) this.M1_M2_M3 = McommandSet.M30;
+					else throw new GcodeRuntimeException("Twice stopping command in same string");
 					break;
 				case M47:
+					if(this.M47_M98_M99 == McommandSet.MDUMMY) this.M47_M98_M99 = McommandSet.M47;
+					else throw new GcodeRuntimeException("Twice execution control command in same string");
 					break;
 				case M48:
 					if(this.M48_M49 == McommandSet.MDUMMY) this.M48_M49 = McommandSet.M48;
@@ -354,8 +366,12 @@ public class LineLoader extends CommandLineLoader {
 					else throw new GcodeRuntimeException("Twice override command in same string");
 					break;
 				case M98:
+					if(this.M47_M98_M99 == McommandSet.MDUMMY) this.M47_M98_M99 = McommandSet.M98;
+					else throw new GcodeRuntimeException("Twice execution control command in same string");
 					break;
 				case M99:
+					if(this.M47_M98_M99 == McommandSet.MDUMMY) this.M47_M98_M99 = McommandSet.M99;
+					else throw new GcodeRuntimeException("Twice execution control command in same string");
 					break;
 				default:
 					throw new GcodeRuntimeException("Unsupported M code num");
