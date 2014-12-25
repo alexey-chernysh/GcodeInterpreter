@@ -3,9 +3,11 @@ package Interpreter.State.ModalState;
 import Drivers.CanonicalCommands.ArcDirection;
 import Drivers.CanonicalCommands.G00_G01;
 import Drivers.CanonicalCommands.G02_G03;
+import Drivers.CanonicalCommands.G04;
 import Drivers.CanonicalCommands.MotionMode;
 import Interpreter.InterpreterException;
 import Interpreter.ProgramLoader;
+import Interpreter.Expression.CommandPair.CNCWordEnum;
 import Interpreter.Expression.ParamExpresionList;
 import Interpreter.Motion.Point;
 import Interpreter.State.InterpreterState;
@@ -47,6 +49,7 @@ public enum GcommandSet {
 			InterpreterState.modalState.set(modalGroup, this);
 			Point startPoint = InterpreterState.getLastPosition();
 			Point endPoint = InterpreterState.modalState.getTargetPoint(startPoint, words);
+			// TODO R format also needed
 			Point centerPoint = InterpreterState.modalState.getCenterPoint(startPoint, words);
 			G02_G03 newG2 = new G02_G03(startPoint, 
 										endPoint,
@@ -59,8 +62,36 @@ public enum GcommandSet {
 			InterpreterState.setLastPosition(endPoint);
 		}
 	}, 
-	G3(3.0, GcommandModalGroupSet.G_GROUP1_MOTION), // Counterclockwise circular/Helical interpolation
-	G4(4.0, GcommandModalGroupSet.G_GROUP0_G4_DWELL), // Dwell
+	G3(3.0, GcommandModalGroupSet.G_GROUP1_MOTION){ // Counterclockwise circular/Helical interpolation
+		@Override
+		public void evalute(ParamExpresionList words) throws InterpreterException {
+			InterpreterState.modalState.set(modalGroup, this);
+			Point startPoint = InterpreterState.getLastPosition();
+			Point endPoint = InterpreterState.modalState.getTargetPoint(startPoint, words);
+			// TODO R format also needed
+			Point centerPoint = InterpreterState.modalState.getCenterPoint(startPoint, words);
+			G02_G03 newG3 = new G02_G03(startPoint, 
+										endPoint,
+										centerPoint,
+										ArcDirection.COUNTERCLOCKWISE,
+										InterpreterState.feedRate.getRapidFeedRate(), 
+										MotionMode.WORK, 
+										InterpreterState.modalState.getCutterRadiusOffsetMode());
+			ProgramLoader.hal_commands.add(newG3);
+			InterpreterState.setLastPosition(endPoint);
+		}
+	}, 
+	G4(4.0, GcommandModalGroupSet.G_GROUP0_G4_DWELL){ // Dwell
+		@Override
+		public void evalute(ParamExpresionList words) throws InterpreterException {
+			InterpreterState.modalState.set(modalGroup, this);
+			double p = words.get(CNCWordEnum.P);
+			if(p >= 0.0){
+				G04 newG4 = new G04(p);
+				ProgramLoader.hal_commands.add(newG4);
+			} else throw new InterpreterException("Illegal dwell time");
+		}
+	}, 
 	G10(10.0, GcommandModalGroupSet.G_GROUP0_NON_MODAL), // Coordinate system origin setting
 	G12(12.0, GcommandModalGroupSet.G_GROUP1_MOTION), // Clockwise circular pocket
 	G13(13.0, GcommandModalGroupSet.G_GROUP1_MOTION), // Counterclockwise circular pocket
