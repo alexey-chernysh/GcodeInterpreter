@@ -16,7 +16,7 @@ import Interpreter.Expression.Variables.VarAssignmentList;
 
 public class CommandLineLoader extends TokenSequence {
 
-	protected LineCommandPairList wordList_ = new LineCommandPairList();
+	protected ParamExpresionList wordList_ = new ParamExpresionList();
 	protected CommandPairList commandSet_ = new CommandPairList();
 	protected VarAssignmentList varAssignmentSet_ = new VarAssignmentList();
 	private String messageString_ = null;

@@ -61,4 +61,8 @@ public class InterpreterState {
 		return InterpreterState.lastPosition;
 	}
 
+	public static void setLastPosition(Point newPos) {
+		InterpreterState.lastPosition = newPos;
+	}
+
 }

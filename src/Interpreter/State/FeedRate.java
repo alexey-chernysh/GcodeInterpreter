@@ -53,5 +53,10 @@ public class FeedRate extends OverrideSwitch {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
+	public double getWorkFeedRate() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 	
 }

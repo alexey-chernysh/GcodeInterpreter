@@ -3,13 +3,13 @@ package Interpreter.Expression;
 import Interpreter.InterpreterException;
 import Interpreter.Expression.CommandPair.CNCWordEnum;
 
-public class LineCommandPairList {
+public class ParamExpresionList {
 	
 	private static final int size_ = CNCWordEnum.Z.ordinal() + 1;
 	private ExpressionGeneral[] expressionList = new ExpressionGeneral[size_];
 	
 	public
-	LineCommandPairList(){
+	ParamExpresionList(){
 		for(int i=0; i<size_; i++) {
 			expressionList[i] = null;
 		}
@@ -33,7 +33,7 @@ public class LineCommandPairList {
 	public String toString(){
 		String result = "";
 		
-		for(int i=0; i<LineCommandPairList.size_; i++){
+		for(int i=0; i<ParamExpresionList.size_; i++){
 			ExpressionGeneral currentExp = this.expressionList[i];
 			if(currentExp != null){
 				result += CNCWordEnum.values()[i].toString() + " " + currentExp.toString();

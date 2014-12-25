@@ -1,43 +1,64 @@
 package Interpreter.State.ModalState;
 
+import Drivers.CanonicalCommands.ArcDirection;
 import Drivers.CanonicalCommands.G00_G01;
+import Drivers.CanonicalCommands.G02_G03;
 import Drivers.CanonicalCommands.MotionMode;
 import Interpreter.InterpreterException;
 import Interpreter.ProgramLoader;
-import Interpreter.Expression.LineCommandPairList;
+import Interpreter.Expression.ParamExpresionList;
 import Interpreter.Motion.Point;
 import Interpreter.State.InterpreterState;
 
 public enum GcommandSet {
 	G0(0.0, GcommandModalGroupSet.G_GROUP1_MOTION){ // Rapid positioning
 		@Override
-		public void evalute(LineCommandPairList words) throws InterpreterException { 
+		public void evalute(ParamExpresionList words) throws InterpreterException { 
 			InterpreterState.modalState.set(modalGroup, this);
 			Point startPoint = InterpreterState.getLastPosition();
-			Point endPoint = InterpreterState.modalState.getPoint(startPoint, words);
+			Point endPoint = InterpreterState.modalState.getTargetPoint(startPoint, words);
 			G00_G01 newG0 = new G00_G01(startPoint, 
 										endPoint, 
 										InterpreterState.feedRate.getRapidFeedRate(), 
 										MotionMode.FREE, 
 										null);
 			ProgramLoader.hal_commands.add(newG0);
+			InterpreterState.setLastPosition(endPoint);
 		}
 	}, 
 	G1(1.0, GcommandModalGroupSet.G_GROUP1_MOTION){ // Linear interpolation
 		@Override
-		public void evalute(LineCommandPairList words) throws InterpreterException {
+		public void evalute(ParamExpresionList words) throws InterpreterException {
 			InterpreterState.modalState.set(modalGroup, this);
 			Point startPoint = InterpreterState.getLastPosition();
-			Point endPoint = InterpreterState.modalState.getPoint(startPoint, words);
+			Point endPoint = InterpreterState.modalState.getTargetPoint(startPoint, words);
 			G00_G01 newG1 = new G00_G01(startPoint, 
 										endPoint, 
-										InterpreterState.feedRate.getRapidFeedRate(), 
+										InterpreterState.feedRate.getWorkFeedRate(), 
 										MotionMode.WORK, 
 										InterpreterState.modalState.getCutterRadiusOffsetMode());
 			ProgramLoader.hal_commands.add(newG1);
+			InterpreterState.setLastPosition(endPoint);
 		}
 	}, 
-	G2(2.0, GcommandModalGroupSet.G_GROUP1_MOTION), // Clockwise circular/helical interpolation
+	G2(2.0, GcommandModalGroupSet.G_GROUP1_MOTION){ // Clockwise circular/helical interpolation
+		@Override
+		public void evalute(ParamExpresionList words) throws InterpreterException {
+			InterpreterState.modalState.set(modalGroup, this);
+			Point startPoint = InterpreterState.getLastPosition();
+			Point endPoint = InterpreterState.modalState.getTargetPoint(startPoint, words);
+			Point centerPoint = InterpreterState.modalState.getCenterPoint(startPoint, words);
+			G02_G03 newG2 = new G02_G03(startPoint, 
+										endPoint,
+										centerPoint,
+										ArcDirection.CLOCKWISE,
+										InterpreterState.feedRate.getRapidFeedRate(), 
+										MotionMode.WORK, 
+										InterpreterState.modalState.getCutterRadiusOffsetMode());
+			ProgramLoader.hal_commands.add(newG2);
+			InterpreterState.setLastPosition(endPoint);
+		}
+	}, 
 	G3(3.0, GcommandModalGroupSet.G_GROUP1_MOTION), // Counterclockwise circular/Helical interpolation
 	G4(4.0, GcommandModalGroupSet.G_GROUP0_G4_DWELL), // Dwell
 	G10(10.0, GcommandModalGroupSet.G_GROUP0_NON_MODAL), // Coordinate system origin setting
@@ -58,7 +79,7 @@ public enum GcommandSet {
 	}, 
 	G41(41.0, GcommandModalGroupSet.G_GROUP7_CUTTER_RADIUS_COMPENSATION){ // Start cutter radius compensation left
 		@Override
-		public void evalute(LineCommandPairList words) throws InterpreterException{ 
+		public void evalute(ParamExpresionList words) throws InterpreterException{ 
 			if(InterpreterState.modalState.getGModalState(GcommandModalGroupSet.G_GROUP2_PLANE) != G17)
 				throw new InterpreterException("Kerf offset possible in  XY plane only");
 			InterpreterState.modalState.set(modalGroup, this);
@@ -112,14 +133,14 @@ public enum GcommandSet {
 	G99(99.0, GcommandModalGroupSet.G_GROUP10_CANNED_CYCLES_RETURN_MODE), // R-point level return after canned cycles
 	GDUMMY(-1.0, GcommandModalGroupSet.G_GROUP0_NON_MODAL){
 		@Override
-		public void evalute(LineCommandPairList words) throws InterpreterException{
+		public void evalute(ParamExpresionList words) throws InterpreterException{
 		};
 	}; // dummy command for initial assignment
 	
 	public int number;
 	public GcommandModalGroupSet modalGroup;
 	
-	public void evalute(LineCommandPairList words) throws InterpreterException{
+	public void evalute(ParamExpresionList words) throws InterpreterException{
 		InterpreterState.modalState.set(modalGroup, this);
 	};
 	

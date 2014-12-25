@@ -2,7 +2,7 @@ package Interpreter.State.ModalState;
 
 import Drivers.CanonicalCommands.OffsetMode;
 import Interpreter.InterpreterException;
-import Interpreter.Expression.LineCommandPairList;
+import Interpreter.Expression.ParamExpresionList;
 import Interpreter.Expression.CommandPair.CNCWordEnum;
 import Interpreter.Motion.Point;
 import Interpreter.State.InterpreterState;
@@ -92,7 +92,30 @@ public class ModalState {
 		return (this.getGModalState(GcommandModalGroupSet.G_GROUP3_DISTANCE_MODE) == GcommandSet.G90);
 	}
 
-	public Point getPoint(Point refPoint, LineCommandPairList words) throws InterpreterException {
+	public Point getTargetPoint(Point refPoint, ParamExpresionList words) throws InterpreterException {
+		double x, y;
+		if(words.hasXYZ()){
+			x = words.get(CNCWordEnum.X);
+			y = words.get(CNCWordEnum.Y);
+		} else throw new InterpreterException("Insuficient parameters in command line");
+		Point resultPoint = refPoint.clone();
+		if(InterpreterState.modalState.isPolar()){
+			// TODO polar coordinate needed
+		} else {
+			x = InterpreterState.modalState.toMM(x);
+			y = InterpreterState.modalState.toMM(y);
+			if(!InterpreterState.modalState.isAbsolute()){
+				x += refPoint.getX();
+				y += refPoint.getY();
+			};
+			// TODO axis rotation needed
+			resultPoint.setX(x);
+			resultPoint.setY(y);
+		};
+		return resultPoint;
+	}
+
+	public Point getCenterPoint(Point refPoint, ParamExpresionList words) throws InterpreterException {
 		double x, y;
 		if(words.hasXYZ()){
 			x = words.get(CNCWordEnum.X);
@@ -128,4 +151,5 @@ public class ModalState {
 			throw new InterpreterException("Illegal value of cutter radius compensation modal group");
 		}
 	}
+
 }
