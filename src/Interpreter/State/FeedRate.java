@@ -1,6 +1,6 @@
 package Interpreter.State;
 
-import Exceptions.GcodeRuntimeException;
+import Interpreter.InterpreterException;
 import Interpreter.State.Overrides.OverrideSwitch;
 
 public class FeedRate extends OverrideSwitch {
@@ -40,7 +40,7 @@ public class FeedRate extends OverrideSwitch {
 		else return current_;
 	}
 
-	public void set(double newCurrentFeedRate) throws GcodeRuntimeException {
+	public void set(double newCurrentFeedRate) throws InterpreterException {
 		double fr = InterpreterState.modalState.toMM(newCurrentFeedRate);
 		if( fr <= this.max_ ){
 			this.current_ = fr;

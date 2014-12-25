@@ -1,7 +1,6 @@
 package Interpreter.Expression;
 
-import Exceptions.GcodeRuntimeException;
-import Exceptions.LexerException;
+import Interpreter.InterpreterException;
 import Interpreter.Expression.CommandPair.CNCWordEnum;
 import Interpreter.Expression.Tokens.Token;
 import Interpreter.Expression.Tokens.TokenAlfa;
@@ -24,7 +23,7 @@ public class CommandLineLoader extends TokenSequence {
 	private int lineNum_ = 0;
 	private int programNum_;
 
-	public CommandLineLoader(String frameString, int programNum) throws LexerException, GcodeRuntimeException {
+	public CommandLineLoader(String frameString, int programNum) throws InterpreterException {
 		super(frameString);
 		this.programNum_ = programNum;
 		this.tokenList.printAllTokens();
@@ -110,7 +109,7 @@ public class CommandLineLoader extends TokenSequence {
 							this.wordList_.addWord(CNCWordEnum.Z, newWord);
 							break;
 						default:
-							throw new LexerException("Unsupported word", t.getStart());
+							throw new InterpreterException("Unsupported word", t.getStart());
 						}
 						break;
 					case WORDINT:
@@ -132,17 +131,17 @@ public class CommandLineLoader extends TokenSequence {
 								ExpressionGeneral varValueExp = getItem(this.tokenList);
 								ExpressionVarAssignment newVarAssign = new ExpressionVarAssignment(numExp, varValueExp);
 								this.varAssignmentSet_.add(newVarAssign);
-							} else throw new LexerException("Asigment symbol '=' needed", t.getStart());
+							} else throw new InterpreterException("Asigment symbol '=' needed", t.getStart());
 							break;
 						default:
 						}
 						break;
 					default:
-						throw new LexerException("Bad command", t.getStart());
+						throw new InterpreterException("Bad command", t.getStart());
 				};
 			}
 			else {
-				throw new LexerException("Bad command", t.getStart());
+				throw new InterpreterException("Bad command", t.getStart());
 			}
 			index = this.tokenList.getNextIndex();
 		};
@@ -155,7 +154,7 @@ public class CommandLineLoader extends TokenSequence {
 		}
 	}
 	
-	private ExpressionGeneral getExpression(TokenList list) throws LexerException {
+	private ExpressionGeneral getExpression(TokenList list) throws InterpreterException {
 		// left bracket occurred, so parse token list for Expression until right bracket
 		ExpressionGeneral item1 = getItem(list);
 		TokenEnum Operator1 = ((TokenAlfa)list.get(list.getNextIndex()).setParsed()).getType();
@@ -165,14 +164,14 @@ public class CommandLineLoader extends TokenSequence {
 		} else {
 			if(Operator1 == TokenEnum.RIGHT_BRACKET){
 				return item1;
-			} else throw new LexerException("Binary operator needed", 0);
+			} else throw new InterpreterException("Binary operator needed", 0);
 		}
 	}
 
 	private ExpressionGeneral getSubExpression(TokenList list,
 									   	   TokenEnum Operator1, 
 									   	   ExpressionGeneral item1, 
-									   	   ExpressionGeneral item2) throws LexerException {
+									   	   ExpressionGeneral item2) throws InterpreterException {
 		TokenEnum Operator2 = ((TokenAlfa)list.get(list.getNextIndex()).setParsed()).getType();
 		if(Operator2.group_ == EnumTokenGroup.ALGEBRA){
 			ExpressionGeneral item3 = getItem(list);
@@ -184,11 +183,11 @@ public class CommandLineLoader extends TokenSequence {
 		} else {
 			if(Operator2 == TokenEnum.RIGHT_BRACKET){
 				return new ExpressionFunction(Operator1, item1, item2);
-			} else throw new LexerException("Binary operator needed", 0);
+			} else throw new InterpreterException("Binary operator needed", 0);
 		}
 	}
 	
-	private ExpressionGeneral getItem(TokenList list) throws LexerException {
+	private ExpressionGeneral getItem(TokenList list) throws InterpreterException {
 		// parse token list for expressions and return next unparsed token index
 		ExpressionGeneral result = null;
 		int index = list.getNextIndex();
@@ -210,7 +209,7 @@ public class CommandLineLoader extends TokenSequence {
 							ExpressionGeneral funArg1 = null;
 							if((t instanceof TokenAlfa)&&(((TokenAlfa)t).getType() == TokenEnum.LEFT_BRACKET)){
 								funArg1 = this.getExpression(list);
-							} else throw new LexerException("Left bracket '[' requred", t.getStart());
+							} else throw new InterpreterException("Left bracket '[' requred", t.getStart());
 							if(funType != TokenEnum.ATAN){
 								result = new ExpressionFunction(funType, funArg1);
 								return result;
@@ -228,12 +227,12 @@ public class CommandLineLoader extends TokenSequence {
 												ExpressionGeneral funArg2 = this.getExpression(list);
 												result = new ExpressionFunction(funType, funArg1, funArg2);
 												return result;
-											} else throw new LexerException("Left bracket '[' requred", t.getStart());
-										}else throw new LexerException("Unxpected end of frame string", t.getStart());
-									} else throw new LexerException("Slash symnol '/' requred", t.getStart());
-								}else throw new LexerException("Unxpected end of frame string", t.getStart());
+											} else throw new InterpreterException("Left bracket '[' requred", t.getStart());
+										}else throw new InterpreterException("Unxpected end of frame string", t.getStart());
+									} else throw new InterpreterException("Slash symnol '/' requred", t.getStart());
+								}else throw new InterpreterException("Unxpected end of frame string", t.getStart());
 							}
-						} else throw new LexerException("Unxpected end of frame string", t.getStart());
+						} else throw new InterpreterException("Unxpected end of frame string", t.getStart());
 					case ALGEBRA: // unary sign
 						switch(((TokenAlfa)t).getType()){ // unary operations + -
 							case MINUS: // sign -, substitute as expression (0 - x)
@@ -245,7 +244,7 @@ public class CommandLineLoader extends TokenSequence {
 								result = this.getItem(list);
 								return result;
 							default:
-								throw new LexerException("Unsupported unary operation", t.getStart());
+								throw new InterpreterException("Unsupported unary operation", t.getStart());
 						}
 					case VARREF:
 						switch(((TokenAlfa)t).getType()){ // reference to variable value
@@ -254,7 +253,7 @@ public class CommandLineLoader extends TokenSequence {
 								result = (ExpressionGeneral) new ExpressionVariable(varNum);
 								return result;
 							default:
-								throw new LexerException("Unsupported var operation", t.getStart());
+								throw new InterpreterException("Unsupported var operation", t.getStart());
 						}
 					case BRACKET:
 						switch(((TokenAlfa)t).getType()){ // in-bracket expression
@@ -262,14 +261,14 @@ public class CommandLineLoader extends TokenSequence {
 								result = this.getExpression(list);
 								return result;
 							default:
-								throw new LexerException("Unsupported block structure", t.getStart());
+								throw new InterpreterException("Unsupported block structure", t.getStart());
 						}
 					default:
 						this.tokenList.printAllTokens();
-						throw new LexerException("Illegal expression syntax", t.getStart());
+						throw new InterpreterException("Illegal expression syntax", t.getStart());
 				}
 			}
-		} else throw new LexerException("Unxpected end of block string", 0);
+		} else throw new InterpreterException("Unxpected end of block string", 0);
 	}
 
 	@Override

@@ -1,6 +1,6 @@
 package Interpreter.Expression.Tokens;
 
-import Exceptions.LexerException;
+import Interpreter.InterpreterException;
 import Interpreter.Expression.Tokens.TokenComment.CommentKeyWord;
 import Interpreter.State.InterpreterState;
 
@@ -8,7 +8,7 @@ public class TokenSequence {
 	
 	public TokenList tokenList = null;
 		
-	public TokenSequence(String frameString) throws LexerException {
+	public TokenSequence(String frameString) throws InterpreterException {
 		this.tokenList = new TokenList(frameString);
 
 		if(frameString.length()>0){
@@ -27,7 +27,7 @@ public class TokenSequence {
 				getAllSeparator(this.tokenList.getSourceLineUpperCase());
 				getAllAlfaTokens(this.tokenList.getSourceLineUpperCase());
 				getAllValues(this.tokenList.getSourceLineUpperCase());
-			} catch (LexerException le) {
+			} catch (InterpreterException le) {
 				System.out.println("Lexer exception: " + le.getMessage() + " at position "+ le.getPosition() + " => "+frameString);
 			} 
 		};
@@ -56,7 +56,7 @@ public class TokenSequence {
 	}
 	
 	private 
-	void getAllComments(String sourceString) throws LexerException{
+	void getAllComments(String sourceString) throws InterpreterException{
 		getAllCommentSemicolon(sourceString);
 		getAllCommentParenthesis(sourceString);
 	}
@@ -80,7 +80,7 @@ public class TokenSequence {
 	}
 	
 	private
-	void getAllCommentParenthesis( String sourceString) throws LexerException {
+	void getAllCommentParenthesis( String sourceString) throws InterpreterException {
 		int curTokenNum = 0;
 		while(curTokenNum < this.tokenList.size()){
 			Token currentToken = this.tokenList.get(curTokenNum);
@@ -101,7 +101,7 @@ public class TokenSequence {
 					if(commentEnd > commentStart){
 						TokenComment newComment = new TokenComment(sourceString, CommentKeyWord.PARENTHESIS, commentStart, commentEnd,sourceString);
 						curTokenNum = this.tokenList.addNewToken(newComment, curTokenNum);
-					} else throw new LexerException("Unexpexted end of line! Symbol ) omitted",commentEnd);
+					} else throw new InterpreterException("Unexpexted end of line! Symbol ) omitted",commentEnd);
 				};
 			}
 			curTokenNum++;
@@ -137,7 +137,7 @@ public class TokenSequence {
 	}
 	
 	private
-	void getAllValues(String sourceString) throws LexerException {
+	void getAllValues(String sourceString) throws InterpreterException {
 		int curTokenNum = 0;
 		while(curTokenNum < this.tokenList.size()){
 			Token currentToken = this.tokenList.get(curTokenNum);
@@ -152,7 +152,7 @@ public class TokenSequence {
 				}
 				catch(NumberFormatException e){
 					this.tokenList.printAllTokens();
-					throw new LexerException("Illegal value or symbol", startPos);
+					throw new InterpreterException("Illegal value or symbol", startPos);
 				}
 			};
 			curTokenNum++;

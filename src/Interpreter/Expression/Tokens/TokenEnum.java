@@ -1,6 +1,6 @@
 package Interpreter.Expression.Tokens;
 
-import Exceptions.GcodeRuntimeException;
+import Interpreter.InterpreterException;
 
 public enum TokenEnum {
 	
@@ -76,8 +76,8 @@ public enum TokenEnum {
 	
 	SQRT("SQRT",	EnumTokenGroup.FUNCTION, -1){
 		@Override
-		public double evalute(double x) throws GcodeRuntimeException{
-			if(x<0.0) throw new GcodeRuntimeException("Square root from negative number");
+		public double evalute(double x) throws InterpreterException{
+			if(x<0.0) throw new InterpreterException("Square root from negative number");
 			return Math.sqrt(x);
 		};
 	},
@@ -91,8 +91,8 @@ public enum TokenEnum {
 	
 	LN("LN", EnumTokenGroup.FUNCTION, -1){
 		@Override
-		public double evalute(double x) throws GcodeRuntimeException{
-			if(x<0.0) throw new GcodeRuntimeException("Log from negative number");
+		public double evalute(double x) throws InterpreterException{
+			if(x<0.0) throw new InterpreterException("Log from negative number");
 			return Math.log(x);
 		};
 	},	
@@ -158,8 +158,8 @@ public enum TokenEnum {
 	
 	DIVIDE("/", EnumTokenGroup.ALGEBRA, 3){
 		@Override
-		public double evalute(double x, double y) throws GcodeRuntimeException{
-			if(y == 0.0) throw new GcodeRuntimeException("Divide by zero");
+		public double evalute(double x, double y) throws InterpreterException{
+			if(y == 0.0) throw new InterpreterException("Divide by zero");
 			return (x/y);
 		};
 	},
@@ -234,12 +234,12 @@ public enum TokenEnum {
 		precedence_ = p;
 	}
 	
-	public double evalute(double x) throws GcodeRuntimeException{
-		throw new GcodeRuntimeException("Token interpretation error");
+	public double evalute(double x) throws InterpreterException{
+		throw new InterpreterException("Token interpretation error");
 	}	
 
-	public double evalute(double x, double y) throws GcodeRuntimeException{
-		throw new GcodeRuntimeException("Token interpretation error");
+	public double evalute(double x, double y) throws InterpreterException{
+		throw new InterpreterException("Token interpretation error");
 	}	
 
 	public enum EnumTokenGroup{

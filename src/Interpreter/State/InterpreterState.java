@@ -1,6 +1,6 @@
 package Interpreter.State;
 
-import Exceptions.GcodeRuntimeException;
+import Interpreter.InterpreterException;
 import Interpreter.Expression.Variables.VariablesSet;
 import Interpreter.Motion.Point;
 import Interpreter.Motion.Attributes.CoordinateSystem;
@@ -30,7 +30,7 @@ public class InterpreterState {
 	public static TimeFormat timeFormat;
 	public static CannedCycleReturnMode cycleReturnMode;
 	
-	public InterpreterState() throws GcodeRuntimeException{
+	public InterpreterState() throws InterpreterException{
 		modalState.initToDefaultState();
 	};
 

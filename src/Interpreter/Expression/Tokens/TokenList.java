@@ -3,7 +3,7 @@ package Interpreter.Expression.Tokens;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import Exceptions.LexerException;
+import Interpreter.InterpreterException;
 
 public class TokenList extends LinkedList<Token> {
 	
@@ -11,7 +11,7 @@ public class TokenList extends LinkedList<Token> {
 	private String sourceLineUpperCase_;
 	
 	public
-	TokenList(String frameLine) throws LexerException {
+	TokenList(String frameLine) throws InterpreterException {
 		super();
 		
 		this.sourceLine_ = frameLine;
@@ -63,7 +63,7 @@ public class TokenList extends LinkedList<Token> {
 	}
 	
 	protected 
-	int getNextInt(int index) throws LexerException {
+	int getNextInt(int index) throws InterpreterException {
 		int i = index+1;
 		while(i < this.size()){
 			Token t = this.get(i);
@@ -76,10 +76,10 @@ public class TokenList extends LinkedList<Token> {
 				if(Math.abs((double)tmp-result)==0){
 					return result;
 				} else {
-					throw new LexerException("Double instead of integer. Integer requred", t.getStart());
+					throw new InterpreterException("Double instead of integer. Integer requred", t.getStart());
 				}
 			} else {
-				throw new LexerException("Integer value ommited", t.getStart());
+				throw new InterpreterException("Integer value ommited", t.getStart());
 			}
 		}
 		return -1;

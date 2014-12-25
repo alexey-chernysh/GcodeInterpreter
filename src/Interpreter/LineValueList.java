@@ -1,6 +1,5 @@
 package Interpreter;
 
-import Exceptions.GcodeRuntimeException;
 import Interpreter.State.InterpreterState;
 
 public class LineValueList {
@@ -64,7 +63,7 @@ public class LineValueList {
 		return valueList_[ParamList.Z.ordinal()];
 	}
 
-	public void setD(double v) throws GcodeRuntimeException{
+	public void setD(double v) throws InterpreterException{
 		this.D_ = checkToolNum(v);
 	}
 	
@@ -92,7 +91,7 @@ public class LineValueList {
 		return this.H_;
 	}
 
-	public void setH(double v) throws GcodeRuntimeException {
+	public void setH(double v) throws InterpreterException {
 		this.H_ = checkToolNum(v);
 	}
 	
@@ -100,16 +99,16 @@ public class LineValueList {
 		return this.L_;
 	}
 
-	public void setL(double v) throws GcodeRuntimeException {
+	public void setL(double v) throws InterpreterException {
 		this.L_ = checkToolNum(v);
 	}
 	
-	private int checkToolNum(double v) throws GcodeRuntimeException{
+	private int checkToolNum(double v) throws InterpreterException{
 		int n = (int)v;
 		if( ( (v - n) != 0.0)
 			||(n < 0.0)
 			||(n > InterpreterState.toolSet.getMaxToolNum())) 
-			throw new GcodeRuntimeException("D should be positive integer number of existing tool!");
+			throw new InterpreterException("D should be positive integer number of existing tool!");
 		return n;
 	}
 	

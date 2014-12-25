@@ -1,6 +1,6 @@
 package Interpreter.State.ModalState;
 
-import Exceptions.GcodeRuntimeException;
+import Interpreter.InterpreterException;
 
 public class ModalState {
 	
@@ -17,7 +17,7 @@ public class ModalState {
 			m_state_[i] = McommandSet.MDUMMY;
 	};
 		
-	public void initToDefaultState() throws GcodeRuntimeException{
+	public void initToDefaultState() throws InterpreterException{
 		
 		set(GcommandModalGroupSet.G_GROUP1_MOTION, GcommandSet.G0);
 		set(GcommandModalGroupSet.G_GROUP2_PLANE, GcommandSet.G17);
@@ -42,12 +42,12 @@ public class ModalState {
 		
 	};
 	
-	public void set(GcommandModalGroupSet group, GcommandSet command) throws GcodeRuntimeException{
+	public void set(GcommandModalGroupSet group, GcommandSet command) throws InterpreterException{
 		if(group != GcommandModalGroupSet.G_GROUP0_NON_MODAL){
 			if(command.modalGroup == group){
 				g_state_[group.ordinal()] = command;
-			} else throw new GcodeRuntimeException("Changing modal state with command from another modal group");
-		} else throw new GcodeRuntimeException("Assiment non modal command to modal state");
+			} else throw new InterpreterException("Changing modal state with command from another modal group");
+		} else throw new InterpreterException("Assiment non modal command to modal state");
 		
 	}
 	
@@ -55,12 +55,12 @@ public class ModalState {
 		return g_state_[group.ordinal()];
 	}
 	
-	public void set(McommandModalGroupSet group, McommandSet command) throws GcodeRuntimeException{
+	public void set(McommandModalGroupSet group, McommandSet command) throws InterpreterException{
 		if(group != McommandModalGroupSet.M_GROUP0_NON_MODAL){
 			if(command.modalGroup == group){
 				m_state_[group.ordinal()] = command;
-			} else throw new GcodeRuntimeException("Changing modal state with command from another modal group");
-		} else throw new GcodeRuntimeException("Assiment non modal command to modal state");
+			} else throw new InterpreterException("Changing modal state with command from another modal group");
+		} else throw new InterpreterException("Assiment non modal command to modal state");
 		
 	}
 	
@@ -68,7 +68,7 @@ public class ModalState {
 		return m_state_[group.ordinal()];
 	}
 	
-	public double toMM(double x) throws GcodeRuntimeException{
+	public double toMM(double x) throws InterpreterException{
 		GcommandSet unitsState = this.getGModalState(GcommandModalGroupSet.G_GROUP6_UNITS);
 		switch(unitsState){
 		case G20:
@@ -76,7 +76,7 @@ public class ModalState {
 		case G21:
 			return x;
 		default:
-			throw new GcodeRuntimeException("Scaling to mesurement units request before units selection");
+			throw new InterpreterException("Scaling to mesurement units request before units selection");
 		}
 	};
 	

@@ -1,6 +1,6 @@
 package Interpreter.Expression;
 
-import Exceptions.GcodeRuntimeException;
+import Interpreter.InterpreterException;
 import Interpreter.Expression.CommandPair.CNCWordEnum;
 
 public class LineCommandPairList {
@@ -13,10 +13,10 @@ public class LineCommandPairList {
 			commandPairList[i] = null;
 	};
 
-	public void addWord(CNCWordEnum w, CommandPair e) throws GcodeRuntimeException{ 
+	public void addWord(CNCWordEnum w, CommandPair e) throws InterpreterException{ 
 		int n = w.ordinal();
 		if(commandPairList[n] == null) commandPairList[n] = e;
-		else throw new GcodeRuntimeException("Twice parameter");
+		else throw new InterpreterException("Twice parameter");
 	}
 
 	public int getLength() {

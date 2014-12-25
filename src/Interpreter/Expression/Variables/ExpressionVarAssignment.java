@@ -1,6 +1,6 @@
 package Interpreter.Expression.Variables;
 
-import Exceptions.GcodeRuntimeException;
+import Interpreter.InterpreterException;
 import Interpreter.Expression.ExpressionGeneral;
 import Interpreter.State.InterpreterState;
 
@@ -16,7 +16,7 @@ public class ExpressionVarAssignment {
 		this.varValExp_ = ev;
 	}
 
-	public void evalute() throws GcodeRuntimeException{
+	public void evalute() throws InterpreterException{
 		this.lastNum_ = this.varNumExp_.integerEvalute();
 		this.lastValue_ = this.varValExp_.evalute();
 		InterpreterState.vars_.set(this.lastNum_, this.lastValue_);

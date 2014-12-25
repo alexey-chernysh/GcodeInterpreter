@@ -1,6 +1,6 @@
 package Interpreter.Expression;
 
-import Exceptions.GcodeRuntimeException;
+import Interpreter.InterpreterException;
 import Interpreter.Expression.Tokens.TokenEnum;
 
 public class ExpressionFunction extends ExpressionGeneral {
@@ -39,7 +39,7 @@ public class ExpressionFunction extends ExpressionGeneral {
 	}
 */	
 	@Override
-	public double evalute() throws GcodeRuntimeException {
+	public double evalute() throws InterpreterException {
 		double x = arg1.evalute();
 		if(arg2 != null){
 			double y = this.arg2.evalute();

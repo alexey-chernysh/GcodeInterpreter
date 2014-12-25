@@ -11,9 +11,9 @@ import Drivers.CanonicalCommands.GCommand;
 import Drivers.CanonicalCommands.M7cutter;
 import Drivers.CanonicalCommands.M8cutter;
 import Drivers.CanonicalCommands.MotionMode;
-import Exceptions.HWCException;
 import HAL.MotionController.MCCommandArcMotion;
 import HAL.MotionController.MCCommandStraightMotion;
+import Interpreter.InterpreterException;
 import Interpreter.Motion.Point;
 import Settings.Settings;
 
@@ -34,7 +34,7 @@ public class CutterDriver implements GeneralDriver {
 	
 	
 	@Override
-	public void loadProgram(ArrayList<GCommand> sourceCommands) throws HWCException{
+	public void loadProgram(ArrayList<GCommand> sourceCommands) throws InterpreterException{
 		
 		sourceCommands_ = sourceCommands;
 		addKerfWidthCompensation();
@@ -42,7 +42,7 @@ public class CutterDriver implements GeneralDriver {
 		
 	}
 
-	private void addKerfWidthCompensation() throws HWCException {
+	private void addKerfWidthCompensation() throws InterpreterException {
 		
 		commands_ = new  ArrayList<Object>();
 		
@@ -70,7 +70,7 @@ public class CutterDriver implements GeneralDriver {
 							if(command instanceof G02_G03) {
 								addCuttingArcMotion((G02_G03)command);
 							} else {
-								throw new HWCException("Unsupperted command");
+								throw new InterpreterException("Unsupperted command");
 							}
 						}
 					}
@@ -79,7 +79,7 @@ public class CutterDriver implements GeneralDriver {
 		}
 	}
 
-	private void addAccelDeaccel() throws HWCException {
+	private void addAccelDeaccel() throws InterpreterException {
 
 		int size = this.commands_.size();
 		
@@ -182,7 +182,7 @@ public class CutterDriver implements GeneralDriver {
 		return null;
 	} 
 
-	private void addFreeMotion(G00_G01 command) throws HWCException {
+	private void addFreeMotion(G00_G01 command) throws InterpreterException {
 		Object lastMotion = findLastMotion();
 		MCCommandStraightMotion newFreeMotion = new MCCommandStraightMotion(command, 0.0);
 		if(lastMotion != null){ 
@@ -193,7 +193,7 @@ public class CutterDriver implements GeneralDriver {
 		commands_.add(newFreeMotion);
 	}
 
-	private void addCuttingStraightMotion(G00_G01 command) throws HWCException {
+	private void addCuttingStraightMotion(G00_G01 command) throws InterpreterException {
 		Object lastMotion = findLastMotion();
 		MCCommandStraightMotion newCutterMotion = new MCCommandStraightMotion(command, kerf_offset_);
 		if(lastMotion != null){ // its no first move
@@ -217,11 +217,11 @@ public class CutterDriver implements GeneralDriver {
 							connectionPoint.shift(-d_l*Math.sin(alfaPrev), -d_l*Math.cos(alfaPrev));
 							// correct previous line
 							if(lm.length() <= d_l) 
-								throw new HWCException("Previous line too short to current compensation");
+								throw new InterpreterException("Previous line too short to current compensation");
 							lm.setEnd(connectionPoint);
 							// correct current line
 							if(newCutterMotion.length() <= d_l) 
-								throw new HWCException("New line too short to current compensation");
+								throw new InterpreterException("New line too short to current compensation");
 							newCutterMotion.setStart(connectionPoint);
 						} else {
 							// arc line before 
@@ -263,11 +263,11 @@ public class CutterDriver implements GeneralDriver {
 								connectionPoint.shift(-d_l*Math.sin(alfaPrev), -d_l*Math.cos(alfaPrev));
 								// correct previous line
 								if(lm.length() <= d_l) 
-									throw new HWCException("Previous line too short to current compensation");
+									throw new InterpreterException("Previous line too short to current compensation");
 								lm.setEnd(connectionPoint);
 								// correct current line
 								if(newCutterMotion.length() <= d_l) 
-									throw new HWCException("New line too short to current compensation");
+									throw new InterpreterException("New line too short to current compensation");
 								newCutterMotion.setStart(connectionPoint);
 							} else {
 								// arc line before 
@@ -288,7 +288,7 @@ public class CutterDriver implements GeneralDriver {
 		commands_.add(newCutterMotion);
 	}
 
-	private void addCuttingArcMotion(G02_G03 command) throws HWCException {
+	private void addCuttingArcMotion(G02_G03 command) throws InterpreterException {
 		Object lastMotion = findLastMotion();
 		MCCommandArcMotion newArcMotion = new MCCommandArcMotion(command,
 					   								   this.kerf_offset_);

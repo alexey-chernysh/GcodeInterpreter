@@ -4,7 +4,7 @@ import Drivers.CanonicalCommands.ArcDirection;
 import Drivers.CanonicalCommands.G00_G01;
 import Drivers.CanonicalCommands.G02_G03;
 import Drivers.CanonicalCommands.OffsetMode;
-import Exceptions.HWCException;
+import Interpreter.InterpreterException;
 import Interpreter.Motion.Point;
 
 public class MCCommandArcMotion 
@@ -19,7 +19,7 @@ public class MCCommandArcMotion
 							  Point end,
 							  Point center,
 							  ArcDirection dir,
-							  G00_G01 prototype) throws HWCException {
+							  G00_G01 prototype) throws InterpreterException {
 		super(start, 
 			  end, 
 			  center, 
@@ -31,7 +31,7 @@ public class MCCommandArcMotion
 	}
 
 	public MCCommandArcMotion(G02_G03 prototype,
-						 	  double kerf_offset) throws HWCException {
+						 	  double kerf_offset) throws InterpreterException {
 		super(prototype.getStart().clone(),
 			  prototype.getEnd().clone(), 
 			  prototype.getCenter(), 
@@ -65,7 +65,7 @@ public class MCCommandArcMotion
 		return prototype_;
 	}
 
-	public MCCommandArcMotion newSubArc(double lengthStart, double lengthEnd) throws HWCException {
+	public MCCommandArcMotion newSubArc(double lengthStart, double lengthEnd) throws InterpreterException {
 		Point newStart = this.getStart();
 		Point newEnd = this.getEnd();
 		Point center = this.getCenter();
@@ -119,7 +119,7 @@ public class MCCommandArcMotion
 	@Override
 	public void setVelocityProfile(double startVel, 
 								   double endVel,
-								   double maxAccel) throws HWCException {
+								   double maxAccel) throws InterpreterException {
 		// check required acceleration
 		double l = this.length();
 		double dT = (endVel + startVel)/2.0/l;
@@ -136,7 +136,7 @@ public class MCCommandArcMotion
 			} else {}
 			this.setStartVel(startVel);
 			this.setEndVel(endVel);
-		} else throw new HWCException("Acceleration out of limits");
+		} else throw new InterpreterException("Acceleration out of limits");
 	}
 	
 	public double getMaxVelicity(double maxAccel){

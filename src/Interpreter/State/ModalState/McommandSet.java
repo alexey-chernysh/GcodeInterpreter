@@ -1,6 +1,6 @@
 package Interpreter.State.ModalState;
 
-import Exceptions.GcodeRuntimeException;
+import Interpreter.InterpreterException;
 import Interpreter.State.InterpreterState;
 
 public enum McommandSet {
@@ -24,7 +24,7 @@ public enum McommandSet {
 	
 	public int number;
 	public McommandModalGroupSet modalGroup;
-	public void evalute() throws GcodeRuntimeException{
+	public void evalute() throws InterpreterException{
 		InterpreterState.modalState.set(modalGroup, this);
 	};
 	

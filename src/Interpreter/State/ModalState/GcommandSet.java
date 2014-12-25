@@ -1,11 +1,19 @@
 package Interpreter.State.ModalState;
 
-import Exceptions.GcodeRuntimeException;
+import Drivers.CanonicalCommands.G00_G01;
+import Interpreter.InterpreterException;
 import Interpreter.Expression.LineCommandPairList;
 import Interpreter.State.InterpreterState;
 
 public enum GcommandSet {
-	G0(0.0, GcommandModalGroupSet.G_GROUP1_MOTION), // Rapid positioning
+	G0(0.0, GcommandModalGroupSet.G_GROUP1_MOTION){ // Rapid positioning
+		@Override
+		public void evalute(LineCommandPairList words) throws InterpreterException { // Start cutter radius compensation left
+			InterpreterState.modalState.set(modalGroup, this);
+			// generate HAL command
+//			G00_G01 newG0 = new G00_G01(null, null, null, null, null);
+		}
+	}, 
 	G1(1.0, GcommandModalGroupSet.G_GROUP1_MOTION), // Linear interpolation
 	G2(2.0, GcommandModalGroupSet.G_GROUP1_MOTION), // Clockwise circular/helical interpolation
 	G3(3.0, GcommandModalGroupSet.G_GROUP1_MOTION), // Counterclockwise circular/Helical interpolation
@@ -28,9 +36,9 @@ public enum GcommandSet {
 	}, 
 	G41(41.0, GcommandModalGroupSet.G_GROUP7_CUTTER_RADIUS_COMPENSATION){ // Start cutter radius compensation left
 		@Override
-		public void evalute(LineCommandPairList words) throws GcodeRuntimeException{ // Start cutter radius compensation left
+		public void evalute(LineCommandPairList words) throws InterpreterException{ // Start cutter radius compensation left
 			if(InterpreterState.modalState.getGModalState(GcommandModalGroupSet.G_GROUP2_PLANE) != G17)
-				throw new GcodeRuntimeException("Kerf offset possible in  XY plane only");
+				throw new InterpreterException("Kerf offset possible in  XY plane only");
 			InterpreterState.modalState.set(modalGroup, this);
 		}
 	}, // Start cutter radius compensation left
@@ -82,14 +90,14 @@ public enum GcommandSet {
 	G99(99.0, GcommandModalGroupSet.G_GROUP10_CANNED_CYCLES_RETURN_MODE), // R-point level return after canned cycles
 	GDUMMY(-1.0, GcommandModalGroupSet.G_GROUP0_NON_MODAL){
 		@Override
-		public void evalute(LineCommandPairList words) throws GcodeRuntimeException{
+		public void evalute(LineCommandPairList words) throws InterpreterException{
 		};
 	}; // dummy command for initial assignment
 	
 	public int number;
 	public GcommandModalGroupSet modalGroup;
 	
-	public void evalute(LineCommandPairList words) throws GcodeRuntimeException{
+	public void evalute(LineCommandPairList words) throws InterpreterException{
 		InterpreterState.modalState.set(modalGroup, this);
 	};
 	

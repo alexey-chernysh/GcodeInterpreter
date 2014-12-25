@@ -2,8 +2,6 @@ package Interpreter;
 
 import java.util.ArrayList;
 
-import Exceptions.GcodeRuntimeException;
-
 public class LineLoaderArray {
 
 	private int programNum_;  
@@ -21,7 +19,7 @@ public class LineLoaderArray {
 		frameList_.add(newBlock);
 	}
 	
-	public void evalute() throws GcodeRuntimeException{
+	public void evalute() throws InterpreterException{
 		int programSize = this.frameList_.size();
 		for(int i=0; i<programSize; i++){
 			LineLoader currentFrame = this.frameList_.get(i);

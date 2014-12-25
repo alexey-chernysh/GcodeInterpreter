@@ -8,9 +8,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-import Exceptions.GcodeRuntimeException;
-import Exceptions.LexerException;
-import HAL.Command.HALCommand;
+import Drivers.CanonicalCommands.GCommand;
 import Interpreter.State.InterpreterState;
 
 public class ProgramLoader {
@@ -18,9 +16,9 @@ public class ProgramLoader {
 	private String fileName_;
 	private static ArrayList<LineLoaderArray> sub_program_list = new ArrayList<LineLoaderArray>();
 	public static InterpreterState interpreterState;
-	public static ArrayList<HALCommand> hal_commands = new ArrayList<HALCommand>();
+	public static ArrayList<GCommand> hal_commands = new ArrayList<GCommand>();
 	
-	public  ProgramLoader(String fn) throws LexerException, GcodeRuntimeException{
+	public  ProgramLoader(String fn) throws InterpreterException{
 		fileName_ = fn;
 		interpreterState = new InterpreterState();
 		int stringCounter = 0;
@@ -64,12 +62,10 @@ public class ProgramLoader {
 			LineLoaderArray mainModule = this.sub_program_list.get(0);
 			try {
 				mainModule.evalute();
-			} catch (GcodeRuntimeException e) {
+			} catch (InterpreterException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		
 	}
-
 }

@@ -2,7 +2,7 @@ package HAL.MotionController;
 
 import Drivers.CanonicalCommands.G00_G01;
 import Drivers.CanonicalCommands.OffsetMode;
-import Exceptions.HWCException;
+import Interpreter.InterpreterException;
 import Interpreter.Motion.Point;
 
 public class MCCommandStraightMotion 
@@ -15,7 +15,7 @@ public class MCCommandStraightMotion
 	
 	public MCCommandStraightMotion(Point start, 
 						 		   Point end, 
-						 		   G00_G01 prototype) throws HWCException {
+						 		   G00_G01 prototype) throws InterpreterException {
 		super(start, 
 			  end, 
 			  prototype.getVelocity(), 
@@ -24,7 +24,7 @@ public class MCCommandStraightMotion
 		this.prototype_ = prototype;
 	}
 
-	public MCCommandStraightMotion(G00_G01 prototype, double kerf_offset) throws HWCException {
+	public MCCommandStraightMotion(G00_G01 prototype, double kerf_offset) throws InterpreterException {
 		super(prototype.getStart().clone(), 
 			  prototype.getEnd().clone(), 
 			  prototype.getVelocity(), 
@@ -43,7 +43,7 @@ public class MCCommandStraightMotion
 		}
 	}
 
-	public MCCommandStraightMotion newSubLine(double lengthStart, double lengthEnd) throws HWCException {
+	public MCCommandStraightMotion newSubLine(double lengthStart, double lengthEnd) throws InterpreterException {
 		
 		Point newStart = this.getStart();
 		Point newEnd = this.getEnd();
@@ -87,7 +87,7 @@ public class MCCommandStraightMotion
 	@Override
 	public void setVelocityProfile(double startVel, 
 								   double endVel,
-								   double maxAccel) throws HWCException {
+								   double maxAccel) throws InterpreterException {
 		// check required acceleration
 		double l = this.length();
 		double dT = (endVel + startVel)/2.0/l;
@@ -95,7 +95,7 @@ public class MCCommandStraightMotion
 		if(Math.abs(ac) <= maxAccel){ // acceleration in limits
 			this.setStartVel(startVel);
 			this.setEndVel(endVel);
-		} else throw new HWCException("Acceleration out of limits");
+		} else throw new InterpreterException("Acceleration out of limits");
 	}
 
 }

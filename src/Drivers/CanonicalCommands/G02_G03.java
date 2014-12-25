@@ -1,6 +1,6 @@
 package Drivers.CanonicalCommands;
 
-import Exceptions.HWCException;
+import Interpreter.InterpreterException;
 import Interpreter.Motion.Point;
 
 public class G02_G03 extends G00_G01 {
@@ -15,7 +15,7 @@ public class G02_G03 extends G00_G01 {
 				   ArcDirection arcDirection,
 				   Velocity velocity,
 				   MotionMode mode,
-				   OffsetMode offsetMode) throws HWCException {
+				   OffsetMode offsetMode) throws InterpreterException {
 		super(startPoint, endPoint, velocity, mode, offsetMode);
 
 		this.center_ = centerPoint;

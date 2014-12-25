@@ -1,6 +1,6 @@
 package Interpreter.Expression;
 
-import Exceptions.GcodeRuntimeException;
+import Interpreter.InterpreterException;
 import Interpreter.Expression.Tokens.TokenEnum;
 
 public class CommandPair { // pair of command indrntifier alfa and associated expression
@@ -13,7 +13,7 @@ public class CommandPair { // pair of command indrntifier alfa and associated ex
 		this.commandExpression_ = exp;
 	}
 	
-	public double getCurrentValue() throws GcodeRuntimeException {
+	public double getCurrentValue() throws InterpreterException {
 		return this.commandExpression_.evalute();
 	}
 

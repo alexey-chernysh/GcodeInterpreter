@@ -1,6 +1,6 @@
 package Drivers.CanonicalCommands;
 
-import Exceptions.HWCException;
+import Interpreter.InterpreterException;
 import Interpreter.Motion.Point;
 
 public class G00_G01 extends GCommand {
@@ -15,11 +15,11 @@ public class G00_G01 extends GCommand {
 				   Point end,
 				   Velocity velocity,
 				   MotionMode mode,
-				   OffsetMode offsetMode) throws HWCException{ // all motions are absolute to current home point
+				   OffsetMode offsetMode) throws InterpreterException{ // all motions are absolute to current home point
 		if(start != null) this.start_ = start;
-		else throw new HWCException("Null start point in motion command");
+		else throw new InterpreterException("Null start point in motion command");
 		if(end != null) this.end_ = end;
-		else throw new HWCException("Null end point in motion command");
+		else throw new InterpreterException("Null end point in motion command");
 		this.velocity_ =  velocity;
 		this.mode_ = mode;
 		this.offsetMode_ = offsetMode;

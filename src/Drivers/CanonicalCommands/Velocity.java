@@ -1,6 +1,6 @@
 package Drivers.CanonicalCommands;
 
-import Exceptions.HWCException;
+import Interpreter.InterpreterException;
 import Settings.Settings;
 
 public class Velocity {
@@ -8,15 +8,15 @@ public class Velocity {
 	private VelocityType type_;
 	private double value;
 	
-	public Velocity(double v) throws HWCException{
+	public Velocity(double v) throws InterpreterException{
 		type_ = VelocityType.OVERRIDES;
 		if(v <= 0.0) value = v;
-		else throw new HWCException("Illegal velocity value");
+		else throw new InterpreterException("Illegal velocity value");
 	}
 	
-	public Velocity(VelocityType t) throws HWCException{
+	public Velocity(VelocityType t) throws InterpreterException{
 		if(t != VelocityType.OVERRIDES) type_ = t;
-		else throw new HWCException("Illegal velocity type");
+		else throw new InterpreterException("Illegal velocity type");
 	}
 	
 	public double getValue(){
