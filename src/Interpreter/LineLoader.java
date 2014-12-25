@@ -4,10 +4,7 @@ import Interpreter.Expression.CommandLineLoader;
 import Interpreter.Expression.CommandPair;
 import Interpreter.Expression.ExpressionGeneral;
 import Interpreter.Expression.Variables.ExpressionVarAssignment;
-import Interpreter.Motion.Motion;
-import Interpreter.Motion.Offset;
 import Interpreter.State.InterpreterState;
-import Interpreter.State.ModalState.GcommandModalGroupSet;
 import Interpreter.State.ModalState.GcommandSet;
 import Interpreter.State.ModalState.McommandSet;
 
@@ -40,7 +37,6 @@ public class LineLoader extends CommandLineLoader {
 	private GcommandSet G93_G94_G95 = GcommandSet.GDUMMY;
 	private GcommandSet G98_G99     = GcommandSet.GDUMMY;
 	private GcommandSet G_MOTION    = GcommandSet.GDUMMY;
-	public final LineValueList valueList_ = new LineValueList();
 
 	public LineLoader(String s, int programNumber) throws InterpreterException{
 		super(s, programNumber);

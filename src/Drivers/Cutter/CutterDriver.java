@@ -99,7 +99,7 @@ public class CutterDriver implements GeneralDriver {
 				// working with cutting lines and arc only
 				Object prevCuttingCommand = PreviousCutting(i);
 				Object nextCuttingCommand = NextCutting(i);
-				double neededVelocity = ((MCCommandStraightMotion)currentCommand).getVelocity().getValue();
+				double neededVelocity = ((MCCommandStraightMotion)currentCommand).getVelocity();
 				if(prevCuttingCommand == null){ 
 					// first cutting after perforation - inserting slow perforation phase 
 					if(itsCuttingLine){

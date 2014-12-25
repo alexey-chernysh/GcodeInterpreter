@@ -27,7 +27,7 @@ public class CommandPair { // pair of command indrntifier alfa and associated ex
 	
 	@Override
 	public String toString(){
-		return this.type_.alfa_ + this.commandExpression_.toString() + " ";
+		return this.type_.alfa_ + "=" + this.commandExpression_.toString();
 	}
 	
 	public enum CNCWordEnum {
@@ -47,5 +47,4 @@ public class CommandPair { // pair of command indrntifier alfa and associated ex
 		Y,
 		Z;
 	}
-
 }

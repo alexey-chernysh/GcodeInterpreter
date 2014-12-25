@@ -8,12 +8,12 @@ public class G00_G01 extends GCommand {
 	private MotionMode mode_;
 	protected Point start_;
 	protected Point end_;
-	private Velocity velocity_;
+	private double velocity_;
 	private OffsetMode offsetMode_; 
 	
 	public G00_G01(Point start,
 				   Point end,
-				   Velocity velocity,
+				   double velocity,
 				   MotionMode mode,
 				   OffsetMode offsetMode) throws InterpreterException{ // all motions are absolute to current home point
 		if(start != null) this.start_ = start;
@@ -45,7 +45,7 @@ public class G00_G01 extends GCommand {
 		return mode_;
 	}
 
-	public Velocity getVelocity() {
+	public double getVelocity() {
 		return velocity_;
 	}
 

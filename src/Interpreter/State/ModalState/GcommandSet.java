@@ -1,20 +1,42 @@
 package Interpreter.State.ModalState;
 
 import Drivers.CanonicalCommands.G00_G01;
+import Drivers.CanonicalCommands.MotionMode;
 import Interpreter.InterpreterException;
+import Interpreter.ProgramLoader;
 import Interpreter.Expression.LineCommandPairList;
+import Interpreter.Motion.Point;
 import Interpreter.State.InterpreterState;
 
 public enum GcommandSet {
 	G0(0.0, GcommandModalGroupSet.G_GROUP1_MOTION){ // Rapid positioning
 		@Override
-		public void evalute(LineCommandPairList words) throws InterpreterException { // Start cutter radius compensation left
+		public void evalute(LineCommandPairList words) throws InterpreterException { 
 			InterpreterState.modalState.set(modalGroup, this);
-			// generate HAL command
-//			G00_G01 newG0 = new G00_G01(null, null, null, null, null);
+			Point startPoint = InterpreterState.getLastPosition();
+			Point endPoint = InterpreterState.modalState.getPoint(startPoint, words);
+			G00_G01 newG0 = new G00_G01(startPoint, 
+										endPoint, 
+										InterpreterState.feedRate.getRapidFeedRate(), 
+										MotionMode.FREE, 
+										null);
+			ProgramLoader.hal_commands.add(newG0);
 		}
 	}, 
-	G1(1.0, GcommandModalGroupSet.G_GROUP1_MOTION), // Linear interpolation
+	G1(1.0, GcommandModalGroupSet.G_GROUP1_MOTION){ // Linear interpolation
+		@Override
+		public void evalute(LineCommandPairList words) throws InterpreterException {
+			InterpreterState.modalState.set(modalGroup, this);
+			Point startPoint = InterpreterState.getLastPosition();
+			Point endPoint = InterpreterState.modalState.getPoint(startPoint, words);
+			G00_G01 newG1 = new G00_G01(startPoint, 
+										endPoint, 
+										InterpreterState.feedRate.getRapidFeedRate(), 
+										MotionMode.WORK, 
+										InterpreterState.modalState.getCutterRadiusOffsetMode());
+			ProgramLoader.hal_commands.add(newG1);
+		}
+	}, 
 	G2(2.0, GcommandModalGroupSet.G_GROUP1_MOTION), // Clockwise circular/helical interpolation
 	G3(3.0, GcommandModalGroupSet.G_GROUP1_MOTION), // Counterclockwise circular/Helical interpolation
 	G4(4.0, GcommandModalGroupSet.G_GROUP0_G4_DWELL), // Dwell
@@ -36,7 +58,7 @@ public enum GcommandSet {
 	}, 
 	G41(41.0, GcommandModalGroupSet.G_GROUP7_CUTTER_RADIUS_COMPENSATION){ // Start cutter radius compensation left
 		@Override
-		public void evalute(LineCommandPairList words) throws InterpreterException{ // Start cutter radius compensation left
+		public void evalute(LineCommandPairList words) throws InterpreterException{ 
 			if(InterpreterState.modalState.getGModalState(GcommandModalGroupSet.G_GROUP2_PLANE) != G17)
 				throw new InterpreterException("Kerf offset possible in  XY plane only");
 			InterpreterState.modalState.set(modalGroup, this);

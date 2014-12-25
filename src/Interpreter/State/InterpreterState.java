@@ -14,8 +14,8 @@ public class InterpreterState {
 
 	public static boolean IsBlockDelete = true;
 
-	private static Point referencePoint = new Point(0.0,0.0);
-	private static Point controlPoint = new Point(0.0,0.0);
+	private static Point homePosition = new Point(0.0,0.0);
+	private static Point lastPosition = new Point(0.0,0.0);
 	private static double currentFeedRate_ = 0.0; // max velocity mm in sec
 
 	public static ModalState modalState = new ModalState();
@@ -43,18 +43,22 @@ public class InterpreterState {
 	}
 	
 	public static double getHomePointX() {
-		return InterpreterState.referencePoint.getX();
+		return InterpreterState.homePosition.getX();
 	}
 	
 	public static double getHomePointY() {
-		return InterpreterState.referencePoint.getY();
+		return InterpreterState.homePosition.getY();
 	}
 	
 	public static void setHomePoint(double X, double Y) {
-		InterpreterState.referencePoint.setX(InterpreterState.referencePoint.getX() + X);
-		InterpreterState.controlPoint.setX(InterpreterState.controlPoint.getX() - X);
-		InterpreterState.referencePoint.setY(InterpreterState.referencePoint.getY() + Y);
-		InterpreterState.controlPoint.setY(InterpreterState.controlPoint.getY() - Y);
+		InterpreterState.homePosition.setX(InterpreterState.homePosition.getX() + X);
+		InterpreterState.lastPosition.setX(InterpreterState.lastPosition.getX() - X);
+		InterpreterState.homePosition.setY(InterpreterState.homePosition.getY() + Y);
+		InterpreterState.lastPosition.setY(InterpreterState.lastPosition.getY() - Y);
+	}
+
+	public static Point getLastPosition() {
+		return InterpreterState.lastPosition;
 	}
 
 }

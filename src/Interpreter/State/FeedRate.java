@@ -7,7 +7,7 @@ public class FeedRate extends OverrideSwitch {
 
 	private double max_ = 2000; // mm/sec
 	private double default_ = 2000; 
-	private double current_ = default_;
+	private double current_ = 0;
 	
 	public FeedRate(){
 		//TODO save & restore
@@ -47,6 +47,11 @@ public class FeedRate extends OverrideSwitch {
 		} else {
 			this.current_ = this.max_;
 		}
+	}
+
+	public double getRapidFeedRate() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 	
 }

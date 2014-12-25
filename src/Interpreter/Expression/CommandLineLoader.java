@@ -40,16 +40,16 @@ public class CommandLineLoader extends TokenSequence {
 						CommandPair newWord = new CommandPair(currentWord, numExp);
 						switch( currentWord ){
 						case A:
-							this.wordList_.addWord(CNCWordEnum.A, newWord);
+							this.wordList_.addWord(CNCWordEnum.A, numExp);
 							break;
 						case B:
-							this.wordList_.addWord(CNCWordEnum.B, newWord);
+							this.wordList_.addWord(CNCWordEnum.B, numExp);
 							break;
 						case C:
-							this.wordList_.addWord(CNCWordEnum.C, newWord);
+							this.wordList_.addWord(CNCWordEnum.C, numExp);
 							break;
 						case D:
-							this.wordList_.addWord(CNCWordEnum.D, newWord);
+							this.wordList_.addWord(CNCWordEnum.D, numExp);
 							break;
 						case F:
 							this.commandSet_.addCommand(newWord);
@@ -58,31 +58,31 @@ public class CommandLineLoader extends TokenSequence {
 							this.commandSet_.addCommand(newWord);
 							break;
 						case H:
-							this.wordList_.addWord(CNCWordEnum.H, newWord);
+							this.wordList_.addWord(CNCWordEnum.H, numExp);
 							break;
 						case I:
-							this.wordList_.addWord(CNCWordEnum.I, newWord);
+							this.wordList_.addWord(CNCWordEnum.I, numExp);
 							break;
 						case J:
-							this.wordList_.addWord(CNCWordEnum.J, newWord);
+							this.wordList_.addWord(CNCWordEnum.J, numExp);
 							break;
 						case K:
-							this.wordList_.addWord(CNCWordEnum.K, newWord);
+							this.wordList_.addWord(CNCWordEnum.K, numExp);
 							break;
 						case L:
-							this.wordList_.addWord(CNCWordEnum.L, newWord);
+							this.wordList_.addWord(CNCWordEnum.L, numExp);
 							break;
 						case M:
 							this.commandSet_.addCommand(newWord);
 							break;
 						case P:
-							this.wordList_.addWord(CNCWordEnum.P, newWord);
+							this.wordList_.addWord(CNCWordEnum.P, numExp);
 							break;
 						case Q:
-							this.wordList_.addWord(CNCWordEnum.Q, newWord);
+							this.wordList_.addWord(CNCWordEnum.Q, numExp);
 							break;
 						case R:
-							this.wordList_.addWord(CNCWordEnum.R, newWord);
+							this.wordList_.addWord(CNCWordEnum.R, numExp);
 							break;
 						case S:
 							this.commandSet_.addCommand(newWord);
@@ -91,22 +91,22 @@ public class CommandLineLoader extends TokenSequence {
 							this.commandSet_.addCommand(newWord);
 							break;
 						case U:
-							this.wordList_.addWord(CNCWordEnum.A, newWord);
+							this.wordList_.addWord(CNCWordEnum.A, numExp);
 							break;
 						case V:
-							this.wordList_.addWord(CNCWordEnum.B, newWord);
+							this.wordList_.addWord(CNCWordEnum.B, numExp);
 							break;
 						case W:
-							this.wordList_.addWord(CNCWordEnum.C, newWord);
+							this.wordList_.addWord(CNCWordEnum.C, numExp);
 							break;
 						case X:
-							this.wordList_.addWord(CNCWordEnum.X, newWord);
+							this.wordList_.addWord(CNCWordEnum.X, numExp);
 							break;
 						case Y:
-							this.wordList_.addWord(CNCWordEnum.Y, newWord);
+							this.wordList_.addWord(CNCWordEnum.Y, numExp);
 							break;
 						case Z:
-							this.wordList_.addWord(CNCWordEnum.Z, newWord);
+							this.wordList_.addWord(CNCWordEnum.Z, numExp);
 							break;
 						default:
 							throw new InterpreterException("Unsupported word", t.getStart());
