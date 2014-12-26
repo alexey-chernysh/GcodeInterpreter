@@ -30,21 +30,4 @@ public class CommandPair { // pair of command indrntifier alfa and associated ex
 		return this.type_.getAlfa() + "=" + this.commandExpression_.toString();
 	}
 	
-	public enum CNCWordEnum {
-		A,
-		B,
-		C,
-		D,
-		H,
-		I,
-		J,
-		K,
-		L,
-		P,
-		Q,
-		R,
-		X,
-		Y,
-		Z;
-	}
 }

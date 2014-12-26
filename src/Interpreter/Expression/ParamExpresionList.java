@@ -1,11 +1,11 @@
 package Interpreter.Expression;
 
 import Interpreter.InterpreterException;
-import Interpreter.Expression.CommandPair.CNCWordEnum;
+import Interpreter.Expression.Tokens.TokenParameter;
 
 public class ParamExpresionList {
 	
-	private static final int size_ = CNCWordEnum.Z.ordinal() + 1;
+	private static final int size_ = TokenParameter.Z.ordinal() + 1;
 	private ExpressionGeneral[] expressionList = new ExpressionGeneral[size_];
 	
 	public
@@ -15,7 +15,7 @@ public class ParamExpresionList {
 		}
 	};
 
-	public void addWord(CNCWordEnum w, ExpressionGeneral e) throws InterpreterException{ 
+	public void addWord(TokenParameter w, ExpressionGeneral e) throws InterpreterException{ 
 		int n = w.ordinal();
 		if(expressionList[n] == null) expressionList[n] = e;
 		else throw new InterpreterException("Twice parameter");
@@ -36,23 +36,23 @@ public class ParamExpresionList {
 		for(int i=0; i<ParamExpresionList.size_; i++){
 			ExpressionGeneral currentExp = this.expressionList[i];
 			if(currentExp != null){
-				result += CNCWordEnum.values()[i].toString() + " " + currentExp.toString();
+				result += TokenParameter.values()[i].toString() + " " + currentExp.toString();
 			};
 		}
 		
 		return result;
 	}
 
-	public boolean has(CNCWordEnum word){
+	public boolean has(TokenParameter word){
 		if(expressionList[word.ordinal()] != null) return true;
 		else return false;
 	}
 	
 	public boolean hasXYZ() {
-		return (has(CNCWordEnum.X)||has(CNCWordEnum.Y)||has(CNCWordEnum.Z));
+		return (has(TokenParameter.X)||has(TokenParameter.Y)||has(TokenParameter.Z));
 	}
 
-	public double get(CNCWordEnum word) throws InterpreterException {
+	public double get(TokenParameter word) throws InterpreterException {
 		int i = word.ordinal();
 		if(expressionList[i] != null){
 			return expressionList[i].evalute();

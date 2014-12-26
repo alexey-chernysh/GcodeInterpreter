@@ -1,13 +1,12 @@
 package Interpreter.Expression;
 
 import Interpreter.InterpreterException;
-import Interpreter.Expression.CommandPair.CNCWordEnum;
 import Interpreter.Expression.Tokens.Token;
 import Interpreter.Expression.Tokens.TokenAlfa;
 import Interpreter.Expression.Tokens.TokenCommand;
 import Interpreter.Expression.Tokens.TokenComment;
 import Interpreter.Expression.Tokens.TokenDefaultFields;
-import Interpreter.Expression.Tokens.TokenFunction;
+import Interpreter.Expression.Tokens.TokenAlgebra;
 import Interpreter.Expression.Tokens.TokenList;
 import Interpreter.Expression.Tokens.TokenParameter;
 import Interpreter.Expression.Tokens.TokenSequence;
@@ -69,68 +68,68 @@ public class CommandLineLoader extends TokenSequence {
 					case PARAMETER:
 						switch( (TokenParameter)currentWord ){
 						case A:
-							this.wordList_.addWord(CNCWordEnum.A, numExp);
+							this.wordList_.addWord(TokenParameter.A, numExp);
 							break;
 						case B:
-							this.wordList_.addWord(CNCWordEnum.B, numExp);
+							this.wordList_.addWord(TokenParameter.B, numExp);
 							break;
 						case C:
-							this.wordList_.addWord(CNCWordEnum.C, numExp);
+							this.wordList_.addWord(TokenParameter.C, numExp);
 							break;
 						case D:
-							this.wordList_.addWord(CNCWordEnum.D, numExp);
+							this.wordList_.addWord(TokenParameter.D, numExp);
 							break;
 						case H:
-							this.wordList_.addWord(CNCWordEnum.H, numExp);
+							this.wordList_.addWord(TokenParameter.H, numExp);
 							break;
 						case I:
-							this.wordList_.addWord(CNCWordEnum.I, numExp);
+							this.wordList_.addWord(TokenParameter.I, numExp);
 							break;
 						case J:
-							this.wordList_.addWord(CNCWordEnum.J, numExp);
+							this.wordList_.addWord(TokenParameter.J, numExp);
 							break;
 						case K:
-							this.wordList_.addWord(CNCWordEnum.K, numExp);
+							this.wordList_.addWord(TokenParameter.K, numExp);
 							break;
 						case L:
-							this.wordList_.addWord(CNCWordEnum.L, numExp);
+							this.wordList_.addWord(TokenParameter.L, numExp);
 							break;
 						case P:
-							this.wordList_.addWord(CNCWordEnum.P, numExp);
+							this.wordList_.addWord(TokenParameter.P, numExp);
 							break;
 						case Q:
-							this.wordList_.addWord(CNCWordEnum.Q, numExp);
+							this.wordList_.addWord(TokenParameter.Q, numExp);
 							break;
 						case R:
-							this.wordList_.addWord(CNCWordEnum.R, numExp);
+							this.wordList_.addWord(TokenParameter.R, numExp);
 							break;
 						case U:
-							this.wordList_.addWord(CNCWordEnum.A, numExp);
+							this.wordList_.addWord(TokenParameter.A, numExp);
 							break;
 						case V:
-							this.wordList_.addWord(CNCWordEnum.B, numExp);
+							this.wordList_.addWord(TokenParameter.B, numExp);
 							break;
 						case W:
-							this.wordList_.addWord(CNCWordEnum.C, numExp);
+							this.wordList_.addWord(TokenParameter.C, numExp);
 							break;
 						case X:
-							this.wordList_.addWord(CNCWordEnum.X, numExp);
+							this.wordList_.addWord(TokenParameter.X, numExp);
 							break;
 						case Y:
-							this.wordList_.addWord(CNCWordEnum.Y, numExp);
+							this.wordList_.addWord(TokenParameter.Y, numExp);
 							break;
 						case Z:
-							this.wordList_.addWord(CNCWordEnum.Z, numExp);
+							this.wordList_.addWord(TokenParameter.Z, numExp);
 							break;
 						default:
 							throw new InterpreterException("Unsupported word", t.getStart());
 						}
 						break;
 					case MISC:
-						switch( (TokenFunction)currentWord ){
+						switch( (TokenAlgebra)currentWord ){
 						case VAR:
 							t = this.tokenList.get(this.tokenList.getNextIndex()).setParsed();
-							if(((TokenAlfa)t).getType() == TokenFunction.ASSIGN){
+							if(((TokenAlfa)t).getType() == TokenAlgebra.ASSIGN){
 								ExpressionGeneral varValueExp = getItem(this.tokenList);
 								ExpressionVarAssignment newVarAssign = new ExpressionVarAssignment(numExp, varValueExp);
 								this.varAssignmentSet_.add(newVarAssign);
@@ -165,7 +164,7 @@ public class CommandLineLoader extends TokenSequence {
 			ExpressionGeneral item2 = getItem(list);
 			return getSubExpression(list, Operator1, item1, item2);
 		} else {
-			if(Operator1 == TokenFunction.RIGHT_BRACKET){
+			if(Operator1 == TokenAlgebra.RIGHT_BRACKET){
 				return item1;
 			} else throw new InterpreterException("Binary operator needed", 0);
 		}
@@ -179,13 +178,13 @@ public class CommandLineLoader extends TokenSequence {
 		if(Operator2.getGroup() == TokenGroup.ALGEBRA){
 			ExpressionGeneral item3 = getItem(list);
 			if(Operator1.getPrecedence() <= Operator2.getPrecedence()){
-				return getSubExpression(list, Operator2, new ExpressionFunction((TokenFunction)Operator1, item1, item2), item3);
+				return getSubExpression(list, Operator2, new ExpressionFunction((TokenAlgebra)Operator1, item1, item2), item3);
 			} else {
-				return new ExpressionFunction((TokenFunction)Operator1, item1, getSubExpression(list, Operator2, item2, item3));
+				return new ExpressionFunction((TokenAlgebra)Operator1, item1, getSubExpression(list, Operator2, item2, item3));
 			}
 		} else {
-			if(Operator2 == TokenFunction.RIGHT_BRACKET){
-				return new ExpressionFunction((TokenFunction)Operator1, item1, item2);
+			if(Operator2 == TokenAlgebra.RIGHT_BRACKET){
+				return new ExpressionFunction((TokenAlgebra)Operator1, item1, item2);
 			} else throw new InterpreterException("Binary operator needed", 0);
 		}
 	}
@@ -210,25 +209,25 @@ public class CommandLineLoader extends TokenSequence {
 							t = list.get(index);
 							t.setParsed();
 							ExpressionGeneral funArg1 = null;
-							if((t instanceof TokenAlfa)&&(((TokenAlfa)t).getType() == TokenFunction.LEFT_BRACKET)){
+							if((t instanceof TokenAlfa)&&(((TokenAlfa)t).getType() == TokenAlgebra.LEFT_BRACKET)){
 								funArg1 = this.getExpression(list);
 							} else throw new InterpreterException("Left bracket '[' requred", t.getStart());
-							if(funType != TokenFunction.ATAN){
-								result = new ExpressionFunction((TokenFunction)funType, funArg1);
+							if(funType != TokenAlgebra.ATAN){
+								result = new ExpressionFunction((TokenAlgebra)funType, funArg1);
 								return result;
 							}else{
 								index = list.getNextIndex();
 								if(index < list.size()){
 									t = list.get(index);
 									t.setParsed();
-									if((t instanceof TokenAlfa)&&(((TokenAlfa)t).getType() == TokenFunction.DIVIDE)){
+									if((t instanceof TokenAlfa)&&(((TokenAlfa)t).getType() == TokenAlgebra.DIVIDE)){
 										index = list.getNextIndex();
 										if(index < list.size()){
 											t = list.get(index);
 											t.setParsed();
-											if((t instanceof TokenAlfa)&&(((TokenAlfa)t).getType() == TokenFunction.LEFT_BRACKET)){
+											if((t instanceof TokenAlfa)&&(((TokenAlfa)t).getType() == TokenAlgebra.LEFT_BRACKET)){
 												ExpressionGeneral funArg2 = this.getExpression(list);
-												result = new ExpressionFunction((TokenFunction)funType, funArg1, funArg2);
+												result = new ExpressionFunction((TokenAlgebra)funType, funArg1, funArg2);
 												return result;
 											} else throw new InterpreterException("Left bracket '[' requred", t.getStart());
 										}else throw new InterpreterException("Unxpected end of frame string", t.getStart());
@@ -237,11 +236,11 @@ public class CommandLineLoader extends TokenSequence {
 							}
 						} else throw new InterpreterException("Unxpected end of frame string", t.getStart());
 				case ALGEBRA: // unary sign
-						switch((TokenFunction)(((TokenAlfa)t).getType())){ // unary operations + -
+						switch((TokenAlgebra)(((TokenAlfa)t).getType())){ // unary operations + -
 							case MINUS: // sign -, substitute as expression (0 - x)
 								ExpressionGeneral nextItem = this.getItem(list);
 								ExpressionValue  zero = new ExpressionValue(0.0);
-								result = (ExpressionGeneral) new ExpressionAlgebra(TokenFunction.MINUS, zero, nextItem);
+								result = (ExpressionGeneral) new ExpressionAlgebra(TokenAlgebra.MINUS, zero, nextItem);
 								return result;
 							case PLUS: // sign +, nothing to do
 								result = this.getItem(list);
@@ -250,7 +249,7 @@ public class CommandLineLoader extends TokenSequence {
 								throw new InterpreterException("Unsupported unary operation", t.getStart());
 						}
 				case MISC: 
-						switch((TokenFunction)(((TokenAlfa)t).getType())){ 
+						switch((TokenAlgebra)(((TokenAlfa)t).getType())){ 
 							case VAR: 
 								ExpressionGeneral varNum = this.getItem(list);
 								result = (ExpressionGeneral) new ExpressionVariable(varNum);

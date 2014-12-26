@@ -3,7 +3,7 @@ package Interpreter.State.ModalState;
 import Drivers.CanonicalCommands.OffsetMode;
 import Interpreter.InterpreterException;
 import Interpreter.Expression.ParamExpresionList;
-import Interpreter.Expression.CommandPair.CNCWordEnum;
+import Interpreter.Expression.Tokens.TokenParameter;
 import Interpreter.Motion.Point;
 import Interpreter.State.InterpreterState;
 
@@ -95,8 +95,8 @@ public class ModalState {
 	public Point getTargetPoint(Point refPoint, ParamExpresionList words) throws InterpreterException {
 		double x, y;
 		if(words.hasXYZ()){
-			x = words.get(CNCWordEnum.X);
-			y = words.get(CNCWordEnum.Y);
+			x = words.get(TokenParameter.X);
+			y = words.get(TokenParameter.Y);
 		} else throw new InterpreterException("Insuficient parameters in command line");
 		Point resultPoint = refPoint.clone();
 		if(InterpreterState.modalState.isPolar()){
@@ -118,8 +118,8 @@ public class ModalState {
 	public Point getCenterPoint(Point refPoint, ParamExpresionList words) throws InterpreterException {
 		double x, y;
 		if(words.hasXYZ()){
-			x = words.get(CNCWordEnum.X);
-			y = words.get(CNCWordEnum.Y);
+			x = words.get(TokenParameter.X);
+			y = words.get(TokenParameter.Y);
 		} else throw new InterpreterException("Insuficient parameters in command line");
 		Point resultPoint = refPoint.clone();
 		if(InterpreterState.modalState.isPolar()){

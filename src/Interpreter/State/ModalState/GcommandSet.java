@@ -7,8 +7,8 @@ import Drivers.CanonicalCommands.G04;
 import Drivers.CanonicalCommands.MotionMode;
 import Interpreter.InterpreterException;
 import Interpreter.ProgramLoader;
-import Interpreter.Expression.CommandPair.CNCWordEnum;
 import Interpreter.Expression.ParamExpresionList;
+import Interpreter.Expression.Tokens.TokenParameter;
 import Interpreter.Motion.Point;
 import Interpreter.State.InterpreterState;
 
@@ -85,7 +85,7 @@ public enum GcommandSet {
 		@Override
 		public void evalute(ParamExpresionList words) throws InterpreterException {
 			InterpreterState.modalState.set(modalGroup, this);
-			double p = words.get(CNCWordEnum.P);
+			double p = words.get(TokenParameter.P);
 			if(p >= 0.0){
 				G04 newG4 = new G04(p);
 				ProgramLoader.hal_commands.add(newG4);

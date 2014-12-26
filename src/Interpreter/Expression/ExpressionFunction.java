@@ -1,28 +1,28 @@
 package Interpreter.Expression;
 
 import Interpreter.InterpreterException;
-import Interpreter.Expression.Tokens.TokenFunction;
+import Interpreter.Expression.Tokens.TokenAlgebra;
 
 public class ExpressionFunction extends ExpressionGeneral {
 
-	private TokenFunction fun_ = null;
+	private TokenAlgebra fun_ = null;
 	private ExpressionGeneral arg1 = null;
 	private ExpressionGeneral arg2 = null;
 
-	public ExpressionFunction(TokenFunction f, ExpressionGeneral a) {
+	public ExpressionFunction(TokenAlgebra f, ExpressionGeneral a) {
 		this.fun_ = f;
 		this.arg1 = a;
 		this.setConstant(this.arg1.isConstant());
 	}
 
-	public ExpressionFunction(TokenFunction f, ExpressionGeneral a1, ExpressionGeneral a2) {
+	public ExpressionFunction(TokenAlgebra f, ExpressionGeneral a1, ExpressionGeneral a2) {
 		this.fun_ = f;
 		this.arg1 = a1;
 		this.arg2 = a2;
 		if(this.arg1.isConstant() && this.arg2.isConstant()) this.setConstant(true);
 	}
 
-	public ExpressionFunction(TokenFunction f) {
+	public ExpressionFunction(TokenAlgebra f) {
 		this.fun_ = f;
 	}
 

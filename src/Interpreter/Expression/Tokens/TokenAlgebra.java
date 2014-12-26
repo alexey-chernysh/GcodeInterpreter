@@ -2,7 +2,7 @@ package Interpreter.Expression.Tokens;
 
 import Interpreter.InterpreterException;
 
-public enum TokenFunction implements TokenDefaultFields {
+public enum TokenAlgebra implements TokenDefaultFields {
 	
 	ABS ("ABS", TokenGroup.FUNCTION, -1){
 		@Override
@@ -176,7 +176,7 @@ public enum TokenFunction implements TokenDefaultFields {
 	private TokenGroup group_;
 	private int precedence_; // in order http://en.wikipedia.org/wiki/Order_of_operations
 	
-	private TokenFunction(String a, TokenGroup g, int p){
+	private TokenAlgebra(String a, TokenGroup g, int p){
 		alfa_ = a;
 		group_ = g;
 		precedence_ = p;

@@ -36,7 +36,7 @@ public class TokenSequence {
 	
 	private
 	void getAllAlfaTokens(String sourceString) {
-		for(TokenFunction tokFun: TokenFunction.values()){
+		for(TokenAlgebra tokFun: TokenAlgebra.values()){
 			String sample = tokFun.getAlfa();
 			int curTokenNum = 0;
 			while(curTokenNum < this.tokenList.size()){
