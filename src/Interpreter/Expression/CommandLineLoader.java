@@ -9,7 +9,7 @@ import Interpreter.Expression.Tokens.TokenEnum;
 import Interpreter.Expression.Tokens.TokenList;
 import Interpreter.Expression.Tokens.TokenSequence;
 import Interpreter.Expression.Tokens.TokenValue;
-import Interpreter.Expression.Tokens.TokenEnum.EnumTokenGroup;
+import Interpreter.Expression.Tokens.TokenGroup;
 import Interpreter.Expression.Variables.ExpressionVarAssignment;
 import Interpreter.Expression.Variables.ExpressionVariable;
 import Interpreter.Expression.Variables.VarAssignmentList;
@@ -35,8 +35,8 @@ public class CommandLineLoader extends TokenSequence {
 			if(t instanceof TokenAlfa){
 				ExpressionGeneral numExp = getItem(this.tokenList);
 				TokenEnum currentWord = ((TokenAlfa)t).getType();
-				switch( currentWord.group_ ){
-					case WORD:
+				switch( currentWord.getGroup() ){
+					case PARAMETER:
 						CommandPair newWord = new CommandPair(currentWord, numExp);
 						switch( currentWord ){
 						case A:
@@ -112,7 +112,7 @@ public class CommandLineLoader extends TokenSequence {
 							throw new InterpreterException("Unsupported word", t.getStart());
 						}
 						break;
-					case WORDINT:
+					case COMMAND:
 						switch( currentWord ){
 						case N:
 							this.lineNum_ = numExp.integerEvalute();
@@ -158,7 +158,7 @@ public class CommandLineLoader extends TokenSequence {
 		// left bracket occurred, so parse token list for Expression until right bracket
 		ExpressionGeneral item1 = getItem(list);
 		TokenEnum Operator1 = ((TokenAlfa)list.get(list.getNextIndex()).setParsed()).getType();
-		if(Operator1.group_ == EnumTokenGroup.ALGEBRA){
+		if(Operator1.getGroup() == TokenGroup.ALGEBRA){
 			ExpressionGeneral item2 = getItem(list);
 			return getSubExpression(list, Operator1, item1, item2);
 		} else {
@@ -173,9 +173,9 @@ public class CommandLineLoader extends TokenSequence {
 									   	   ExpressionGeneral item1, 
 									   	   ExpressionGeneral item2) throws InterpreterException {
 		TokenEnum Operator2 = ((TokenAlfa)list.get(list.getNextIndex()).setParsed()).getType();
-		if(Operator2.group_ == EnumTokenGroup.ALGEBRA){
+		if(Operator2.getGroup() == TokenGroup.ALGEBRA){
 			ExpressionGeneral item3 = getItem(list);
-			if(Operator1.precedence_ <= Operator2.precedence_){
+			if(Operator1.getPrecedence() <= Operator2.getPrecedence()){
 				return getSubExpression(list, Operator2, new ExpressionFunction(Operator1, item1, item2), item3);
 			} else {
 				return new ExpressionFunction(Operator1, item1, getSubExpression(list, Operator2, item2, item3));
@@ -199,7 +199,7 @@ public class CommandLineLoader extends TokenSequence {
 				result = new ExpressionValue(((TokenValue)t).getValue());
 				return result;
 			} else {
-				switch(((TokenAlfa)t).getType().group_){
+				switch(((TokenAlfa)t).getType().getGroup()){
 					case FUNCTION:
 						TokenEnum funType = ((TokenAlfa)t).getType();
 						index = list.getNextIndex();
