@@ -114,9 +114,14 @@ public enum GcommandSet {
 			if(InterpreterState.modalState.getGModalState(GcommandModalGroupSet.G_GROUP2_PLANE) != G17)
 				throw new InterpreterException("Kerf offset possible in  XY plane only");
 			InterpreterState.modalState.set(modalGroup, this);
+			int d = ;
 		}
 	}, // Start cutter radius compensation left
-	G42(42.0, GcommandModalGroupSet.G_GROUP7_CUTTER_RADIUS_COMPENSATION), // Start cutter radius compensation right
+	G42(42.0, GcommandModalGroupSet.G_GROUP7_CUTTER_RADIUS_COMPENSATION){ // Start cutter radius compensation right
+		if(InterpreterState.modalState.getGModalState(GcommandModalGroupSet.G_GROUP2_PLANE) != G17)
+			throw new InterpreterException("Kerf offset possible in  XY plane only");
+		InterpreterState.modalState.set(modalGroup, this);
+	}, 
 	G43(43.0, GcommandModalGroupSet.G_GROUP8_TOOL_LENGHT_OFFSET), // Apply tool length offset (plus)
 	G49(49.0, GcommandModalGroupSet.G_GROUP8_TOOL_LENGHT_OFFSET), // Cancel tool length offset
 	G50(50.0, GcommandModalGroupSet.G_GROUP18_SCALING), // Reset all scale factors to 1.0
@@ -150,7 +155,13 @@ public enum GcommandSet {
 	G90_1(90.1, GcommandModalGroupSet.G_GROUP4_ARC_DISTANCE_MODE), // Arc absolute distance mode
 	G91(91.0, GcommandModalGroupSet.G_GROUP3_DISTANCE_MODE), // Incremental distance mode
 	G91_1(91.1, GcommandModalGroupSet.G_GROUP4_ARC_DISTANCE_MODE), // Arc incremental distance mode
-	G92(92.0, GcommandModalGroupSet.G_GROUP0_NON_MODAL), // Offset coordinates and set parameters
+	G92(92.0, GcommandModalGroupSet.G_GROUP0_NON_MODAL){// Offset coordinates and set parameters
+		@Override
+		public void evalute(ParamExpresionList words) throws InterpreterException{
+			InterpreterState.setHomePoint(words.get(TokenParameter.X), 
+										  words.get(TokenParameter.Y));
+		};
+	}, 
 	G92_1(92.1, GcommandModalGroupSet.G_GROUP0_NON_MODAL), // Cancel G92 etc.
 	G92_2(92.2, GcommandModalGroupSet.G_GROUP0_NON_MODAL), // 
 	G92_3(92.3, GcommandModalGroupSet.G_GROUP0_NON_MODAL), // 

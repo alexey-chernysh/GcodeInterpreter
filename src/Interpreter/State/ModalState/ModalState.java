@@ -52,7 +52,8 @@ public class ModalState {
 			if(command.modalGroup == group){
 				g_state_[group.ordinal()] = command;
 			} else throw new InterpreterException("Changing modal state with command from another modal group");
-		} else throw new InterpreterException("Assiment non modal command to modal state");
+		} else 
+			throw new InterpreterException("Assiment non modal command to modal state");
 		
 	}
 	
