@@ -1,14 +1,14 @@
 package Interpreter.Expression;
 
 import Interpreter.InterpreterException;
-import Interpreter.Expression.Tokens.TokenEnum;
+import Interpreter.Expression.Tokens.TokenCommand;
 
 public class CommandPair { // pair of command indrntifier alfa and associated expression
 	
-	private TokenEnum type_;
+	private TokenCommand type_;
 	private ExpressionGeneral commandExpression_ = null;
 
-	public CommandPair(TokenEnum t, ExpressionGeneral exp){
+	public CommandPair(TokenCommand t, ExpressionGeneral exp){
 		this.type_ = t;
 		this.commandExpression_ = exp;
 	}
@@ -21,7 +21,7 @@ public class CommandPair { // pair of command indrntifier alfa and associated ex
 		return this.commandExpression_;
 	}
 	
-	public TokenEnum getType(){
+	public TokenCommand getType(){
 		return this.type_;
 	}
 	

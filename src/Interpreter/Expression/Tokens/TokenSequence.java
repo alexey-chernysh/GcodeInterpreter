@@ -36,8 +36,8 @@ public class TokenSequence {
 	
 	private
 	void getAllAlfaTokens(String sourceString) {
-		for(TokenEnum tok: TokenEnum.values()){
-			String sample = tok.getAlfa();
+		for(TokenFunction tokFun: TokenFunction.values()){
+			String sample = tokFun.getAlfa();
 			int curTokenNum = 0;
 			while(curTokenNum < this.tokenList.size()){
 				Token currentToken = this.tokenList.get(curTokenNum);
@@ -46,7 +46,41 @@ public class TokenSequence {
 					String source = sourceString.substring(startPos, currentToken.getEnd()+1);
 					int funPos = source.indexOf(sample);
 					if(funPos >= 0){
-						TokenAlfa newFun = new TokenAlfa(sourceString, tok, startPos+funPos,startPos+funPos+sample.length()-1);
+						TokenAlfa newFun = new TokenAlfa(sourceString, tokFun, startPos+funPos,startPos+funPos+sample.length()-1);
+						curTokenNum = this.tokenList.addNewToken(newFun, curTokenNum);
+					};
+				};
+				curTokenNum++;
+			}
+		}
+		for(TokenCommand tokComm: TokenCommand.values()){
+			String sample = tokComm.getAlfa();
+			int curTokenNum = 0;
+			while(curTokenNum < this.tokenList.size()){
+				Token currentToken = this.tokenList.get(curTokenNum);
+				if(currentToken instanceof TokenUnlexedText){
+					int startPos = currentToken.getStart();
+					String source = sourceString.substring(startPos, currentToken.getEnd()+1);
+					int funPos = source.indexOf(sample);
+					if(funPos >= 0){
+						TokenAlfa newFun = new TokenAlfa(sourceString, tokComm, startPos+funPos,startPos+funPos+sample.length()-1);
+						curTokenNum = this.tokenList.addNewToken(newFun, curTokenNum);
+					};
+				};
+				curTokenNum++;
+			}
+		}
+		for(TokenParameter tokParam: TokenParameter.values()){
+			String sample = tokParam.getAlfa();
+			int curTokenNum = 0;
+			while(curTokenNum < this.tokenList.size()){
+				Token currentToken = this.tokenList.get(curTokenNum);
+				if(currentToken instanceof TokenUnlexedText){
+					int startPos = currentToken.getStart();
+					String source = sourceString.substring(startPos, currentToken.getEnd()+1);
+					int funPos = source.indexOf(sample);
+					if(funPos >= 0){
+						TokenAlfa newFun = new TokenAlfa(sourceString, tokParam, startPos+funPos,startPos+funPos+sample.length()-1);
 						curTokenNum = this.tokenList.addNewToken(newFun, curTokenNum);
 					};
 				};

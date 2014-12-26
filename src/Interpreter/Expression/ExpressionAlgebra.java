@@ -1,17 +1,17 @@
 package Interpreter.Expression;
 
 import Interpreter.InterpreterException;
-import Interpreter.Expression.Tokens.TokenEnum;
+import Interpreter.Expression.Tokens.TokenFunction;
 
 public class ExpressionAlgebra extends ExpressionGeneral {
 	
-	private TokenEnum oper_;
+	private TokenFunction oper_;
 	private ExpressionGeneral arg1 = null;
 	private ExpressionGeneral arg2 = null;
 
-	public ExpressionAlgebra( TokenEnum o,
-								 ExpressionGeneral a1, 
-								 ExpressionGeneral a2) {
+	public ExpressionAlgebra( TokenFunction o,
+							  ExpressionGeneral a1, 
+							  ExpressionGeneral a2) {
 		this.oper_ = o; 
 		this.arg1 = a1;
 		this.arg2 = a2;

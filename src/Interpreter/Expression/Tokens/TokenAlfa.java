@@ -5,13 +5,13 @@ package Interpreter.Expression.Tokens;
 
 public class TokenAlfa extends Token {
 	
-	private TokenEnum type_;
+	private TokenDefaultFields type_;
 	
-	public	TokenAlfa(String st, TokenEnum t, int s, int e){
+	public	TokenAlfa(String st, TokenDefaultFields t, int s, int e){
 		super(st, s, e); 
 		this.type_ = t;
 	}
 	
-	public	TokenEnum getType(){ return this.type_; }
+	public	TokenDefaultFields getType(){ return this.type_; }
 
 }

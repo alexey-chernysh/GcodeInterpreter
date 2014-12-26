@@ -49,16 +49,6 @@ public enum TokenParameter implements TokenDefaultFields {
 	}
 	
 	@Override
-	public double evalute(double x) throws InterpreterException{
-		throw new InterpreterException("Token interpretation error");
-	}	
-
-	@Override
-	public double evalute(double x, double y) throws InterpreterException{
-		throw new InterpreterException("Token interpretation error");
-	}
-
-	@Override
 	public String getAlfa() {
 		return alfa_;
 	}

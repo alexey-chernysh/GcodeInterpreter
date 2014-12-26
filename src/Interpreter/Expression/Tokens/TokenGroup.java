@@ -5,8 +5,5 @@ public enum TokenGroup {
 	ALGEBRA,
 	PARAMETER,
 	COMMAND,
-	MISC,
-	VARREF,
-	BRACKET,
-	ASSIGNMENT;
+	MISC;
 }
