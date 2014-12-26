@@ -1,7 +1,7 @@
 package Drivers.CanonicalCommands;
 
 
-public class G40_G41_G42 extends GCommand {
+public class G40_G41_G42 extends CanonCommand {
 
 	private OffsetMode mode_;
 	

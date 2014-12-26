@@ -8,7 +8,7 @@ public enum McommandSet {
 	M1(1, McommandModalGroupSet.M_GROUP4_PROGRAM_CONTROL){}, // Optional program stop
 	M2(2, McommandModalGroupSet.M_GROUP4_PROGRAM_CONTROL){}, // Program end
 	M3(3, McommandModalGroupSet.M_GROUP7_SPINDLE_TURNING){}, // Rotate spindle clockwise
-	M4(4, McommandModalGroupSet.M_GROUP7_SPINDLE_TURNING){}, // Rotate spindle counterclckwise
+	M4(4, McommandModalGroupSet.M_GROUP7_SPINDLE_TURNING){}, // Rotate spindle counterclockwise
 	M5(5, McommandModalGroupSet.M_GROUP7_SPINDLE_TURNING){}, // Stop spindle rotation
 	M6(6, McommandModalGroupSet.M_GROUP6_TOOL_CHANGE){}, // Tool change (by two macros)
 	M7(7, McommandModalGroupSet.M_GROUP8_COOLANT){}, // Mist coolant on

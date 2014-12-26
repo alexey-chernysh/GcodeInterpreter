@@ -2,12 +2,12 @@ package Drivers;
 
 import java.util.ArrayList;
 
-import Drivers.CanonicalCommands.GCommand;
+import Drivers.CanonicalCommands.CanonCommand;
 import Interpreter.InterpreterException;
 
 public interface GeneralDriver {
 	
-	void loadProgram(ArrayList<GCommand> sourceCommands) throws InterpreterException; 
+	void loadProgram(ArrayList<CanonCommand> sourceCommands) throws InterpreterException; 
 	
 	void startProgram(); 
 	

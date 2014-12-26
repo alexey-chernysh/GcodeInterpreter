@@ -1,6 +1,6 @@
 package Drivers.CanonicalCommands;
 
-public class GCommand {
+public class CanonCommand {
 	
 	public void draw(){
 		

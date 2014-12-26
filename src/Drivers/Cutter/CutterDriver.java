@@ -7,8 +7,8 @@ import Drivers.CanonicalCommands.ArcDirection;
 import Drivers.CanonicalCommands.G00_G01;
 import Drivers.CanonicalCommands.G02_G03;
 import Drivers.CanonicalCommands.G04;
-import Drivers.CanonicalCommands.GCommand;
-import Drivers.CanonicalCommands.M7cutter;
+import Drivers.CanonicalCommands.CanonCommand;
+import Drivers.CanonicalCommands.M9cutter;
 import Drivers.CanonicalCommands.M8cutter;
 import Drivers.CanonicalCommands.MotionMode;
 import HAL.MotionController.MCCommandArcMotion;
@@ -21,7 +21,7 @@ public class CutterDriver implements GeneralDriver {
 	
 	private double kerf_offset_;
 	
-	private ArrayList<GCommand> sourceCommands_ = null; 
+	private ArrayList<CanonCommand> sourceCommands_ = null; 
 	private ArrayList<Object> commands_ = null;
 
 	public CutterDriver(double kerf_offset){
@@ -34,7 +34,7 @@ public class CutterDriver implements GeneralDriver {
 	
 	
 	@Override
-	public void loadProgram(ArrayList<GCommand> sourceCommands) throws InterpreterException{
+	public void loadProgram(ArrayList<CanonCommand> sourceCommands) throws InterpreterException{
 		
 		sourceCommands_ = sourceCommands;
 		addKerfWidthCompensation();
@@ -49,11 +49,11 @@ public class CutterDriver implements GeneralDriver {
 		// initial loading with changing points according kerf offset
 		int size = this.sourceCommands_.size();
 		for(int i=0; i<size; i++){
-			GCommand command = this.sourceCommands_.get(i);
+			CanonCommand command = this.sourceCommands_.get(i);
 			if(command instanceof G04){
 				// TODO add pause implementation
 			} else {
-				if(command instanceof M7cutter){
+				if(command instanceof M9cutter){
 					commands_.add(new CutterTorchOnOff(true));
 				} else {
 					if(command instanceof M8cutter){

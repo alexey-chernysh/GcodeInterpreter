@@ -8,7 +8,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-import Drivers.CanonicalCommands.GCommand;
+import Drivers.CanonicalCommands.CanonCommand;
 import Interpreter.State.InterpreterState;
 
 public class ProgramLoader {
@@ -16,7 +16,7 @@ public class ProgramLoader {
 	private String fileName_;
 	private static ArrayList<LineLoaderArray> sub_program_list = new ArrayList<LineLoaderArray>();
 	public static InterpreterState interpreterState;
-	public static ArrayList<GCommand> hal_commands = new ArrayList<GCommand>();
+	public static ArrayList<CanonCommand> hal_commands = new ArrayList<CanonCommand>();
 	
 	public  ProgramLoader(String fn) throws InterpreterException{
 		fileName_ = fn;

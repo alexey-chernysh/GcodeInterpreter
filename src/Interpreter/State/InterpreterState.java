@@ -17,6 +17,7 @@ public class InterpreterState {
 	private static Point homePosition = new Point(0.0,0.0);
 	private static Point lastPosition = new Point(0.0,0.0);
 	private static double currentFeedRate_ = 0.0; // max velocity mm in sec
+	private static double cutterRadius = 0.0;
 
 	public static ModalState modalState = new ModalState();
 	
@@ -63,6 +64,10 @@ public class InterpreterState {
 
 	public static void setLastPosition(Point newPos) {
 		InterpreterState.lastPosition = newPos;
+	}
+
+	public static void setCutterRadius(double offset) {
+		cutterRadius = offset;
 	}
 
 }

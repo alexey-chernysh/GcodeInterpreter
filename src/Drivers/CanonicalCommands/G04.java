@@ -1,6 +1,6 @@
 package Drivers.CanonicalCommands;
 
-public class G04 extends GCommand {
+public class G04 extends CanonCommand {
 
 	private double delay_; // milliseconds
 	

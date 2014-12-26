@@ -3,7 +3,7 @@ package Drivers.CanonicalCommands;
 import Interpreter.InterpreterException;
 import Interpreter.Motion.Point;
 
-public class G00_G01 extends GCommand {
+public class G00_G01 extends CanonCommand {
 	
 	private MotionMode mode_;
 	protected Point start_;

@@ -4,7 +4,9 @@ import Drivers.CanonicalCommands.ArcDirection;
 import Drivers.CanonicalCommands.G00_G01;
 import Drivers.CanonicalCommands.G02_G03;
 import Drivers.CanonicalCommands.G04;
+import Drivers.CanonicalCommands.G40_G41_G42;
 import Drivers.CanonicalCommands.MotionMode;
+import Drivers.CanonicalCommands.OffsetMode;
 import Interpreter.InterpreterException;
 import Interpreter.ProgramLoader;
 import Interpreter.Expression.ParamExpresionList;
@@ -98,15 +100,33 @@ public enum GcommandSet {
 	G15(15.0, GcommandModalGroupSet.G_GROUP17_POLAR_COORDINATES), // Polar coordinate moves in G0 and G1
 	G16(16.0, GcommandModalGroupSet.G_GROUP17_POLAR_COORDINATES), // Cancel polar coordinate moves
 	G17(17.0, GcommandModalGroupSet.G_GROUP2_PLANE), // XY Plane select
-	G18(18.0, GcommandModalGroupSet.G_GROUP2_PLANE), // XZ plane select
-	G19(19.0, GcommandModalGroupSet.G_GROUP2_PLANE), // YZ plane select
+	G18(18.0, GcommandModalGroupSet.G_GROUP2_PLANE){ // XZ plane select
+		@Override
+		public void evalute(ParamExpresionList words) throws InterpreterException{ 
+			if(InterpreterState.modalState.getGModalState(GcommandModalGroupSet.G_GROUP7_CUTTER_RADIUS_COMPENSATION) != G40)
+				throw new InterpreterException("Setting plane XZ incompatible with cutter radius compensation");
+		};
+	}, 
+	G19(19.0, GcommandModalGroupSet.G_GROUP2_PLANE){ // YZ plane select
+		@Override
+		public void evalute(ParamExpresionList words) throws InterpreterException{ 
+			if(InterpreterState.modalState.getGModalState(GcommandModalGroupSet.G_GROUP7_CUTTER_RADIUS_COMPENSATION) != G40)
+				throw new InterpreterException("Setting plane YZ incompatible with cutter radius compensation");
+		};
+	}, 
 	G20(20.0, GcommandModalGroupSet.G_GROUP6_UNITS), // Inch unit
-	G21(21.0, GcommandModalGroupSet.G_GROUP6_UNITS), // Millimetre unit
+	G21(21.0, GcommandModalGroupSet.G_GROUP6_UNITS), // Millimeter unit
 	G28(28.0, GcommandModalGroupSet.G_GROUP0_NON_MODAL), // Return home
 	G28_1(28.1, GcommandModalGroupSet.G_GROUP0_NON_MODAL), // Reference axes
 	G30(30.0, GcommandModalGroupSet.G_GROUP0_NON_MODAL), // Return home
 	G31(31.0, GcommandModalGroupSet.G_GROUP1_MOTION), // Straight probe
 	G40(40.0, GcommandModalGroupSet.G_GROUP7_CUTTER_RADIUS_COMPENSATION){ // Cancel cutter radius compensation
+		@Override
+		public void evalute(ParamExpresionList words) throws InterpreterException{ 
+			InterpreterState.modalState.set(modalGroup, this);
+			G40_G41_G42 newG40 = new G40_G41_G42(OffsetMode.NONE);
+			ProgramLoader.hal_commands.add(newG40);
+		};
 	}, 
 	G41(41.0, GcommandModalGroupSet.G_GROUP7_CUTTER_RADIUS_COMPENSATION){ // Start cutter radius compensation left
 		@Override
@@ -114,13 +134,35 @@ public enum GcommandSet {
 			if(InterpreterState.modalState.getGModalState(GcommandModalGroupSet.G_GROUP2_PLANE) != G17)
 				throw new InterpreterException("Kerf offset possible in  XY plane only");
 			InterpreterState.modalState.set(modalGroup, this);
-			int d = ;
-		}
+			double offset = -1.0;
+			int d = (int)words.get(TokenParameter.D);
+			if(d > 0){
+				offset = InterpreterState.toolSet.getToolRadius(d);
+			} else {
+				offset = words.get(TokenParameter.P);
+			};
+			if(offset > 0.0)InterpreterState.setCutterRadius(offset);
+			G40_G41_G42 newG41 = new G40_G41_G42(OffsetMode.LEFT);
+			ProgramLoader.hal_commands.add(newG41);
+		};
 	}, // Start cutter radius compensation left
 	G42(42.0, GcommandModalGroupSet.G_GROUP7_CUTTER_RADIUS_COMPENSATION){ // Start cutter radius compensation right
-		if(InterpreterState.modalState.getGModalState(GcommandModalGroupSet.G_GROUP2_PLANE) != G17)
-			throw new InterpreterException("Kerf offset possible in  XY plane only");
-		InterpreterState.modalState.set(modalGroup, this);
+		@Override
+		public void evalute(ParamExpresionList words) throws InterpreterException{ 
+			if(InterpreterState.modalState.getGModalState(GcommandModalGroupSet.G_GROUP2_PLANE) != G17)
+				throw new InterpreterException("Kerf offset possible in  XY plane only");
+			InterpreterState.modalState.set(modalGroup, this);
+			double offset = -1.0;
+			int d = (int)words.get(TokenParameter.D);
+			if(d > 0){
+				offset = InterpreterState.toolSet.getToolRadius(d);
+			} else {
+				offset = words.get(TokenParameter.P);
+			};
+			if(offset > 0.0)InterpreterState.setCutterRadius(offset);
+			G40_G41_G42 newG42 = new G40_G41_G42(OffsetMode.RIGHT);
+			ProgramLoader.hal_commands.add(newG42);
+		};
 	}, 
 	G43(43.0, GcommandModalGroupSet.G_GROUP8_TOOL_LENGHT_OFFSET), // Apply tool length offset (plus)
 	G49(49.0, GcommandModalGroupSet.G_GROUP8_TOOL_LENGHT_OFFSET), // Cancel tool length offset
@@ -169,7 +211,7 @@ public enum GcommandSet {
 	}, 
 	G94(94.0, GcommandModalGroupSet.G_GROUP5_FEED_RATE_MODE){ // Feed per minute mode
 	}, 
-	G95(95.0, GcommandModalGroupSet.G_GROUP5_FEED_RATE_MODE){ // Feed per rev mode
+	G95(95.0, GcommandModalGroupSet.G_GROUP5_FEED_RATE_MODE){ // Feed per revolution mode
 	}, 
 	G98(98.0, GcommandModalGroupSet.G_GROUP10_CANNED_CYCLES_RETURN_MODE), // Initial level return after canned cycles
 	G99(99.0, GcommandModalGroupSet.G_GROUP10_CANNED_CYCLES_RETURN_MODE), // R-point level return after canned cycles
