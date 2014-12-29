@@ -2,6 +2,7 @@ package Interpreter.Expression.Variables;
 
 import Interpreter.InterpreterException;
 import Interpreter.Expression.Tokens.TokenParameter;
+import Interpreter.Motion.Point;
 
 public class VariablesSet {
 	
@@ -245,6 +246,16 @@ public class VariablesSet {
 			else throw new InterpreterException("Illegal parameter number");
 		}
 		
+	}
+
+	public Point getHomePointG28() throws InterpreterException {
+		Point homePoint =  new Point(this.getX(G28HomePos_), this.getY(G28HomePos_));
+		return homePoint;
+	}
+	
+	public Point getHomePointG30() throws InterpreterException {
+		Point homePoint =  new Point(this.getX(G30HomePos_), this.getY(G30HomePos_));
+		return homePoint;
 	}
 	
 }

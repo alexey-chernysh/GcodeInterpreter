@@ -199,14 +199,30 @@ public enum GcommandSet {
 			} else new InterpreterException("For G12 pocket positive I parameter needed");
 		}
 	}, 
-	G15(15.0, GcommandModalGroupSet.G_GROUP17_POLAR_COORDINATES), // Polar coordinate moves in G0 and G1
-	G16(16.0, GcommandModalGroupSet.G_GROUP17_POLAR_COORDINATES), // Cancel polar coordinate moves
-	G17(17.0, GcommandModalGroupSet.G_GROUP2_PLANE), // XY Plane select
+	G15(15.0, GcommandModalGroupSet.G_GROUP17_POLAR_COORDINATES){ // Polar coordinate moves in G0 and G1
+		@Override
+		public void evalute(ParamExpresionList words) throws InterpreterException { 
+			InterpreterState.modalState.set(modalGroup, this);
+		}
+	}, 
+	G16(16.0, GcommandModalGroupSet.G_GROUP17_POLAR_COORDINATES){ // Cancel polar coordinate moves
+		@Override
+		public void evalute(ParamExpresionList words) throws InterpreterException { 
+			InterpreterState.modalState.set(modalGroup, this);
+		}
+	}, 
+	G17(17.0, GcommandModalGroupSet.G_GROUP2_PLANE){ // XY Plane select
+		@Override
+		public void evalute(ParamExpresionList words) throws InterpreterException { 
+			InterpreterState.modalState.set(modalGroup, this);
+		}
+	}, 
 	G18(18.0, GcommandModalGroupSet.G_GROUP2_PLANE){ // XZ plane select
 		@Override
 		public void evalute(ParamExpresionList words) throws InterpreterException { 
 			if(InterpreterState.modalState.getGModalState(GcommandModalGroupSet.G_GROUP7_CUTTER_RADIUS_COMPENSATION) != G40)
 				throw new InterpreterException("Setting plane XZ incompatible with cutter radius compensation");
+			InterpreterState.modalState.set(modalGroup, this);
 		}
 	}, 
 	G19(19.0, GcommandModalGroupSet.G_GROUP2_PLANE){ // YZ plane select
@@ -214,13 +230,72 @@ public enum GcommandSet {
 		public void evalute(ParamExpresionList words) throws InterpreterException{ 
 			if(InterpreterState.modalState.getGModalState(GcommandModalGroupSet.G_GROUP7_CUTTER_RADIUS_COMPENSATION) != G40)
 				throw new InterpreterException("Setting plane YZ incompatible with cutter radius compensation");
+			InterpreterState.modalState.set(modalGroup, this);
 		};
 	}, 
-	G20(20.0, GcommandModalGroupSet.G_GROUP6_UNITS), // Inch unit
-	G21(21.0, GcommandModalGroupSet.G_GROUP6_UNITS), // Millimeter unit
-	G28(28.0, GcommandModalGroupSet.G_GROUP0_NON_MODAL), // Return home
+	G20(20.0, GcommandModalGroupSet.G_GROUP6_UNITS){  // Inch unit
+		@Override
+		public void evalute(ParamExpresionList words) throws InterpreterException { 
+			InterpreterState.modalState.set(modalGroup, this);
+		}
+	},
+	G21(21.0, GcommandModalGroupSet.G_GROUP6_UNITS){ // Millimeter unit
+		@Override
+		public void evalute(ParamExpresionList words) throws InterpreterException { 
+			InterpreterState.modalState.set(modalGroup, this);
+		}
+	}, 
+	G28(28.0, GcommandModalGroupSet.G_GROUP0_NON_MODAL){ // Return home
+		@Override
+		public void evalute(ParamExpresionList words) throws InterpreterException { 
+			Point currentPoint = InterpreterState.getLastPosition();
+			Point intermediatePoint = words.getPoint();
+			if(intermediatePoint != null){
+				G00_G01 motion1 = new G00_G01(currentPoint, 
+						  					  intermediatePoint, 
+						  					  InterpreterState.feedRate.getRapidFeedRate(), 
+						  					  MotionMode.FREE, 
+						  					  null);
+				ProgramLoader.hal_commands.add(motion1);
+				InterpreterState.setLastPosition(intermediatePoint);
+				currentPoint = intermediatePoint;
+			};
+			Point homePoint  = InterpreterState.vars_.getHomePointG28();
+			G00_G01 motion2 = new G00_G01(currentPoint, 
+										  homePoint, 
+										  InterpreterState.feedRate.getRapidFeedRate(), 
+										  MotionMode.FREE, 
+										  null);
+			ProgramLoader.hal_commands.add(motion2);
+			InterpreterState.setLastPosition(homePoint);
+		}
+	}, 
 	G28_1(28.1, GcommandModalGroupSet.G_GROUP0_NON_MODAL), // Reference axes
-	G30(30.0, GcommandModalGroupSet.G_GROUP0_NON_MODAL), // Return home
+	G30(30.0, GcommandModalGroupSet.G_GROUP0_NON_MODAL){ // Return home
+		@Override
+		public void evalute(ParamExpresionList words) throws InterpreterException { 
+			Point currentPoint = InterpreterState.getLastPosition();
+			Point intermediatePoint = words.getPoint();
+			if(intermediatePoint != null){
+				G00_G01 motion1 = new G00_G01(currentPoint, 
+						  					  intermediatePoint, 
+						  					  InterpreterState.feedRate.getRapidFeedRate(), 
+						  					  MotionMode.FREE, 
+						  					  null);
+				ProgramLoader.hal_commands.add(motion1);
+				InterpreterState.setLastPosition(intermediatePoint);
+				currentPoint = intermediatePoint;
+			};
+			Point homePoint  = InterpreterState.vars_.getHomePointG30();
+			G00_G01 motion2 = new G00_G01(currentPoint, 
+										  homePoint, 
+										  InterpreterState.feedRate.getRapidFeedRate(), 
+										  MotionMode.FREE, 
+										  null);
+			ProgramLoader.hal_commands.add(motion2);
+			InterpreterState.setLastPosition(homePoint);
+		}
+	}, 
 	G31(31.0, GcommandModalGroupSet.G_GROUP1_MOTION), // Straight probe
 	G40(40.0, GcommandModalGroupSet.G_GROUP7_CUTTER_RADIUS_COMPENSATION){ // Cancel cutter radius compensation
 		@Override
@@ -268,8 +343,32 @@ public enum GcommandSet {
 	}, 
 	G43(43.0, GcommandModalGroupSet.G_GROUP8_TOOL_LENGHT_OFFSET), // Apply tool length offset (plus)
 	G49(49.0, GcommandModalGroupSet.G_GROUP8_TOOL_LENGHT_OFFSET), // Cancel tool length offset
-	G50(50.0, GcommandModalGroupSet.G_GROUP18_SCALING), // Reset all scale factors to 1.0
-	G51(51.0, GcommandModalGroupSet.G_GROUP18_SCALING), // Set axis data input scale factors
+	G50(50.0, GcommandModalGroupSet.G_GROUP18_SCALING){ // Reset all scale factors to 1.0
+		@Override
+		public void evalute(ParamExpresionList words) throws InterpreterException { 
+			InterpreterState.modalState.set(modalGroup, this);
+			InterpreterState.vars_.setScale(1.0, 1.0, 1.0, 1.0, 1.0, 1.0);
+		}
+	}, 
+	G51(51.0, GcommandModalGroupSet.G_GROUP18_SCALING){ // Set axis data input scale factors
+		@Override
+		public void evalute(ParamExpresionList words) throws InterpreterException { 
+			InterpreterState.modalState.set(modalGroup, this);
+			double X = 1.0;
+			double Y = 1.0;
+			double Z = 1.0;
+			double A = 1.0;
+			double B = 1.0;
+			double C = 1.0;
+			if(words.has(TokenParameter.X)) X = words.get(TokenParameter.X);
+			if(words.has(TokenParameter.Y)) X = words.get(TokenParameter.Y);
+			if(words.has(TokenParameter.Z)) X = words.get(TokenParameter.Z);
+			if(words.has(TokenParameter.A)) X = words.get(TokenParameter.A);
+			if(words.has(TokenParameter.B)) X = words.get(TokenParameter.B);
+			if(words.has(TokenParameter.C)) X = words.get(TokenParameter.C);
+			InterpreterState.vars_.setScale(X, Y, Z, A, B, C);
+		}
+	}, 
 	G52(52.0, GcommandModalGroupSet.G_GROUP0_NON_MODAL), // Temporary coordinate system offsets
 	G53(53.0, GcommandModalGroupSet.G_GROUP0_G53_MODIFIER), // Move in absolute machine coordinate system
 	G54(54.0, GcommandModalGroupSet.G_GROUP12_OFFSET_SELECTION), // Use fixture offset 1
@@ -282,8 +381,18 @@ public enum GcommandSet {
 	G64(64.0, GcommandModalGroupSet.G_GROUP13_PATH_CONTROL_MODE), // Constant Velocity mode
 	G68(68.0, GcommandModalGroupSet.G_GROUP16_COORDINATE_ROTATION), // Rotate program coordinate system
 	G69(69.0, GcommandModalGroupSet.G_GROUP16_COORDINATE_ROTATION), // Cancel program coordinate system rotation
-	G70(70.0, GcommandModalGroupSet.G_GROUP6_UNITS),  // Inch unit
-	G71(71.0, GcommandModalGroupSet.G_GROUP6_UNITS), // Millimetre unit
+	G70(70.0, GcommandModalGroupSet.G_GROUP6_UNITS){ // Inch unit
+		@Override
+		public void evalute(ParamExpresionList words) throws InterpreterException { 
+			G20.evalute(words);
+		}
+	},  
+	G71(71.0, GcommandModalGroupSet.G_GROUP6_UNITS){ // Millimetre unit
+		@Override
+		public void evalute(ParamExpresionList words) throws InterpreterException { 
+			G21.evalute(words);
+		}
+	}, 
 	G73(73.0, GcommandModalGroupSet.G_GROUP1_MOTION), // Canned cycle - peck drilling
 	G80(80.0, GcommandModalGroupSet.G_GROUP1_MOTION), // Cancel motion mode (including canned cycles)
 	G81(81.0, GcommandModalGroupSet.G_GROUP1_MOTION), // Canned cycle - drilling
@@ -295,10 +404,30 @@ public enum GcommandSet {
 	G87(87.0, GcommandModalGroupSet.G_GROUP1_MOTION), // Canned cycle - boring
 	G88(88.0, GcommandModalGroupSet.G_GROUP1_MOTION), // Canned cycle - boring
 	G89(89.0, GcommandModalGroupSet.G_GROUP1_MOTION), // Canned cycle - boring
-	G90(90.0, GcommandModalGroupSet.G_GROUP3_DISTANCE_MODE), // Absolute distance mode
-	G90_1(90.1, GcommandModalGroupSet.G_GROUP4_ARC_DISTANCE_MODE), // Arc absolute distance mode
-	G91(91.0, GcommandModalGroupSet.G_GROUP3_DISTANCE_MODE), // Incremental distance mode
-	G91_1(91.1, GcommandModalGroupSet.G_GROUP4_ARC_DISTANCE_MODE), // Arc incremental distance mode
+	G90(90.0, GcommandModalGroupSet.G_GROUP3_DISTANCE_MODE){ // Absolute distance mode
+		@Override
+		public void evalute(ParamExpresionList words) throws InterpreterException { 
+			InterpreterState.modalState.set(modalGroup, this);
+		}
+	}, // Absolute distance mode
+	G90_1(90.1, GcommandModalGroupSet.G_GROUP4_ARC_DISTANCE_MODE){ // Arc absolute distance mode
+		@Override
+		public void evalute(ParamExpresionList words) throws InterpreterException { 
+			InterpreterState.modalState.set(modalGroup, this);
+		}
+	}, 
+	G91(91.0, GcommandModalGroupSet.G_GROUP3_DISTANCE_MODE){ // Incremental distance mode
+		@Override
+		public void evalute(ParamExpresionList words) throws InterpreterException { 
+			InterpreterState.modalState.set(modalGroup, this);
+		}
+	}, 
+	G91_1(91.1, GcommandModalGroupSet.G_GROUP4_ARC_DISTANCE_MODE){ // Arc incremental distance mode
+		@Override
+		public void evalute(ParamExpresionList words) throws InterpreterException { 
+			InterpreterState.modalState.set(modalGroup, this);
+		}
+	}, 
 	G92(92.0, GcommandModalGroupSet.G_GROUP0_NON_MODAL){// Offset coordinates and set parameters
 		@Override
 		public void evalute(ParamExpresionList words) throws InterpreterException{

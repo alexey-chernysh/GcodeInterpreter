@@ -2,6 +2,7 @@ package Interpreter.Expression;
 
 import Interpreter.InterpreterException;
 import Interpreter.Expression.Tokens.TokenParameter;
+import Interpreter.Motion.Point;
 
 public class ParamExpresionList {
 	
@@ -54,18 +55,19 @@ public class ParamExpresionList {
 
 	public double get(TokenParameter word) throws InterpreterException {
 		int i = word.ordinal();
-		if(expressionList[i] != null){
-			return expressionList[i].evalute();
-		}
+		if(expressionList[i] != null) return expressionList[i].evalute();
 		else return 0.0;
 	}
 
 	public int getInt(TokenParameter word) throws InterpreterException {
 		int i = word.ordinal();
-		if(expressionList[i] != null){
-			return expressionList[i].integerEvalute();
-		}
+		if(expressionList[i] != null) return expressionList[i].integerEvalute();
 		else return 0;
+	}
+	
+	public Point getPoint() throws InterpreterException{
+		if(this.hasXYZ()) return new Point(this.get(TokenParameter.X), this.get(TokenParameter.Y));
+		else return null;
 	}
 
 }
