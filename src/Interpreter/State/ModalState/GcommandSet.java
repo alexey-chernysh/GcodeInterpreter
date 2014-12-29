@@ -1,5 +1,7 @@
 package Interpreter.State.ModalState;
 
+import javax.tools.Tool;
+
 import Drivers.CanonicalCommands.ArcDirection;
 import Drivers.CanonicalCommands.G00_G01;
 import Drivers.CanonicalCommands.G02_G03;
@@ -11,6 +13,7 @@ import Interpreter.InterpreterException;
 import Interpreter.ProgramLoader;
 import Interpreter.Expression.ParamExpresionList;
 import Interpreter.Expression.Tokens.TokenParameter;
+import Interpreter.Expression.Variables.VariablesSet;
 import Interpreter.Motion.Point;
 import Interpreter.State.InterpreterState;
 
@@ -94,18 +97,117 @@ public enum GcommandSet {
 			} else throw new InterpreterException("Illegal dwell time");
 		}
 	}, 
-	G10(10.0, GcommandModalGroupSet.G_GROUP0_NON_MODAL), // Coordinate system origin setting
-	G12(12.0, GcommandModalGroupSet.G_GROUP1_MOTION), // Clockwise circular pocket
-	G13(13.0, GcommandModalGroupSet.G_GROUP1_MOTION), // Counterclockwise circular pocket
+	G10(10.0, GcommandModalGroupSet.G_GROUP0_NON_MODAL){ // Coordinate system origin setting
+		@Override
+		public void evalute(ParamExpresionList words) throws InterpreterException {
+			int l = words.getInt(TokenParameter.L);
+			int p = words.getInt(TokenParameter.P);
+			if((p >= 0)&&(p <= VariablesSet.maxToolNumber)){
+				switch(l){
+				case 1: //
+					if(words.has(TokenParameter.X))
+						InterpreterState.vars_.setToolFixtureOffset(p, TokenParameter.X, words.get(TokenParameter.X));
+					if(words.has(TokenParameter.Z))
+						InterpreterState.vars_.setToolFixtureOffset(p, TokenParameter.Z, words.get(TokenParameter.Z));
+					if(words.has(TokenParameter.A))
+						InterpreterState.vars_.setToolFixtureOffset(p, TokenParameter.A, words.get(TokenParameter.A));
+					break;
+				case 2: 
+					// set tool fixture offset for tool with number p
+					if(words.has(TokenParameter.X))
+						InterpreterState.vars_.setToolFixtureOffset(p, TokenParameter.X, words.get(TokenParameter.X));
+					if(words.has(TokenParameter.Y))
+						InterpreterState.vars_.setToolFixtureOffset(p, TokenParameter.Y, words.get(TokenParameter.Y));
+					if(words.has(TokenParameter.Z))
+						InterpreterState.vars_.setToolFixtureOffset(p, TokenParameter.Z, words.get(TokenParameter.Z));
+					if(words.has(TokenParameter.A))
+						InterpreterState.vars_.setToolFixtureOffset(p, TokenParameter.A, words.get(TokenParameter.A));
+					if(words.has(TokenParameter.B))
+						InterpreterState.vars_.setToolFixtureOffset(p, TokenParameter.B, words.get(TokenParameter.B));
+					if(words.has(TokenParameter.C))
+						InterpreterState.vars_.setToolFixtureOffset(p, TokenParameter.C, words.get(TokenParameter.C));
+					break; 
+				default:
+					throw new InterpreterException("Unsupported G10 mode");
+				}
+			} else throw new InterpreterException("Illegal (" + p + ") tool number in G10");
+		}
+	}, 
+	G12(12.0, GcommandModalGroupSet.G_GROUP1_MOTION){ // Clockwise circular pocket
+		@Override
+		public void evalute(ParamExpresionList words) throws InterpreterException { 
+			if(InterpreterState.modalState.getGModalState(GcommandModalGroupSet.G_GROUP2_PLANE) != G17)
+				throw new InterpreterException("G12 pocket available for XY plane only");
+			double radius = words.get(TokenParameter.I); // circle radius
+			if(radius > 0.0){
+				Point centerPoint = InterpreterState.getLastPosition();
+				Point circleStartPoint = centerPoint.clone();
+				circleStartPoint.shift(radius, 0.0);
+				G00_G01 G1_in = new G00_G01(centerPoint, 
+											circleStartPoint, 
+											InterpreterState.feedRate.getWorkFeedRate(), 
+											MotionMode.WORK, 
+											InterpreterState.modalState.getCutterRadiusOffsetMode());
+				ProgramLoader.hal_commands.add(G1_in);
+				G02_G03 newG2 = new G02_G03(circleStartPoint, 
+											circleStartPoint,
+											centerPoint,
+											ArcDirection.CLOCKWISE,
+											InterpreterState.feedRate.getRapidFeedRate(), 
+											MotionMode.WORK, 
+											InterpreterState.modalState.getCutterRadiusOffsetMode());
+				ProgramLoader.hal_commands.add(newG2);
+				G00_G01 G1_out = new G00_G01(circleStartPoint,
+											 centerPoint, 
+											 InterpreterState.feedRate.getWorkFeedRate(), 
+											 MotionMode.WORK, 
+											 InterpreterState.modalState.getCutterRadiusOffsetMode());
+				ProgramLoader.hal_commands.add(G1_out);
+			} else new InterpreterException("For G12 pocket positive I parameter needed");
+		}
+	}, 
+	G13(13.0, GcommandModalGroupSet.G_GROUP1_MOTION){ // Counterclockwise circular pocket
+		@Override
+		public void evalute(ParamExpresionList words) throws InterpreterException { 
+			if(InterpreterState.modalState.getGModalState(GcommandModalGroupSet.G_GROUP2_PLANE) != G17)
+				throw new InterpreterException("G12 pocket available for XY plane only");
+			double radius = words.get(TokenParameter.I); // circle radius
+			if(radius > 0.0){
+				Point centerPoint = InterpreterState.getLastPosition();
+				Point circleStartPoint = centerPoint.clone();
+				circleStartPoint.shift(radius, 0.0);
+				G00_G01 G1_in = new G00_G01(centerPoint, 
+											circleStartPoint, 
+											InterpreterState.feedRate.getWorkFeedRate(), 
+											MotionMode.WORK, 
+											InterpreterState.modalState.getCutterRadiusOffsetMode());
+				ProgramLoader.hal_commands.add(G1_in);
+				G02_G03 newG2 = new G02_G03(circleStartPoint, 
+											circleStartPoint,
+											centerPoint,
+											ArcDirection.COUNTERCLOCKWISE,
+											InterpreterState.feedRate.getRapidFeedRate(), 
+											MotionMode.WORK, 
+											InterpreterState.modalState.getCutterRadiusOffsetMode());
+				ProgramLoader.hal_commands.add(newG2);
+				G00_G01 G1_out = new G00_G01(circleStartPoint,
+											 centerPoint, 
+											 InterpreterState.feedRate.getWorkFeedRate(), 
+											 MotionMode.WORK, 
+											 InterpreterState.modalState.getCutterRadiusOffsetMode());
+				ProgramLoader.hal_commands.add(G1_out);
+			} else new InterpreterException("For G12 pocket positive I parameter needed");
+		}
+	}, 
 	G15(15.0, GcommandModalGroupSet.G_GROUP17_POLAR_COORDINATES), // Polar coordinate moves in G0 and G1
 	G16(16.0, GcommandModalGroupSet.G_GROUP17_POLAR_COORDINATES), // Cancel polar coordinate moves
 	G17(17.0, GcommandModalGroupSet.G_GROUP2_PLANE), // XY Plane select
 	G18(18.0, GcommandModalGroupSet.G_GROUP2_PLANE){ // XZ plane select
 		@Override
-		public void evalute(ParamExpresionList words) throws InterpreterException{ 
+		public void evalute(ParamExpresionList words) throws InterpreterException { 
 			if(InterpreterState.modalState.getGModalState(GcommandModalGroupSet.G_GROUP7_CUTTER_RADIUS_COMPENSATION) != G40)
 				throw new InterpreterException("Setting plane XZ incompatible with cutter radius compensation");
-		};
+		}
 	}, 
 	G19(19.0, GcommandModalGroupSet.G_GROUP2_PLANE){ // YZ plane select
 		@Override

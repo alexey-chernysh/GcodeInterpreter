@@ -1,6 +1,7 @@
 package Interpreter.Expression.Variables;
 
 import Interpreter.InterpreterException;
+import Interpreter.Expression.Tokens.TokenParameter;
 
 public class VariablesSet {
 	
@@ -12,6 +13,7 @@ public class VariablesSet {
 	private static final int workOffsetsPos_ = 5220;
 	private static final int shift_ = 20;
 	private VarArray va = new VarArray();
+	public static final int maxToolNumber = 255;
 	
 	public VariablesSet(){
 	}
@@ -62,6 +64,32 @@ public class VariablesSet {
 		return this.va.get(base+6);
 	}
 
+	public void setToolFixtureOffset(int L, TokenParameter tp, double value) throws InterpreterException{
+		int varPosition = workOffsetsPos_ + (L-1)*shift_;
+		switch(tp){
+		case X:
+			this.setX(varPosition, value);
+			break;
+		case Y:
+			this.setY(varPosition, value);
+			break;
+		case Z:
+			this.setZ(varPosition, value);
+			break;
+		case A:
+			this.setA(varPosition, value);
+			break;
+		case B:
+			this.setB(varPosition, value);
+			break;
+		case C:
+			this.setC(varPosition, value);
+			break;
+		default:
+			throw new InterpreterException("Illegal alfa word (" + tp.toString() + ") in G10");
+		}
+	}
+	
 	public void setWorkingToolOffset(int P, double X, double Y, double Z, double A, double B, double C) throws InterpreterException{
 		if((P>0)&(P<VariablesSet.arraySize_)){
 			int varPosition = workOffsetsPos_ + (P-1)*shift_;

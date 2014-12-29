@@ -60,4 +60,12 @@ public class ParamExpresionList {
 		else return 0.0;
 	}
 
+	public int getInt(TokenParameter word) throws InterpreterException {
+		int i = word.ordinal();
+		if(expressionList[i] != null){
+			return expressionList[i].integerEvalute();
+		}
+		else return 0;
+	}
+
 }
