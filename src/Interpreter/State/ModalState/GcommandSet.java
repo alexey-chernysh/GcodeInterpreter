@@ -1,7 +1,5 @@
 package Interpreter.State.ModalState;
 
-import javax.tools.Tool;
-
 import Drivers.CanonicalCommands.ArcDirection;
 import Drivers.CanonicalCommands.G00_G01;
 import Drivers.CanonicalCommands.G02_G03;
@@ -439,13 +437,35 @@ public enum GcommandSet {
 	G92_2(92.2, GcommandModalGroupSet.G_GROUP0_NON_MODAL), // 
 	G92_3(92.3, GcommandModalGroupSet.G_GROUP0_NON_MODAL), // 
 	G93(93.0, GcommandModalGroupSet.G_GROUP5_FEED_RATE_MODE){ // Inverse time feed mode
+		@Override
+		public void evalute(ParamExpresionList words) throws InterpreterException{
+			InterpreterState.modalState.set(modalGroup, this);
+		};
 	}, 
 	G94(94.0, GcommandModalGroupSet.G_GROUP5_FEED_RATE_MODE){ // Feed per minute mode
+		@Override
+		public void evalute(ParamExpresionList words) throws InterpreterException{
+			InterpreterState.modalState.set(modalGroup, this);
+		};
 	}, 
 	G95(95.0, GcommandModalGroupSet.G_GROUP5_FEED_RATE_MODE){ // Feed per revolution mode
+		@Override
+		public void evalute(ParamExpresionList words) throws InterpreterException{
+			InterpreterState.modalState.set(modalGroup, this);
+		};
 	}, 
-	G98(98.0, GcommandModalGroupSet.G_GROUP10_CANNED_CYCLES_RETURN_MODE), // Initial level return after canned cycles
-	G99(99.0, GcommandModalGroupSet.G_GROUP10_CANNED_CYCLES_RETURN_MODE), // R-point level return after canned cycles
+	G98(98.0, GcommandModalGroupSet.G_GROUP10_CANNED_CYCLES_RETURN_MODE){ // Initial level return after canned cycles
+		@Override
+		public void evalute(ParamExpresionList words) throws InterpreterException{
+			InterpreterState.modalState.set(modalGroup, this);
+		};
+	}, 
+	G99(99.0, GcommandModalGroupSet.G_GROUP10_CANNED_CYCLES_RETURN_MODE){ // R-point level return after canned cycles
+		@Override
+		public void evalute(ParamExpresionList words) throws InterpreterException{
+			InterpreterState.modalState.set(modalGroup, this);
+		};
+	}, 
 	GDUMMY(-1.0, GcommandModalGroupSet.G_GROUP0_NON_MODAL){
 		@Override
 		public void evalute(ParamExpresionList words) throws InterpreterException{
