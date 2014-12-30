@@ -22,12 +22,9 @@ public class CommandLineLoader extends TokenSequence {
 	protected CommandPairList commandSet_ = new CommandPairList();
 	protected VarAssignmentList varAssignmentSet_ = new VarAssignmentList();
 	private String messageString_ = null;
-	private int lineNum_ = 0;
-	private int programNum_;
 
-	public CommandLineLoader(String frameString, int programNum) throws InterpreterException {
+	public CommandLineLoader(String frameString) throws InterpreterException {
 		super(frameString);
-		this.programNum_ = programNum;
 		this.tokenList.printAllTokens();
 
 		// split tokens in hardware's command sequence
@@ -39,91 +36,10 @@ public class CommandLineLoader extends TokenSequence {
 				TokenDefaultFields currentWord = ((TokenAlfa)t).getType();
 				switch( currentWord.getGroup() ){
 					case COMMAND:
-						CommandPair newWord = new CommandPair((TokenCommand)currentWord, numExp);
-						switch( (TokenCommand)currentWord ){
-						case F:
-							this.commandSet_.addCommand(newWord);
-							break;
-						case G:
-							this.commandSet_.addCommand(newWord);
-							break;
-						case M:
-							this.commandSet_.addCommand(newWord);
-							break;
-						case N:
-							this.lineNum_ = numExp.integerEvalute();
-							break;
-						case O:
-							this.programNum_ = numExp.integerEvalute();
-							break;
-						case S:
-							this.commandSet_.addCommand(newWord);
-							break;
-						case T:
-							this.commandSet_.addCommand(newWord);
-							break;
-						default:
-						}
+						this.commandSet_.addCommand(new CommandPair( (TokenCommand)currentWord, numExp));
 						break;
 					case PARAMETER:
-						switch( (TokenParameter)currentWord ){
-						case A:
-							this.wordList_.addWord(TokenParameter.A, numExp);
-							break;
-						case B:
-							this.wordList_.addWord(TokenParameter.B, numExp);
-							break;
-						case C:
-							this.wordList_.addWord(TokenParameter.C, numExp);
-							break;
-						case D:
-							this.wordList_.addWord(TokenParameter.D, numExp);
-							break;
-						case H:
-							this.wordList_.addWord(TokenParameter.H, numExp);
-							break;
-						case I:
-							this.wordList_.addWord(TokenParameter.I, numExp);
-							break;
-						case J:
-							this.wordList_.addWord(TokenParameter.J, numExp);
-							break;
-						case K:
-							this.wordList_.addWord(TokenParameter.K, numExp);
-							break;
-						case L:
-							this.wordList_.addWord(TokenParameter.L, numExp);
-							break;
-						case P:
-							this.wordList_.addWord(TokenParameter.P, numExp);
-							break;
-						case Q:
-							this.wordList_.addWord(TokenParameter.Q, numExp);
-							break;
-						case R:
-							this.wordList_.addWord(TokenParameter.R, numExp);
-							break;
-						case U:
-							this.wordList_.addWord(TokenParameter.A, numExp);
-							break;
-						case V:
-							this.wordList_.addWord(TokenParameter.B, numExp);
-							break;
-						case W:
-							this.wordList_.addWord(TokenParameter.C, numExp);
-							break;
-						case X:
-							this.wordList_.addWord(TokenParameter.X, numExp);
-							break;
-						case Y:
-							this.wordList_.addWord(TokenParameter.Y, numExp);
-							break;
-						case Z:
-							this.wordList_.addWord(TokenParameter.Z, numExp);
-							break;
-						default:
-							throw new InterpreterException("Unsupported word", t.getStart());
-						}
+						this.wordList_.addWord((TokenParameter)currentWord, numExp);
 						break;
 					case MISC:
 						switch( (TokenAlgebra)currentWord ){
@@ -280,14 +196,6 @@ public class CommandLineLoader extends TokenSequence {
 
 	public String getMessageString() {
 		return messageString_;
-	}
-
-	public int getProgramNum() {
-		return programNum_;
-	}
-
-	public int getLineNum() {
-		return lineNum_;
 	}
 
 }

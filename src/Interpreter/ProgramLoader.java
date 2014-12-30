@@ -13,37 +13,33 @@ import Interpreter.State.InterpreterState;
 
 public class ProgramLoader {
 
-	private String fileName_;
-	private static ArrayList<LineLoaderArray> sub_program_list = new ArrayList<LineLoaderArray>();
+	public String fileName_;
+	private static ArrayList<LineLoader> lineArray;
+	private static ModuleArray moduleArray;
 	public static InterpreterState interpreterState;
-	public static ArrayList<CanonCommand> hal_commands = new ArrayList<CanonCommand>();
+	public static ArrayList<CanonCommand> hal_commands;
 	
 	public  ProgramLoader(String fn) throws InterpreterException{
 		fileName_ = fn;
+		lineArray = new ArrayList<LineLoader>();
+		moduleArray = new ModuleArray();
 		interpreterState = new InterpreterState();
-		int stringCounter = 0;
+		hal_commands = new ArrayList<CanonCommand>();
 		try{
 			InputStream f = new FileInputStream(fileName_);
 
 			BufferedReader inputStream = new BufferedReader(new InputStreamReader(f));
 			String line;
 			int currentSubNumber = 0;
-			LineLoaderArray current_program = new LineLoaderArray(currentSubNumber);
-			sub_program_list.add(current_program);
+			int lastModuleNum = -1;
 			while ((line = inputStream.readLine()) != null) {
-				LineLoader currentBlock = new LineLoader(line, currentSubNumber);
-				int newSubNum = currentBlock.getProgramNum();
-				if(newSubNum == currentSubNumber) { 
-					current_program.add(currentBlock); 
-				}
-				else {
-					currentSubNumber = newSubNum;
-					current_program = new LineLoaderArray(newSubNum);
-					sub_program_list.add(current_program);
-					current_program.add(currentBlock); 
-				}
+				LineLoader currentBlock = new LineLoader(line);
+				lineArray.add(currentBlock); 
+				if(currentBlock.isModuleStart()){
+					ProgramModule newModule = new ProgramModule(currentBlock.getModuleNum(), lineArray);
+					newModule.setStart(lineArray.size() - 1);
+				};
 				System.out.println(line);
-				stringCounter++;
 			}
 			inputStream.close();
 			f.close();
@@ -57,15 +53,11 @@ public class ProgramLoader {
 
 	private void evalute() {
 		
-		if(this.sub_program_list.size() > 0){
-			// execute "main"/first/number 0 program only
-			LineLoaderArray mainModule = this.sub_program_list.get(0);
-			try {
-				mainModule.evalute();
-			} catch (InterpreterException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		try {
+			this.moduleArray.getMain().evalute();
+		} catch (InterpreterException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 }

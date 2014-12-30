@@ -19,7 +19,7 @@ public class ParamExpresionList {
 	public void addWord(TokenParameter w, ExpressionGeneral e) throws InterpreterException{ 
 		int n = w.ordinal();
 		if(expressionList[n] == null) expressionList[n] = e;
-		else throw new InterpreterException("Twice parameter");
+		else throw new InterpreterException("Twice parameter " + w.toString() + ";");
 	}
 
 	public int getLength() {
@@ -37,7 +37,12 @@ public class ParamExpresionList {
 		for(int i=0; i<ParamExpresionList.size_; i++){
 			ExpressionGeneral currentExp = this.expressionList[i];
 			if(currentExp != null){
-				result += TokenParameter.values()[i].toString() + " " + currentExp.toString();
+				try {
+					result += " " + TokenParameter.values()[i].toString() + currentExp.evalute();
+				} catch (InterpreterException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			};
 		}
 		

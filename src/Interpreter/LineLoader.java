@@ -37,9 +37,11 @@ public class LineLoader extends CommandLineLoader {
 	private GcommandSet G93_G94_G95 = GcommandSet.GDUMMY;
 	private GcommandSet G98_G99     = GcommandSet.GDUMMY;
 	private GcommandSet G_MOTION    = GcommandSet.GDUMMY;
+	
+	private int moduleNum_ = -1;
 
-	public LineLoader(String s, int programNumber) throws InterpreterException{
-		super(s, programNumber);
+	public LineLoader(String s) throws InterpreterException{
+		super(s);
 		int size = this.commandSet_.size();
 		int i;
 		for(i=0; i<size; i++){
@@ -371,6 +373,11 @@ public class LineLoader extends CommandLineLoader {
 					throw new InterpreterException("Unsupported M code num");
 				};
 				break;
+			case N: // nothing to do
+				break;
+			case O: 
+				moduleNum_ = commandValueExpressiion.integerEvalute();
+				break;
 			case S:
 				this.spindelSpeed_ = commandValueExpressiion;
 				break;
@@ -480,4 +487,49 @@ public class LineLoader extends CommandLineLoader {
 		return McommandSet.MDUMMY;
 	}
 
+	@Override
+	public String toString(){
+		String result = "";
+		if(message_  != null) result += "MSG = " + this.message_ + "; ";
+		if(feedRate_ != null) result += "FeedRate = " + feedRate_.toString() + "; ";
+		if(tool_ != null)     result += "Tool = " + tool_.toString() + "; ";
+		if(spindelSpeed_ != null) result += "Spindle speed = " + spindelSpeed_.toString() + "; ";
+/*
+		private McommandSet M1_M2_M3    = McommandSet.MDUMMY;
+		private McommandSet M3_M4_M5    = McommandSet.MDUMMY;
+		private McommandSet M6          = McommandSet.MDUMMY;
+		private McommandSet M7_M8_M9    = McommandSet.MDUMMY;
+		private McommandSet M48_M49     = McommandSet.MDUMMY;
+		private McommandSet M47_M98_M99 = McommandSet.MDUMMY;
+		private GcommandSet G4          = GcommandSet.GDUMMY;
+		private GcommandSet G_NON_MODAL = GcommandSet.GDUMMY;
+		private GcommandSet G15_G16     = GcommandSet.GDUMMY;
+		private GcommandSet G17_G18_G19 = GcommandSet.GDUMMY;
+		private GcommandSet G20_G21     = GcommandSet.GDUMMY;
+*/
+		if(G40_G41_G42 != GcommandSet.GDUMMY) result += "Cutter radius compensation = " + G40_G41_G42.toString() + "; ";
+/*
+		private GcommandSet G43_G49     = GcommandSet.GDUMMY; 
+		private GcommandSet G50_G51     = GcommandSet.GDUMMY; 
+		private GcommandSet G53         = GcommandSet.GDUMMY; 
+		private GcommandSet G54___G59   = GcommandSet.GDUMMY;
+		private GcommandSet G61_G64     = GcommandSet.GDUMMY;
+		private GcommandSet G68_G69     = GcommandSet.GDUMMY;
+		private GcommandSet G90_G91     = GcommandSet.GDUMMY;
+		private GcommandSet G90_1_G91_1 = GcommandSet.GDUMMY;
+		private GcommandSet G93_G94_G95 = GcommandSet.GDUMMY;
+		private GcommandSet G98_G99     = GcommandSet.GDUMMY;
+*/
+		if(G_MOTION != GcommandSet.GDUMMY) result += "Motion command = " + G_MOTION.toString() + "; ";
+		result += this.wordList_.toString();
+		return result;
+	}
+
+	public boolean isModuleStart() {
+		return (this.moduleNum_ > 0);
+	}
+	
+	public int getModuleNum(){
+		return this.moduleNum_;
+	}
 }
