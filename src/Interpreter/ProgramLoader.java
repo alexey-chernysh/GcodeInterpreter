@@ -20,29 +20,45 @@ public class ProgramLoader {
 	public static ArrayList<CanonCommand> hal_commands;
 	
 	public  ProgramLoader(String fn) throws InterpreterException{
+		
 		fileName_ = fn;
 		lineArray = new ArrayList<LineLoader>();
 		moduleArray = new ModuleArray();
 		interpreterState = new InterpreterState();
 		hal_commands = new ArrayList<CanonCommand>();
+		
 		try{
 			InputStream f = new FileInputStream(fileName_);
 
 			BufferedReader inputStream = new BufferedReader(new InputStreamReader(f));
 			String line;
-			int currentSubNumber = 0;
-			int lastModuleNum = -1;
-			while ((line = inputStream.readLine()) != null) {
+			ProgramModule lastModule = null;
+			boolean programEndReached = false;
+			while (((line = inputStream.readLine()) != null)&&(!programEndReached)) {
 				LineLoader currentBlock = new LineLoader(line);
 				lineArray.add(currentBlock); 
+				final int lineOrdinalNum = lineArray.size() - 1;
 				if(currentBlock.isModuleStart()){
 					ProgramModule newModule = new ProgramModule(currentBlock.getModuleNum(), lineArray);
-					newModule.setStart(lineArray.size() - 1);
+					newModule.setStart(lineOrdinalNum);
+					moduleArray.add(newModule);
+					lastModule = newModule;
 				};
+				if(currentBlock.isProgramEnd()){
+					programEndReached = true;
+					if(lastModule == null){
+						ProgramModule newModule = new ProgramModule(1, lineArray);
+						newModule.setStart(0);
+						moduleArray.add(newModule);
+						lastModule = newModule;
+					};
+					lastModule.setEnd(lineOrdinalNum);
+				}
 				System.out.println(line);
 			}
 			inputStream.close();
 			f.close();
+			if(!programEndReached) throw new InterpreterException("M2 needed in the end of program!");
 			this.evalute();
 		}
 		catch (FileNotFoundException e){
@@ -52,7 +68,6 @@ public class ProgramLoader {
 	}
 
 	private void evalute() {
-		
 		try {
 			this.moduleArray.getMain().evalute();
 		} catch (InterpreterException e) {

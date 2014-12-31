@@ -532,4 +532,8 @@ public class LineLoader extends CommandLineLoader {
 	public int getModuleNum(){
 		return this.moduleNum_;
 	}
+
+	public boolean isProgramEnd() {
+		return (this.M1_M2_M3 == McommandSet.M2);
+	}
 }
