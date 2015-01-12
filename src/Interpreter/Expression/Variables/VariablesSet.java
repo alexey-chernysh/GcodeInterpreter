@@ -6,7 +6,6 @@ import Interpreter.Motion.Point;
 
 public class VariablesSet {
 	
-	private static final int arraySize_ = 10320;
 	private static final int G28HomePos_ = 5160;
 	private static final int G30HomePos_ = 5180;
 	private static final int ScalePos_ = 5190;
@@ -14,7 +13,7 @@ public class VariablesSet {
 	private static final int workOffsetsPos_ = 5220;
 	private static final int shift_ = 20;
 	private VarArray va = new VarArray();
-	public static final int maxToolNumber = 255;
+	public static final int maxToolNumber = 254;
 	
 	public VariablesSet(){
 	}
@@ -27,42 +26,49 @@ public class VariablesSet {
 		this.va.set(num, value);
 	}
 	
+	private static final int offset_X = 1;
+	private static final int offset_Y = 2;
+	private static final int offset_Z = 3;
+	private static final int offset_A = 4;
+	private static final int offset_B = 5;
+	private static final int offset_C = 6;
+	
 	private void setX(int base, double value) throws InterpreterException{
-		this.va.set(base+1, value);
+		this.va.set(base + offset_X, value);
 	}
 	private void setY(int base, double value) throws InterpreterException{
-		this.va.set(base+2, value);
+		this.va.set(base + offset_Y, value);
 	}
 	private void setZ(int base, double value) throws InterpreterException{
-		this.va.set(base+3, value);
+		this.va.set(base + offset_Z, value);
 	}
 	private void setA(int base, double value) throws InterpreterException{
-		this.va.set(base+4, value);
+		this.va.set(base + offset_A, value);
 	}
 	private void setB(int base, double value) throws InterpreterException{
-		this.va.set(base+5, value);
-	}
+		this.va.set(base + offset_B, value);
+	} 
 	private void setC(int base, double value) throws InterpreterException{
-		this.va.set(base+6, value);
+		this.va.set(base + offset_C, value);
 	}
 	
 	private double getX(int base) throws InterpreterException{
-		return this.va.get(base+1);
+		return this.va.get(base + offset_X);
 	}
 	private double getY(int base) throws InterpreterException{
-		return this.va.get(base+2);
+		return this.va.get(base + offset_Y);
 	}
 	private double getZ(int base) throws InterpreterException{
-		return this.va.get(base+3);
+		return this.va.get(base + offset_Z);
 	}
 	private double getA(int base) throws InterpreterException{
-		return this.va.get(base+4);
+		return this.va.get(base + offset_A);
 	}
 	private double getB(int base) throws InterpreterException{
-		return this.va.get(base+5);
+		return this.va.get(base + offset_B);
 	}
 	private double getC(int base) throws InterpreterException{
-		return this.va.get(base+6);
+		return this.va.get(base + offset_C);
 	}
 
 	public void setToolFixtureOffset(int L, TokenParameter tp, double value) throws InterpreterException{
@@ -92,7 +98,7 @@ public class VariablesSet {
 	}
 	
 	public void setWorkingToolOffset(int P, double X, double Y, double Z, double A, double B, double C) throws InterpreterException{
-		if((P>0)&(P<VariablesSet.arraySize_)){
+		if((P>0)&(P<=VariablesSet.maxToolNumber)){
 			int varPosition = workOffsetsPos_ + (P-1)*shift_;
 			this.setX(varPosition, X);
 			this.setY(varPosition, Y);
@@ -100,7 +106,6 @@ public class VariablesSet {
 			this.setA(varPosition, A);
 			this.setB(varPosition, B);
 			this.setC(varPosition, C);
-			this.setCurrentWorkOffsetNum(P);
 		}
 	}
 	
@@ -122,6 +127,13 @@ public class VariablesSet {
 	}
 	public double getCurrentScaleZ() throws InterpreterException{
 		return this.getZ(ScalePos_);
+	}
+	
+	public boolean scalesAreEquals() throws InterpreterException{
+		double sx = getCurrentScaleX();
+		double sy = getCurrentScaleX();
+		double sz = getCurrentScaleZ();
+		return ((sx==sy)&&(sy==sz)&&(sx==sz));
 	}
 	
 	public void setG92Offset(double X, double Y, double Z, double A, double B, double C) throws InterpreterException{
@@ -214,40 +226,6 @@ public class VariablesSet {
 			else return false;
 	}
 	
-	private class VarArray {
-		
-		private double[] variables_ = new double[arraySize_];
-		private int[] assigment_counter_ = new int[arraySize_];
-
-		public VarArray(){
-			for( int i = 0; i<VariablesSet.arraySize_; i++){
-				variables_[i] = 0.0;
-				assigment_counter_[i] = 0;
-			}
-		}
-		
-		private int getAssignmentCounter(int num){
-			return this.assigment_counter_[num];
-		};
-		
-		public double get(int num) throws InterpreterException{
-			if((num>=0)&(num<VariablesSet.arraySize_)){ 
-				if(getAssignmentCounter(num) > 0) return this.variables_[num];
-				else throw new InterpreterException("Reference to non initialized variable");
-			}
-			else throw new InterpreterException("Illegal parameter number");
-		}
-		
-		public void set(int num, double val) throws InterpreterException{
-			if((num>=0)&(num<VariablesSet.arraySize_)){ 
-				this.variables_[num] = val;
-				this.assigment_counter_[num]++;
-			}
-			else throw new InterpreterException("Illegal parameter number");
-		}
-		
-	}
-
 	public Point getHomePointG28() throws InterpreterException {
 		Point homePoint =  new Point(this.getX(G28HomePos_), this.getY(G28HomePos_));
 		return homePoint;

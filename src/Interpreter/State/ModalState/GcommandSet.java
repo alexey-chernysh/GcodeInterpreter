@@ -68,6 +68,7 @@ public enum GcommandSet {
 	G3(3.0, GcommandModalGroupSet.G_GROUP1_MOTION){ // Counterclockwise circular/Helical interpolation
 		@Override
 		public void evalute(ParamExpresionList words) throws InterpreterException {
+			checkThatScalesAreEquals();
 			InterpreterState.modalState.set(modalGroup, this);
 			Point startPoint = InterpreterState.getLastPosition();
 			Point endPoint = InterpreterState.modalState.getTargetPoint(startPoint, words);
@@ -87,6 +88,7 @@ public enum GcommandSet {
 	G4(4.0, GcommandModalGroupSet.G_GROUP0_G4_DWELL){ // Dwell
 		@Override
 		public void evalute(ParamExpresionList words) throws InterpreterException {
+			checkThatScalesAreEquals();
 			InterpreterState.modalState.set(modalGroup, this);
 			double p = words.get(TokenParameter.P);
 			if(p >= 0.0){
@@ -134,8 +136,7 @@ public enum GcommandSet {
 	G12(12.0, GcommandModalGroupSet.G_GROUP1_MOTION){ // Clockwise circular pocket
 		@Override
 		public void evalute(ParamExpresionList words) throws InterpreterException { 
-			if(InterpreterState.modalState.getGModalState(GcommandModalGroupSet.G_GROUP2_PLANE) != G17)
-				throw new InterpreterException("G12 pocket available for XY plane only");
+			checkThatPlaneIsXY();
 			double radius = words.get(TokenParameter.I); // circle radius
 			if(radius > 0.0){
 				Point centerPoint = InterpreterState.getLastPosition();
@@ -167,8 +168,7 @@ public enum GcommandSet {
 	G13(13.0, GcommandModalGroupSet.G_GROUP1_MOTION){ // Counterclockwise circular pocket
 		@Override
 		public void evalute(ParamExpresionList words) throws InterpreterException { 
-			if(InterpreterState.modalState.getGModalState(GcommandModalGroupSet.G_GROUP2_PLANE) != G17)
-				throw new InterpreterException("G12 pocket available for XY plane only");
+			checkThatPlaneIsXY();
 			double radius = words.get(TokenParameter.I); // circle radius
 			if(radius > 0.0){
 				Point centerPoint = InterpreterState.getLastPosition();
@@ -218,16 +218,14 @@ public enum GcommandSet {
 	G18(18.0, GcommandModalGroupSet.G_GROUP2_PLANE){ // XZ plane select
 		@Override
 		public void evalute(ParamExpresionList words) throws InterpreterException { 
-			if(InterpreterState.modalState.getGModalState(GcommandModalGroupSet.G_GROUP7_CUTTER_RADIUS_COMPENSATION) != G40)
-				throw new InterpreterException("Setting plane XZ incompatible with cutter radius compensation");
+			checkThatCutterRadiusCompebsationIsOff();
 			InterpreterState.modalState.set(modalGroup, this);
 		}
 	}, 
 	G19(19.0, GcommandModalGroupSet.G_GROUP2_PLANE){ // YZ plane select
 		@Override
 		public void evalute(ParamExpresionList words) throws InterpreterException{ 
-			if(InterpreterState.modalState.getGModalState(GcommandModalGroupSet.G_GROUP7_CUTTER_RADIUS_COMPENSATION) != G40)
-				throw new InterpreterException("Setting plane YZ incompatible with cutter radius compensation");
+			checkThatCutterRadiusCompebsationIsOff();
 			InterpreterState.modalState.set(modalGroup, this);
 		};
 	}, 
@@ -306,8 +304,7 @@ public enum GcommandSet {
 	G41(41.0, GcommandModalGroupSet.G_GROUP7_CUTTER_RADIUS_COMPENSATION){ // Start cutter radius compensation left
 		@Override
 		public void evalute(ParamExpresionList words) throws InterpreterException{ 
-			if(InterpreterState.modalState.getGModalState(GcommandModalGroupSet.G_GROUP2_PLANE) != G17)
-				throw new InterpreterException("Kerf offset possible in  XY plane only");
+			checkThatPlaneIsXY();
 			InterpreterState.modalState.set(modalGroup, this);
 			double offset = -1.0;
 			int d = (int)words.get(TokenParameter.D);
@@ -324,8 +321,7 @@ public enum GcommandSet {
 	G42(42.0, GcommandModalGroupSet.G_GROUP7_CUTTER_RADIUS_COMPENSATION){ // Start cutter radius compensation right
 		@Override
 		public void evalute(ParamExpresionList words) throws InterpreterException{ 
-			if(InterpreterState.modalState.getGModalState(GcommandModalGroupSet.G_GROUP2_PLANE) != G17)
-				throw new InterpreterException("Kerf offset possible in  XY plane only");
+			checkThatPlaneIsXY();
 			InterpreterState.modalState.set(modalGroup, this);
 			double offset = -1.0;
 			int d = (int)words.get(TokenParameter.D);
@@ -369,12 +365,52 @@ public enum GcommandSet {
 	}, 
 	G52(52.0, GcommandModalGroupSet.G_GROUP0_NON_MODAL), // Temporary coordinate system offsets
 	G53(53.0, GcommandModalGroupSet.G_GROUP0_G53_MODIFIER), // Move in absolute machine coordinate system
-	G54(54.0, GcommandModalGroupSet.G_GROUP12_OFFSET_SELECTION), // Use fixture offset 1
-	G55(55.0, GcommandModalGroupSet.G_GROUP12_OFFSET_SELECTION), // Use fixture offset 2
-	G56(56.0, GcommandModalGroupSet.G_GROUP12_OFFSET_SELECTION), // Use fixture offset 3
-	G57(57.0, GcommandModalGroupSet.G_GROUP12_OFFSET_SELECTION), // Use fixture offset 4
-	G58(58.0, GcommandModalGroupSet.G_GROUP12_OFFSET_SELECTION), // Use fixture offset 5
-	G59(59.0, GcommandModalGroupSet.G_GROUP12_OFFSET_SELECTION), // Use fixture offset 6 / use general fixture number
+	G54(54.0, GcommandModalGroupSet.G_GROUP12_OFFSET_SELECTION){ // Use fixture offset 1
+		@Override
+		public void evalute(ParamExpresionList words) throws InterpreterException { 
+			checkThatCutterRadiusCompebsationIsOff();
+			InterpreterState.vars_.setCurrentWorkOffsetNum(1);
+		}
+	}, 
+	G55(55.0, GcommandModalGroupSet.G_GROUP12_OFFSET_SELECTION){ // Use fixture offset 2
+		@Override
+		public void evalute(ParamExpresionList words) throws InterpreterException { 
+			checkThatCutterRadiusCompebsationIsOff();
+			InterpreterState.vars_.setCurrentWorkOffsetNum(2);
+		}
+	}, 
+	G56(56.0, GcommandModalGroupSet.G_GROUP12_OFFSET_SELECTION){ // Use fixture offset 3
+		@Override
+		public void evalute(ParamExpresionList words) throws InterpreterException { 
+			checkThatCutterRadiusCompebsationIsOff();
+			InterpreterState.vars_.setCurrentWorkOffsetNum(3);
+		}
+	}, 
+	G57(57.0, GcommandModalGroupSet.G_GROUP12_OFFSET_SELECTION){ // Use fixture offset 4
+		@Override
+		public void evalute(ParamExpresionList words) throws InterpreterException { 
+			checkThatCutterRadiusCompebsationIsOff();
+			InterpreterState.vars_.setCurrentWorkOffsetNum(4);
+		}
+	}, 
+	G58(58.0, GcommandModalGroupSet.G_GROUP12_OFFSET_SELECTION){ // Use fixture offset 5
+		@Override
+		public void evalute(ParamExpresionList words) throws InterpreterException { 
+			checkThatCutterRadiusCompebsationIsOff();
+			InterpreterState.vars_.setCurrentWorkOffsetNum(5);
+		}
+	}, 
+	G59(59.0, GcommandModalGroupSet.G_GROUP12_OFFSET_SELECTION){ // Use fixture offset 6 / use general fixture number
+		@Override
+		public void evalute(ParamExpresionList words) throws InterpreterException { 
+			checkThatCutterRadiusCompebsationIsOff();
+			if(words.has(TokenParameter.P)){
+				int P = words.getInt(TokenParameter.P);
+				InterpreterState.vars_.setCurrentWorkOffsetNum(P);
+			} 
+			else InterpreterState.vars_.setCurrentWorkOffsetNum(1);
+		}
+	}, 
 	G61(61.0, GcommandModalGroupSet.G_GROUP13_PATH_CONTROL_MODE), // Exact stop mode
 	G64(64.0, GcommandModalGroupSet.G_GROUP13_PATH_CONTROL_MODE), // Constant Velocity mode
 	G68(68.0, GcommandModalGroupSet.G_GROUP16_COORDINATE_ROTATION), // Rotate program coordinate system
@@ -434,7 +470,12 @@ public enum GcommandSet {
 		};
 	}, 
 	G92_1(92.1, GcommandModalGroupSet.G_GROUP0_NON_MODAL), // Cancel G92 etc.
-	G92_2(92.2, GcommandModalGroupSet.G_GROUP0_NON_MODAL), // 
+	G92_2(92.2, GcommandModalGroupSet.G_GROUP0_NON_MODAL){ // G92 X0 Y0
+		@Override
+		public void evalute(ParamExpresionList words) throws InterpreterException{
+			InterpreterState.setHomePoint(0.0, 0.0);
+		};
+	}, 
 	G92_3(92.3, GcommandModalGroupSet.G_GROUP0_NON_MODAL), // 
 	G93(93.0, GcommandModalGroupSet.G_GROUP5_FEED_RATE_MODE){ // Inverse time feed mode
 		@Override
@@ -484,5 +525,20 @@ public enum GcommandSet {
 		this.number = (int)(10*n);
 		this.modalGroup = g;
 	};
+	
+	private static void checkThatCutterRadiusCompebsationIsOff() throws InterpreterException{
+		if(InterpreterState.modalState.getGModalState(GcommandModalGroupSet.G_GROUP7_CUTTER_RADIUS_COMPENSATION) != G40)
+			throw new InterpreterException("Command available only while cutter raius compensation is off");
+	}
+
+	private static void checkThatPlaneIsXY() throws InterpreterException{
+		if(InterpreterState.modalState.getGModalState(GcommandModalGroupSet.G_GROUP2_PLANE) != G17)
+			throw new InterpreterException("Command available for XY plane only");
+	}
+	
+	private static void checkThatScalesAreEquals() throws InterpreterException{
+		if(!InterpreterState.vars_.scalesAreEquals())
+			throw new InterpreterException("Command available with equal scales for X, Y and Z");
+	}
 	
 }

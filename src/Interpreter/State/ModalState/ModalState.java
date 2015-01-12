@@ -24,9 +24,9 @@ public class ModalState {
 		
 	public void initToDefaultState() throws InterpreterException{
 		
-		set(GcommandModalGroupSet.G_GROUP1_MOTION, GcommandSet.G0);
+		set(GcommandModalGroupSet.G_GROUP1_MOTION, GcommandSet.G1);
 		set(GcommandModalGroupSet.G_GROUP2_PLANE, GcommandSet.G17);
-		set(GcommandModalGroupSet.G_GROUP3_DISTANCE_MODE, GcommandSet.G91);
+		set(GcommandModalGroupSet.G_GROUP3_DISTANCE_MODE, GcommandSet.G90);
 		set(GcommandModalGroupSet.G_GROUP4_ARC_DISTANCE_MODE, GcommandSet.G91_1);
 		set(GcommandModalGroupSet.G_GROUP5_FEED_RATE_MODE, GcommandSet.G94);
 		set(GcommandModalGroupSet.G_GROUP6_UNITS, GcommandSet.G21);
