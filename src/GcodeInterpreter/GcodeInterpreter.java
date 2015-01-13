@@ -19,7 +19,6 @@ package GcodeInterpreter;
 import Interpreter.InterpreterException;
 import Interpreter.ProgramLoader;
 
-
 public class GcodeInterpreter {
 	
 	static ProgramLoader program;

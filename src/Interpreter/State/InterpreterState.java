@@ -19,9 +19,6 @@ package Interpreter.State;
 import Interpreter.InterpreterException;
 import Interpreter.Expression.Variables.VariablesSet;
 import Interpreter.Motion.Point;
-import Interpreter.Motion.Attributes.CoordinateSystem;
-import Interpreter.Motion.Attributes.TimeFormat;
-import Interpreter.State.CannedCycle.CannedCycleReturnMode;
 import Interpreter.State.ModalState.ModalState;
 
 public class InterpreterState {
@@ -42,11 +39,7 @@ public class InterpreterState {
 
 	public static Spindle spindle = new Spindle();
 	public static FeedRate feedRate = new FeedRate();
-	public static CoordinateSystem coordinateSystem = new CoordinateSystem();
 
-	public static TimeFormat timeFormat;
-	public static CannedCycleReturnMode cycleReturnMode;
-	
 	public InterpreterState() throws InterpreterException{
 		modalState.initToDefaultState();
 	};
