@@ -33,7 +33,7 @@ public class ProgramLoader {
 	private static ArrayList<LineLoader> lineArray;
 	private static ModuleArray moduleArray;
 	public static InterpreterState interpreterState;
-	public static ArrayList<CanonCommand> hal_commands;
+	public static ArrayList<CanonCommand> command_sequence;
 	
 	public  ProgramLoader(String fn) throws InterpreterException{
 		
@@ -41,7 +41,7 @@ public class ProgramLoader {
 		lineArray = new ArrayList<LineLoader>();
 		moduleArray = new ModuleArray();
 		interpreterState = new InterpreterState();
-		hal_commands = new ArrayList<CanonCommand>();
+		command_sequence = new ArrayList<CanonCommand>();
 		
 		try{
 			InputStream f = new FileInputStream(fileName_);

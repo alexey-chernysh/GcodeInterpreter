@@ -20,7 +20,6 @@ import Drivers.CanonicalCommands.ArcDirection;
 import Drivers.CanonicalCommands.G00_G01;
 import Drivers.CanonicalCommands.G02_G03;
 import Drivers.CanonicalCommands.G04;
-import Drivers.CanonicalCommands.G40_G41_G42;
 import Drivers.CanonicalCommands.MotionMode;
 import Drivers.CanonicalCommands.OffsetMode;
 import Interpreter.InterpreterException;
@@ -43,7 +42,7 @@ public enum GcommandSet {
 										InterpreterState.feedRate.getRapidFeedRate(), 
 										MotionMode.FREE, 
 										null);
-			ProgramLoader.hal_commands.add(newG0);
+			ProgramLoader.command_sequence.add(newG0);
 			InterpreterState.setLastPosition(endPoint);
 		}
 	}, 
@@ -57,8 +56,8 @@ public enum GcommandSet {
 										endPoint, 
 										InterpreterState.feedRate.getWorkFeedRate(), 
 										MotionMode.WORK, 
-										InterpreterState.modalState.getCutterRadiusOffsetMode());
-			ProgramLoader.hal_commands.add(newG1);
+										InterpreterState.offsetMode);
+			ProgramLoader.command_sequence.add(newG1);
 			InterpreterState.setLastPosition(endPoint);
 		}
 	}, 
@@ -76,8 +75,8 @@ public enum GcommandSet {
 										ArcDirection.CLOCKWISE,
 										InterpreterState.feedRate.getRapidFeedRate(), 
 										MotionMode.WORK, 
-										InterpreterState.modalState.getCutterRadiusOffsetMode());
-			ProgramLoader.hal_commands.add(newG2);
+										InterpreterState.offsetMode);
+			ProgramLoader.command_sequence.add(newG2);
 			InterpreterState.setLastPosition(endPoint);
 		}
 	}, 
@@ -96,8 +95,8 @@ public enum GcommandSet {
 										ArcDirection.COUNTERCLOCKWISE,
 										InterpreterState.feedRate.getRapidFeedRate(), 
 										MotionMode.WORK, 
-										InterpreterState.modalState.getCutterRadiusOffsetMode());
-			ProgramLoader.hal_commands.add(newG3);
+										InterpreterState.offsetMode);
+			ProgramLoader.command_sequence.add(newG3);
 			InterpreterState.setLastPosition(endPoint);
 		}
 	}, 
@@ -109,7 +108,7 @@ public enum GcommandSet {
 			double p = words.get(TokenParameter.P);
 			if(p >= 0.0){
 				G04 newG4 = new G04(p);
-				ProgramLoader.hal_commands.add(newG4);
+				ProgramLoader.command_sequence.add(newG4);
 			} else throw new InterpreterException("Illegal dwell time");
 		}
 	}, 
@@ -162,22 +161,22 @@ public enum GcommandSet {
 											circleStartPoint, 
 											InterpreterState.feedRate.getWorkFeedRate(), 
 											MotionMode.WORK, 
-											InterpreterState.modalState.getCutterRadiusOffsetMode());
-				ProgramLoader.hal_commands.add(G1_in);
+											InterpreterState.offsetMode);
+				ProgramLoader.command_sequence.add(G1_in);
 				G02_G03 newG2 = new G02_G03(circleStartPoint, 
 											circleStartPoint,
 											centerPoint,
 											ArcDirection.CLOCKWISE,
 											InterpreterState.feedRate.getRapidFeedRate(), 
 											MotionMode.WORK, 
-											InterpreterState.modalState.getCutterRadiusOffsetMode());
-				ProgramLoader.hal_commands.add(newG2);
+											InterpreterState.offsetMode);
+				ProgramLoader.command_sequence.add(newG2);
 				G00_G01 G1_out = new G00_G01(circleStartPoint,
 											 centerPoint, 
 											 InterpreterState.feedRate.getWorkFeedRate(), 
 											 MotionMode.WORK, 
-											 InterpreterState.modalState.getCutterRadiusOffsetMode());
-				ProgramLoader.hal_commands.add(G1_out);
+											 InterpreterState.offsetMode);
+				ProgramLoader.command_sequence.add(G1_out);
 			} else new InterpreterException("For G12 pocket positive I parameter needed");
 		}
 	}, 
@@ -194,22 +193,22 @@ public enum GcommandSet {
 											circleStartPoint, 
 											InterpreterState.feedRate.getWorkFeedRate(), 
 											MotionMode.WORK, 
-											InterpreterState.modalState.getCutterRadiusOffsetMode());
-				ProgramLoader.hal_commands.add(G1_in);
+											InterpreterState.offsetMode);
+				ProgramLoader.command_sequence.add(G1_in);
 				G02_G03 newG2 = new G02_G03(circleStartPoint, 
 											circleStartPoint,
 											centerPoint,
 											ArcDirection.COUNTERCLOCKWISE,
 											InterpreterState.feedRate.getRapidFeedRate(), 
 											MotionMode.WORK, 
-											InterpreterState.modalState.getCutterRadiusOffsetMode());
-				ProgramLoader.hal_commands.add(newG2);
+											InterpreterState.offsetMode);
+				ProgramLoader.command_sequence.add(newG2);
 				G00_G01 G1_out = new G00_G01(circleStartPoint,
 											 centerPoint, 
 											 InterpreterState.feedRate.getWorkFeedRate(), 
 											 MotionMode.WORK, 
-											 InterpreterState.modalState.getCutterRadiusOffsetMode());
-				ProgramLoader.hal_commands.add(G1_out);
+											 InterpreterState.offsetMode);
+				ProgramLoader.command_sequence.add(G1_out);
 			} else new InterpreterException("For G12 pocket positive I parameter needed");
 		}
 	}, 
@@ -268,7 +267,7 @@ public enum GcommandSet {
 						  					  InterpreterState.feedRate.getRapidFeedRate(), 
 						  					  MotionMode.FREE, 
 						  					  null);
-				ProgramLoader.hal_commands.add(motion1);
+				ProgramLoader.command_sequence.add(motion1);
 				InterpreterState.setLastPosition(intermediatePoint);
 				currentPoint = intermediatePoint;
 			};
@@ -278,7 +277,7 @@ public enum GcommandSet {
 										  InterpreterState.feedRate.getRapidFeedRate(), 
 										  MotionMode.FREE, 
 										  null);
-			ProgramLoader.hal_commands.add(motion2);
+			ProgramLoader.command_sequence.add(motion2);
 			InterpreterState.setLastPosition(homePoint);
 		}
 	}, 
@@ -294,7 +293,7 @@ public enum GcommandSet {
 						  					  InterpreterState.feedRate.getRapidFeedRate(), 
 						  					  MotionMode.FREE, 
 						  					  null);
-				ProgramLoader.hal_commands.add(motion1);
+				ProgramLoader.command_sequence.add(motion1);
 				InterpreterState.setLastPosition(intermediatePoint);
 				currentPoint = intermediatePoint;
 			};
@@ -304,7 +303,7 @@ public enum GcommandSet {
 										  InterpreterState.feedRate.getRapidFeedRate(), 
 										  MotionMode.FREE, 
 										  null);
-			ProgramLoader.hal_commands.add(motion2);
+			ProgramLoader.command_sequence.add(motion2);
 			InterpreterState.setLastPosition(homePoint);
 		}
 	}, 
@@ -313,8 +312,7 @@ public enum GcommandSet {
 		@Override
 		public void evalute(ParamExpresionList words) throws InterpreterException{ 
 			InterpreterState.modalState.set(modalGroup, this);
-			G40_G41_G42 newG40 = new G40_G41_G42(OffsetMode.NONE);
-			ProgramLoader.hal_commands.add(newG40);
+			InterpreterState.offsetMode.setMode(OffsetMode.mode.OFF);
 		};
 	}, 
 	G41(41.0, GcommandModalGroupSet.G_GROUP7_CUTTER_RADIUS_COMPENSATION){ // Start cutter radius compensation left
@@ -322,6 +320,7 @@ public enum GcommandSet {
 		public void evalute(ParamExpresionList words) throws InterpreterException{ 
 			checkThatPlaneIsXY();
 			InterpreterState.modalState.set(modalGroup, this);
+			InterpreterState.offsetMode.setMode(OffsetMode.mode.LEFT);
 			double offset = -1.0;
 			int d = (int)words.get(TokenParameter.D);
 			if(d > 0){
@@ -329,9 +328,7 @@ public enum GcommandSet {
 			} else {
 				offset = words.get(TokenParameter.P);
 			};
-			if(offset > 0.0)InterpreterState.setCutterRadius(offset);
-			G40_G41_G42 newG41 = new G40_G41_G42(OffsetMode.LEFT);
-			ProgramLoader.hal_commands.add(newG41);
+			if(offset > 0.0) InterpreterState.offsetMode.setRadius(offset);
 		};
 	}, // Start cutter radius compensation left
 	G42(42.0, GcommandModalGroupSet.G_GROUP7_CUTTER_RADIUS_COMPENSATION){ // Start cutter radius compensation right
@@ -339,6 +336,7 @@ public enum GcommandSet {
 		public void evalute(ParamExpresionList words) throws InterpreterException{ 
 			checkThatPlaneIsXY();
 			InterpreterState.modalState.set(modalGroup, this);
+			InterpreterState.offsetMode.setMode(OffsetMode.mode.RIGHT);
 			double offset = -1.0;
 			int d = (int)words.get(TokenParameter.D);
 			if(d > 0){
@@ -346,9 +344,7 @@ public enum GcommandSet {
 			} else {
 				offset = words.get(TokenParameter.P);
 			};
-			if(offset > 0.0)InterpreterState.setCutterRadius(offset);
-			G40_G41_G42 newG42 = new G40_G41_G42(OffsetMode.RIGHT);
-			ProgramLoader.hal_commands.add(newG42);
+			if(offset > 0.0)InterpreterState.offsetMode.setRadius(offset);
 		};
 	}, 
 	G43(43.0, GcommandModalGroupSet.G_GROUP8_TOOL_LENGHT_OFFSET), // Apply tool length offset (plus)

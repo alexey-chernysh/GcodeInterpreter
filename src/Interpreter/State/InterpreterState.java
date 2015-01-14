@@ -16,6 +16,7 @@
 
 package Interpreter.State;
 
+import Drivers.CanonicalCommands.OffsetMode;
 import Interpreter.InterpreterException;
 import Interpreter.Expression.Variables.VariablesSet;
 import Interpreter.Motion.Point;
@@ -30,17 +31,20 @@ public class InterpreterState {
 	private static Point homePosition = new Point(0.0,0.0);
 	private static Point lastPosition = new Point(0.0,0.0);
 	private static double currentFeedRate_ = 0.0; // max velocity mm in sec
-	private static double cutterRadius = 0.0;
 
-	public static ModalState modalState = new ModalState();
+	public static ModalState modalState;
 	
-	public static ToolSet toolSet = new ToolSet();
-	public static int G4142_D = 0; // tool number for cutting radius compensation
-
-	public static Spindle spindle = new Spindle();
-	public static FeedRate feedRate = new FeedRate();
+	public static ToolSet toolSet;
+	public static Spindle spindle;
+	public static FeedRate feedRate;
+	public static OffsetMode offsetMode;
 
 	public InterpreterState() throws InterpreterException{
+		modalState = new ModalState();
+		toolSet = new ToolSet();
+		spindle = new Spindle();
+		feedRate = new FeedRate();
+		offsetMode = new OffsetMode(OffsetMode.mode.OFF, 0.0);
 		modalState.initToDefaultState();
 	};
 
@@ -73,10 +77,6 @@ public class InterpreterState {
 
 	public static void setLastPosition(Point newPos) {
 		InterpreterState.lastPosition = newPos;
-	}
-
-	public static void setCutterRadius(double offset) {
-		cutterRadius = offset;
 	}
 
 }

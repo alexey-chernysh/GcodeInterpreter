@@ -39,7 +39,7 @@ public class G00_G01 extends CanonCommand {
 		if(start == end) throw new InterpreterException("Null distance in motion command");
 		this.velocity_ =  velocity;
 		this.mode_ = mode;
-		this.offsetMode_ = offsetMode;
+		this.offsetMode_ = new OffsetMode(offsetMode.getMode(), offsetMode.getRadius());
 	}
 
 	public Point getStart() {

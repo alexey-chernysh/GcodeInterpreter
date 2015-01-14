@@ -48,9 +48,9 @@ public class MCCommandStraightMotion
 			  prototype.getOffsetMode());
 		this.prototype_ = prototype;
 		OffsetMode offMode = prototype_.getOffsetMode();
-		if(offMode != OffsetMode.NONE) {
+		if(offMode.getMode() != OffsetMode.mode.OFF) {
 			double alfa = prototype.getStartTangentAngle();
-			if(offMode != OffsetMode.LEFT) alfa += Math.PI/2;
+			if(offMode.getMode() != OffsetMode.mode.LEFT) alfa += Math.PI/2;
 			else alfa -= Math.PI/2;
 			double dx = kerf_offset*Math.sin(alfa); 
 			double dy = kerf_offset*Math.cos(alfa);

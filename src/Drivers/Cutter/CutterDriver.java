@@ -222,7 +222,7 @@ public class CutterDriver implements GeneralDriver {
 				double alfaCurrent = newCutterMotion.getStartTangentAngle();
 				double alfaPrev = lm.getEndTangentAngle();
 				final double d_alfa = alfaCurrent - alfaPrev;
-				switch(command.getOffsetMode()){
+				switch(command.getOffsetMode().getMode()){
 				case LEFT:
 					if(d_alfa > 0.0){
 						// line turn left and left offset
@@ -295,7 +295,7 @@ public class CutterDriver implements GeneralDriver {
 						};
 					};
 					break;
-				case NONE:
+				case OFF:
 				default:
 					break;
 				}
@@ -318,7 +318,7 @@ public class CutterDriver implements GeneralDriver {
 				double alfaCurrent = newArcMotion.getStartTangentAngle();
 				double alfaPrev = lm.getEndTangentAngle();
 				final double d_alfa = alfaCurrent - alfaPrev;
-				switch(command.getOffsetMode()){
+				switch(command.getOffsetMode().getMode()){
 				case LEFT:
 					if(d_alfa > 0.0){
 						// line turn left and left offset
@@ -372,7 +372,7 @@ public class CutterDriver implements GeneralDriver {
 						};
 					};
 					break;
-				case NONE:
+				case OFF:
 				default:
 					break;
 				}

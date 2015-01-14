@@ -155,18 +155,4 @@ public class ModalState {
 		return resultPoint;
 	}
 
-	public OffsetMode getCutterRadiusOffsetMode() throws InterpreterException {
-		GcommandSet mode = this.getGModalState(GcommandModalGroupSet.G_GROUP7_CUTTER_RADIUS_COMPENSATION);
-		switch(mode){
-		case G40:
-			return OffsetMode.NONE;
-		case G41:
-			return OffsetMode.LEFT;
-		case G42:
-			return OffsetMode.RIGHT;
-		default:
-			throw new InterpreterException("Illegal value of cutter radius compensation modal group");
-		}
-	}
-
 }
