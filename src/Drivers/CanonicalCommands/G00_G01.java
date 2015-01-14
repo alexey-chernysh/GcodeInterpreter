@@ -36,6 +36,7 @@ public class G00_G01 extends CanonCommand {
 		else throw new InterpreterException("Null start point in motion command");
 		if(end != null) this.end_ = end;
 		else throw new InterpreterException("Null end point in motion command");
+		if(start == end) throw new InterpreterException("Null distance in motion command");
 		this.velocity_ =  velocity;
 		this.mode_ = mode;
 		this.offsetMode_ = offsetMode;
