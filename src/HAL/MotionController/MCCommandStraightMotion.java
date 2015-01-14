@@ -17,9 +17,9 @@
 package HAL.MotionController;
 
 import Drivers.CanonicalCommands.G00_G01;
-import Drivers.CanonicalCommands.OffsetMode;
 import Interpreter.InterpreterException;
 import Interpreter.Motion.Point;
+import Interpreter.State.CutterRadiusCompensation;
 
 public class MCCommandStraightMotion 
 		extends G00_G01 
@@ -40,17 +40,18 @@ public class MCCommandStraightMotion
 		this.prototype_ = prototype;
 	}
 
-	public MCCommandStraightMotion(G00_G01 prototype, double kerf_offset) throws InterpreterException {
+	public MCCommandStraightMotion(G00_G01 prototype) throws InterpreterException {
 		super(prototype.getStart().clone(), 
 			  prototype.getEnd().clone(), 
 			  prototype.getVelocity(), 
 			  prototype.getMode(),
 			  prototype.getOffsetMode());
 		this.prototype_ = prototype;
-		OffsetMode offMode = prototype_.getOffsetMode();
-		if(offMode.getMode() != OffsetMode.mode.OFF) {
+		CutterRadiusCompensation offMode = prototype_.getOffsetMode();
+		if(offMode.getMode() != CutterRadiusCompensation.mode.OFF) {
+			double kerf_offset = offMode.getRadius();
 			double alfa = prototype.getStartTangentAngle();
-			if(offMode.getMode() != OffsetMode.mode.LEFT) alfa += Math.PI/2;
+			if(offMode.getMode() != CutterRadiusCompensation.mode.LEFT) alfa += Math.PI/2;
 			else alfa -= Math.PI/2;
 			double dx = kerf_offset*Math.sin(alfa); 
 			double dy = kerf_offset*Math.cos(alfa);

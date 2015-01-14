@@ -18,6 +18,7 @@ package Drivers.CanonicalCommands;
 
 import Interpreter.InterpreterException;
 import Interpreter.Motion.Point;
+import Interpreter.State.CutterRadiusCompensation;
 
 public class G02_G03 extends G00_G01 {
 	
@@ -31,7 +32,7 @@ public class G02_G03 extends G00_G01 {
 				   ArcDirection arcDirection,
 				   double velocity,
 				   MotionMode mode,
-				   OffsetMode offsetMode) throws InterpreterException {
+				   CutterRadiusCompensation offsetMode) throws InterpreterException {
 		super(startPoint, endPoint, velocity, mode, offsetMode);
 
 		this.center_ = centerPoint;

@@ -1,13 +1,13 @@
-package Drivers.CanonicalCommands;
+package Interpreter.State;
 
 import Interpreter.InterpreterException;
 
-public class OffsetMode {
+public class CutterRadiusCompensation {
 	
 	private double offset_ = 0.0;
 	private mode mode_ = mode.OFF;
 	
-	public OffsetMode(mode m, double r) throws InterpreterException{
+	public CutterRadiusCompensation(mode m, double r) throws InterpreterException{
 		setMode(m);
 		setRadius(r);
 	}

@@ -18,6 +18,7 @@ package Drivers.CanonicalCommands;
 
 import Interpreter.InterpreterException;
 import Interpreter.Motion.Point;
+import Interpreter.State.CutterRadiusCompensation;
 
 public class G00_G01 extends CanonCommand {
 	
@@ -25,13 +26,13 @@ public class G00_G01 extends CanonCommand {
 	protected Point start_;
 	protected Point end_;
 	private double velocity_;
-	private OffsetMode offsetMode_; 
+	private CutterRadiusCompensation offsetMode_; 
 	
 	public G00_G01(Point start,
 				   Point end,
 				   double velocity,
 				   MotionMode mode,
-				   OffsetMode offsetMode) throws InterpreterException{ // all motions are absolute to current home point
+				   CutterRadiusCompensation offsetMode) throws InterpreterException{ // all motions are absolute to current home point
 		if(start != null) this.start_ = start;
 		else throw new InterpreterException("Null start point in motion command");
 		if(end != null) this.end_ = end;
@@ -39,7 +40,7 @@ public class G00_G01 extends CanonCommand {
 		if(start == end) throw new InterpreterException("Null distance in motion command");
 		this.velocity_ =  velocity;
 		this.mode_ = mode;
-		this.offsetMode_ = new OffsetMode(offsetMode.getMode(), offsetMode.getRadius());
+		this.offsetMode_ = new CutterRadiusCompensation(offsetMode.getMode(), offsetMode.getRadius());
 	}
 
 	public Point getStart() {
@@ -92,11 +93,11 @@ public class G00_G01 extends CanonCommand {
 		return (this.getMode() == MotionMode.WORK);
 	}
 
-	public OffsetMode getOffsetMode() {
+	public CutterRadiusCompensation getOffsetMode() {
 		return offsetMode_;
 	}
 
-	public void setOffsetMode(OffsetMode offsetMode) {
+	public void setOffsetMode(CutterRadiusCompensation offsetMode) {
 		this.offsetMode_ = offsetMode;
 	}
 

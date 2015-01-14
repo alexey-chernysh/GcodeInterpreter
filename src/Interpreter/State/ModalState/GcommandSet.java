@@ -21,7 +21,6 @@ import Drivers.CanonicalCommands.G00_G01;
 import Drivers.CanonicalCommands.G02_G03;
 import Drivers.CanonicalCommands.G04;
 import Drivers.CanonicalCommands.MotionMode;
-import Drivers.CanonicalCommands.OffsetMode;
 import Interpreter.InterpreterException;
 import Interpreter.ProgramLoader;
 import Interpreter.Expression.ParamExpresionList;
@@ -29,6 +28,7 @@ import Interpreter.Expression.Tokens.TokenParameter;
 import Interpreter.Expression.Variables.VariablesSet;
 import Interpreter.Motion.Point;
 import Interpreter.State.InterpreterState;
+import Interpreter.State.CutterRadiusCompensation;
 
 public enum GcommandSet {
 	G0(0.0, GcommandModalGroupSet.G_GROUP1_MOTION){ // Rapid positioning
@@ -312,7 +312,7 @@ public enum GcommandSet {
 		@Override
 		public void evalute(ParamExpresionList words) throws InterpreterException{ 
 			InterpreterState.modalState.set(modalGroup, this);
-			InterpreterState.offsetMode.setMode(OffsetMode.mode.OFF);
+			InterpreterState.offsetMode.setMode(CutterRadiusCompensation.mode.OFF);
 		};
 	}, 
 	G41(41.0, GcommandModalGroupSet.G_GROUP7_CUTTER_RADIUS_COMPENSATION){ // Start cutter radius compensation left
@@ -320,7 +320,7 @@ public enum GcommandSet {
 		public void evalute(ParamExpresionList words) throws InterpreterException{ 
 			checkThatPlaneIsXY();
 			InterpreterState.modalState.set(modalGroup, this);
-			InterpreterState.offsetMode.setMode(OffsetMode.mode.LEFT);
+			InterpreterState.offsetMode.setMode(CutterRadiusCompensation.mode.LEFT);
 			double offset = -1.0;
 			int d = (int)words.get(TokenParameter.D);
 			if(d > 0){
@@ -336,7 +336,7 @@ public enum GcommandSet {
 		public void evalute(ParamExpresionList words) throws InterpreterException{ 
 			checkThatPlaneIsXY();
 			InterpreterState.modalState.set(modalGroup, this);
-			InterpreterState.offsetMode.setMode(OffsetMode.mode.RIGHT);
+			InterpreterState.offsetMode.setMode(CutterRadiusCompensation.mode.RIGHT);
 			double offset = -1.0;
 			int d = (int)words.get(TokenParameter.D);
 			if(d > 0){

@@ -16,12 +16,12 @@
 
 package Interpreter.State.ModalState;
 
-import Drivers.CanonicalCommands.OffsetMode;
 import Interpreter.InterpreterException;
 import Interpreter.Expression.ParamExpresionList;
 import Interpreter.Expression.Tokens.TokenParameter;
 import Interpreter.Motion.Point;
 import Interpreter.State.InterpreterState;
+import Interpreter.State.CutterRadiusCompensation;
 
 public class ModalState {
 	

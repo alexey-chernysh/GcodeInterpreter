@@ -19,9 +19,9 @@ package HAL.MotionController;
 import Drivers.CanonicalCommands.ArcDirection;
 import Drivers.CanonicalCommands.G00_G01;
 import Drivers.CanonicalCommands.G02_G03;
-import Drivers.CanonicalCommands.OffsetMode;
 import Interpreter.InterpreterException;
 import Interpreter.Motion.Point;
+import Interpreter.State.CutterRadiusCompensation;
 
 public class MCCommandArcMotion 
 			extends G02_G03 
@@ -46,8 +46,7 @@ public class MCCommandArcMotion
 		this.prototype_ = prototype;
 	}
 
-	public MCCommandArcMotion(G02_G03 prototype,
-						 	  double kerf_offset) throws InterpreterException {
+	public MCCommandArcMotion(G02_G03 prototype) throws InterpreterException {
 		super(prototype.getStart().clone(),
 			  prototype.getEnd().clone(), 
 			  prototype.getCenter(), 
@@ -57,8 +56,9 @@ public class MCCommandArcMotion
 			  prototype.getOffsetMode());
 		this.prototype_ = prototype;
 
-		OffsetMode offMode = prototype_.getOffsetMode();
-		if(offMode.getMode() != OffsetMode.mode.OFF){
+		CutterRadiusCompensation offMode = prototype_.getOffsetMode();
+		if(offMode.getMode() != CutterRadiusCompensation.mode.OFF){
+			double kerf_offset = offMode.getRadius();
 			double dx_start = this.getStart().getX() - this.getCenter().getX();
 			double dy_start = this.getStart().getY() - this.getCenter().getY();
 			double a_start = Math.atan2(dy_start, dx_start);
@@ -66,8 +66,8 @@ public class MCCommandArcMotion
 			double dy_end = this.getEnd().getY() - this.getCenter().getY();
 			double a_end = Math.atan2(dy_end, dx_end);
 //			double radius = Math.sqrt(dx_start*dx_start + dy_start*dy_start);
-			if(((offMode.getMode() == OffsetMode.mode.LEFT)&&(this.getArcDirection() == ArcDirection.CLOCKWISE))
-			 ||((offMode.getMode() == OffsetMode.mode.RIGHT)&&(this.getArcDirection() == ArcDirection.COUNTERCLOCKWISE))){ // external arc offset
+			if(((offMode.getMode() == CutterRadiusCompensation.mode.LEFT)&&(this.getArcDirection() == ArcDirection.CLOCKWISE))
+			 ||((offMode.getMode() == CutterRadiusCompensation.mode.RIGHT)&&(this.getArcDirection() == ArcDirection.COUNTERCLOCKWISE))){ // external arc offset
 				this.start_.shift(kerf_offset*Math.sin(a_start), kerf_offset*Math.cos(a_start));
 				this.end_.shift(kerf_offset*Math.sin(a_end), kerf_offset*Math.cos(a_end));
 			} else { // internal kerf offset

@@ -16,7 +16,6 @@
 
 package Interpreter.State;
 
-import Drivers.CanonicalCommands.OffsetMode;
 import Interpreter.InterpreterException;
 import Interpreter.Expression.Variables.VariablesSet;
 import Interpreter.Motion.Point;
@@ -37,14 +36,14 @@ public class InterpreterState {
 	public static ToolSet toolSet;
 	public static Spindle spindle;
 	public static FeedRate feedRate;
-	public static OffsetMode offsetMode;
+	public static CutterRadiusCompensation offsetMode;
 
 	public InterpreterState() throws InterpreterException{
 		modalState = new ModalState();
 		toolSet = new ToolSet();
 		spindle = new Spindle();
 		feedRate = new FeedRate();
-		offsetMode = new OffsetMode(OffsetMode.mode.OFF, 0.0);
+		offsetMode = new CutterRadiusCompensation(CutterRadiusCompensation.mode.OFF, 0.0);
 		modalState.initToDefaultState();
 	};
 
