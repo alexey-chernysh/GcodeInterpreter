@@ -35,17 +35,10 @@ import Settings.Settings;
 
 public class CutterDriver implements GeneralDriver {
 	
-	private double kerf_offset_;
-	
 	private ArrayList<CanonCommand> sourceCommands_ = null; 
 	private ArrayList<Object> commands_ = null;
 
-	public CutterDriver(double kerf_offset){
-		this.kerf_offset_ = kerf_offset;
-	}
-
-	public CutterDriver(){ // same default value for debug
-		this.kerf_offset_ = 1.5;
+	public CutterDriver(){
 	}
 	
 	
@@ -200,7 +193,7 @@ public class CutterDriver implements GeneralDriver {
 
 	private void addFreeMotion(G00_G01 command) throws InterpreterException {
 		Object lastMotion = findLastMotion();
-		MCCommandStraightMotion newFreeMotion = new MCCommandStraightMotion(command, 0.0);
+		MCCommandStraightMotion newFreeMotion = new MCCommandStraightMotion(command);
 		if(lastMotion != null){ 
 			// line should be corrected according kerf offset of previous line
 			// last motion is straight or arc working run, correction needed
@@ -211,7 +204,7 @@ public class CutterDriver implements GeneralDriver {
 
 	private void addCuttingStraightMotion(G00_G01 command) throws InterpreterException {
 		Object lastMotion = findLastMotion();
-		MCCommandStraightMotion newCutterMotion = new MCCommandStraightMotion(command, kerf_offset_);
+		MCCommandStraightMotion newCutterMotion = new MCCommandStraightMotion(command);
 		if(lastMotion != null){ // its no first move
 			if((lastMotion instanceof MCCommandStraightMotion)&&(!((MCCommandStraightMotion)lastMotion).isWorkingRun())) {
 				// free run line should be connected to start of new motion
@@ -228,7 +221,7 @@ public class CutterDriver implements GeneralDriver {
 						// line turn left and left offset
 						if(lastMotion instanceof MCCommandStraightMotion){  // Straight line before
 							// calculate length shortening of new line
-							double d_l = this.kerf_offset_ * Math.sin(d_alfa/2.0);
+							double d_l = command.getOffsetMode().getRadius() * Math.sin(d_alfa/2.0);
 							Point connectionPoint = lm.getEnd().clone();
 							connectionPoint.shift(-d_l*Math.sin(alfaPrev), -d_l*Math.cos(alfaPrev));
 							// correct previous line
@@ -274,7 +267,7 @@ public class CutterDriver implements GeneralDriver {
 							// line turn right and right offset
 							if(lastMotion instanceof MCCommandStraightMotion){  // stright line before
 								// calc length shortening of new line
-								double d_l = this.kerf_offset_ * Math.sin(d_alfa/2.0);
+								double d_l = command.getOffsetMode().getRadius() * Math.sin(d_alfa/2.0);
 								Point connectionPoint = lm.getEnd().clone();
 								connectionPoint.shift(-d_l*Math.sin(alfaPrev), -d_l*Math.cos(alfaPrev));
 								// correct previous line
@@ -306,8 +299,7 @@ public class CutterDriver implements GeneralDriver {
 
 	private void addCuttingArcMotion(G02_G03 command) throws InterpreterException {
 		Object lastMotion = findLastMotion();
-		MCCommandArcMotion newArcMotion = new MCCommandArcMotion(command,
-					   								   this.kerf_offset_);
+		MCCommandArcMotion newArcMotion = new MCCommandArcMotion(command);
 		if(lastMotion != null){ // its no first move
 			if((lastMotion instanceof MCCommandStraightMotion)&&(!((MCCommandStraightMotion)lastMotion).isWorkingRun())) {
 				// free run line should be connected to start of new motion
