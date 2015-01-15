@@ -24,19 +24,15 @@ public class G00_G01 extends CanonCommand {
 	
 	// straight line & arc common fields
 	protected Point start_;
-	protected Point crco_start_; // CRCO - Cutter Radius Compensation Offseted
 	protected Point end_;
-	protected Point crco_end_;
-	
+
 	private MotionMode mode_;
 	private VelocityPlan velocityPlan_;
-	private CutterRadiusCompensation offsetMode_; 
-	
+
 	public G00_G01(Point s,
 				   Point e,
 				   VelocityPlan vp,
-				   MotionMode m,
-				   CutterRadiusCompensation crc) throws InterpreterException{ 
+				   MotionMode m) throws InterpreterException{
 		// all motions are absolute to current home point
 		// init fields
 		super(CanonCommand.type.MOTION);
@@ -46,22 +42,18 @@ public class G00_G01 extends CanonCommand {
 		else throw new InterpreterException("Null end point in motion command");
 		setVelocityPlan(vp);
 		mode_ = m;
-		setOffsetMode(crc);
-		
-		crco_start_ = start_;
-		crco_end_ = end_;
 	}
 	
-	public void createCRCOpoints(){
-		if(offsetMode_.getMode() != CutterRadiusCompensation.mode.OFF) {
-			double kerf_offset = offsetMode_.getRadius();
+	public void applyCutterRadiusCompensation(CutterRadiusCompensation offsetMode){
+		if(offsetMode.getMode() != CutterRadiusCompensation.mode.OFF) {
+			double radius = offsetMode.getRadius();
 			double alfa = getStartTangentAngle();
-			if(offsetMode_.getMode() != CutterRadiusCompensation.mode.LEFT) alfa += Math.PI/2;
+			if(offsetMode.getMode() != CutterRadiusCompensation.mode.LEFT) alfa += Math.PI/2;
 			else alfa -= Math.PI/2;
-			double dx = kerf_offset*Math.sin(alfa); 
-			double dy = kerf_offset*Math.cos(alfa);
-			crco_start_ = new Point(start_.getX()+dx, start_.getY()+dy);
-			crco_end_ = new Point(end_.getX()+dx, end_.getY()+dy);
+			double dx = radius * Math.sin(alfa);
+			double dy = radius * Math.cos(alfa);
+			start_ = new Point(start_.getX()+dx, start_.getY()+dy);
+			end_ = new Point(end_.getX()+dx, end_.getY()+dy);
 		}
 	}
 
@@ -69,26 +61,16 @@ public class G00_G01 extends CanonCommand {
 		return start_;
 	}
 
-	public Point getCRCOstart() {
-		return crco_start_;
-	}
-
 	public void setStart(Point p) {
 		this.start_ = p;
-		createCRCOpoints();
 	}
 
 	public Point getEnd() {
 		return end_;
 	}
 
-	public Point getCRCOend() {
-		return crco_end_;
-	}
-
 	public void setEnd(Point p) {
 		this.end_ = p;
-		createCRCOpoints();
 	}
 
 	public MotionMode getMode() {
@@ -125,10 +107,6 @@ public class G00_G01 extends CanonCommand {
 		return (this.getMode() == MotionMode.FREE);
 	}
 
-	public CutterRadiusCompensation getOffsetMode() {
-		return offsetMode_;
-	}
-
 	public VelocityPlan getVelocityPlan() {
 		return velocityPlan_;
 	}
@@ -137,10 +115,6 @@ public class G00_G01 extends CanonCommand {
 		this.velocityPlan_ = new VelocityPlan(vp.getStartVel(),vp.getEndVel());
 	}
 
-	public void setOffsetMode(CutterRadiusCompensation om) throws InterpreterException {
-		this.offsetMode_ = new CutterRadiusCompensation(om.getMode(), om.getRadius());
-	}
-	
 	public void truncHead(double dl/* length change */) throws InterpreterException{
 		double l = length();
 		if(l < dl ) throw new InterpreterException("Line too short for current compensation");
@@ -191,7 +165,7 @@ public class G00_G01 extends CanonCommand {
 			newEnd = new Point(x,y);
 		}
 
-		return new G00_G01(newStart, newEnd, this.velocityPlan_, this.mode_, this.offsetMode_);
+		return new G00_G01(newStart, newEnd, this.velocityPlan_, this.mode_);
 	}
 
 }

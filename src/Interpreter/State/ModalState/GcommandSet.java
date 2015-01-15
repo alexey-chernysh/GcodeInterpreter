@@ -42,8 +42,7 @@ public enum GcommandSet {
 			G00_G01 newG0 = new G00_G01(startPoint, 
 										endPoint, 
 										vp, 
-										MotionMode.FREE, 
-										null);
+										MotionMode.FREE);
 			ProgramLoader.command_sequence.add(newG0);
 			InterpreterState.setLastPosition(endPoint);
 		}
@@ -58,8 +57,7 @@ public enum GcommandSet {
 			G00_G01 newG1 = new G00_G01(startPoint, 
 										endPoint, 
 										vp, 
-										MotionMode.WORK, 
-										InterpreterState.offsetMode);
+										MotionMode.WORK);
 			ProgramLoader.command_sequence.add(newG1);
 			InterpreterState.setLastPosition(endPoint);
 		}
@@ -77,9 +75,7 @@ public enum GcommandSet {
 										endPoint,
 										centerPoint,
 										ArcDirection.CLOCKWISE,
-										vp, 
-										MotionMode.WORK, 
-										InterpreterState.offsetMode);
+										vp);
 			ProgramLoader.command_sequence.add(newG2);
 			InterpreterState.setLastPosition(endPoint);
 		}
@@ -98,9 +94,7 @@ public enum GcommandSet {
 										endPoint,
 										centerPoint,
 										ArcDirection.COUNTERCLOCKWISE,
-										vp, 
-										MotionMode.WORK, 
-										InterpreterState.offsetMode);
+										vp);
 			ProgramLoader.command_sequence.add(newG3);
 			InterpreterState.setLastPosition(endPoint);
 		}
@@ -166,22 +160,18 @@ public enum GcommandSet {
 				G00_G01 G1_in = new G00_G01(centerPoint, 
 											circleStartPoint, 
 											vp, 
-											MotionMode.WORK, 
-											InterpreterState.offsetMode);
+											MotionMode.WORK);
 				ProgramLoader.command_sequence.add(G1_in);
 				G02_G03 newG2 = new G02_G03(circleStartPoint, 
 											circleStartPoint,
 											centerPoint,
 											ArcDirection.CLOCKWISE,
-											vp, 
-											MotionMode.WORK, 
-											InterpreterState.offsetMode);
+											vp);
 				ProgramLoader.command_sequence.add(newG2);
 				G00_G01 G1_out = new G00_G01(circleStartPoint,
 											 centerPoint, 
 											 vp, 
-											 MotionMode.WORK, 
-											 InterpreterState.offsetMode);
+											 MotionMode.WORK);
 				ProgramLoader.command_sequence.add(G1_out);
 			} else new InterpreterException("For G12 pocket positive I parameter needed");
 		}
@@ -199,22 +189,18 @@ public enum GcommandSet {
 				G00_G01 G1_in = new G00_G01(centerPoint, 
 											circleStartPoint, 
 											vp, 
-											MotionMode.WORK, 
-											InterpreterState.offsetMode);
+											MotionMode.WORK);
 				ProgramLoader.command_sequence.add(G1_in);
 				G02_G03 newG2 = new G02_G03(circleStartPoint, 
 											circleStartPoint,
 											centerPoint,
 											ArcDirection.COUNTERCLOCKWISE,
-											vp, 
-											MotionMode.WORK, 
-											InterpreterState.offsetMode);
+											vp);
 				ProgramLoader.command_sequence.add(newG2);
 				G00_G01 G1_out = new G00_G01(circleStartPoint,
 											 centerPoint, 
 											 vp, 
-											 MotionMode.WORK, 
-											 InterpreterState.offsetMode);
+											 MotionMode.WORK);
 				ProgramLoader.command_sequence.add(G1_out);
 			} else new InterpreterException("For G12 pocket positive I parameter needed");
 		}
@@ -273,8 +259,7 @@ public enum GcommandSet {
 				G00_G01 motion1 = new G00_G01(currentPoint, 
 						  					  intermediatePoint, 
 						  					  vp, 
-						  					  MotionMode.FREE, 
-						  					  null);
+						  					  MotionMode.FREE);
 				ProgramLoader.command_sequence.add(motion1);
 				InterpreterState.setLastPosition(intermediatePoint);
 				currentPoint = intermediatePoint;
@@ -283,8 +268,7 @@ public enum GcommandSet {
 			G00_G01 motion2 = new G00_G01(currentPoint, 
 										  homePoint, 
 										  vp, 
-										  MotionMode.FREE, 
-										  null);
+										  MotionMode.FREE);
 			ProgramLoader.command_sequence.add(motion2);
 			InterpreterState.setLastPosition(homePoint);
 		}
@@ -300,8 +284,7 @@ public enum GcommandSet {
 				G00_G01 motion1 = new G00_G01(currentPoint, 
 						  					  intermediatePoint, 
 						  					  vp, 
-						  					  MotionMode.FREE, 
-						  					  null);
+						  					  MotionMode.FREE);
 				ProgramLoader.command_sequence.add(motion1);
 				InterpreterState.setLastPosition(intermediatePoint);
 				currentPoint = intermediatePoint;
@@ -310,8 +293,7 @@ public enum GcommandSet {
 			G00_G01 motion2 = new G00_G01(currentPoint, 
 										  homePoint, 
 										  vp, 
-										  MotionMode.FREE, 
-										  null);
+										  MotionMode.FREE);
 			ProgramLoader.command_sequence.add(motion2);
 			InterpreterState.setLastPosition(homePoint);
 		}
