@@ -51,4 +51,10 @@ public class Point {
 		return new Point(this.x_, this.y_);
 	}
 
+	public double getDistance(Point p) {
+		double dx = this.getX() - p.getX();
+		double dy = this.getY() - p.getY();
+		return Math.sqrt(dx*dx + dy*dy);
+	}
+
 }

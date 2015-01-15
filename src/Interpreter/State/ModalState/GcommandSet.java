@@ -21,6 +21,7 @@ import Drivers.CanonicalCommands.G00_G01;
 import Drivers.CanonicalCommands.G02_G03;
 import Drivers.CanonicalCommands.G04;
 import Drivers.CanonicalCommands.MotionMode;
+import Drivers.CanonicalCommands.VelocityPlan;
 import Interpreter.InterpreterException;
 import Interpreter.ProgramLoader;
 import Interpreter.Expression.ParamExpresionList;
@@ -37,9 +38,10 @@ public enum GcommandSet {
 			InterpreterState.modalState.set(modalGroup, this);
 			Point startPoint = InterpreterState.getLastPosition();
 			Point endPoint = InterpreterState.modalState.getTargetPoint(startPoint, words);
+			VelocityPlan vp = new VelocityPlan(InterpreterState.feedRate.getRapidFeedRate());
 			G00_G01 newG0 = new G00_G01(startPoint, 
 										endPoint, 
-										InterpreterState.feedRate.getRapidFeedRate(), 
+										vp, 
 										MotionMode.FREE, 
 										null);
 			ProgramLoader.command_sequence.add(newG0);
@@ -52,9 +54,10 @@ public enum GcommandSet {
 			InterpreterState.modalState.set(modalGroup, this);
 			Point startPoint = InterpreterState.getLastPosition();
 			Point endPoint = InterpreterState.modalState.getTargetPoint(startPoint, words);
+			VelocityPlan vp = new VelocityPlan(InterpreterState.feedRate.getWorkFeedRate());
 			G00_G01 newG1 = new G00_G01(startPoint, 
 										endPoint, 
-										InterpreterState.feedRate.getWorkFeedRate(), 
+										vp, 
 										MotionMode.WORK, 
 										InterpreterState.offsetMode);
 			ProgramLoader.command_sequence.add(newG1);
@@ -69,11 +72,12 @@ public enum GcommandSet {
 			Point endPoint = InterpreterState.modalState.getTargetPoint(startPoint, words);
 			// TODO R format also needed
 			Point centerPoint = InterpreterState.modalState.getCenterPoint(startPoint, words);
+			VelocityPlan vp = new VelocityPlan(InterpreterState.feedRate.getWorkFeedRate());
 			G02_G03 newG2 = new G02_G03(startPoint, 
 										endPoint,
 										centerPoint,
 										ArcDirection.CLOCKWISE,
-										InterpreterState.feedRate.getRapidFeedRate(), 
+										vp, 
 										MotionMode.WORK, 
 										InterpreterState.offsetMode);
 			ProgramLoader.command_sequence.add(newG2);
@@ -89,11 +93,12 @@ public enum GcommandSet {
 			Point endPoint = InterpreterState.modalState.getTargetPoint(startPoint, words);
 			// TODO R format also needed
 			Point centerPoint = InterpreterState.modalState.getCenterPoint(startPoint, words);
+			VelocityPlan vp = new VelocityPlan(InterpreterState.feedRate.getWorkFeedRate());
 			G02_G03 newG3 = new G02_G03(startPoint, 
 										endPoint,
 										centerPoint,
 										ArcDirection.COUNTERCLOCKWISE,
-										InterpreterState.feedRate.getRapidFeedRate(), 
+										vp, 
 										MotionMode.WORK, 
 										InterpreterState.offsetMode);
 			ProgramLoader.command_sequence.add(newG3);
@@ -156,10 +161,11 @@ public enum GcommandSet {
 			if(radius > 0.0){
 				Point centerPoint = InterpreterState.getLastPosition();
 				Point circleStartPoint = centerPoint.clone();
+				VelocityPlan vp = new VelocityPlan(InterpreterState.feedRate.getWorkFeedRate());
 				circleStartPoint.shift(radius, 0.0);
 				G00_G01 G1_in = new G00_G01(centerPoint, 
 											circleStartPoint, 
-											InterpreterState.feedRate.getWorkFeedRate(), 
+											vp, 
 											MotionMode.WORK, 
 											InterpreterState.offsetMode);
 				ProgramLoader.command_sequence.add(G1_in);
@@ -167,13 +173,13 @@ public enum GcommandSet {
 											circleStartPoint,
 											centerPoint,
 											ArcDirection.CLOCKWISE,
-											InterpreterState.feedRate.getRapidFeedRate(), 
+											vp, 
 											MotionMode.WORK, 
 											InterpreterState.offsetMode);
 				ProgramLoader.command_sequence.add(newG2);
 				G00_G01 G1_out = new G00_G01(circleStartPoint,
 											 centerPoint, 
-											 InterpreterState.feedRate.getWorkFeedRate(), 
+											 vp, 
 											 MotionMode.WORK, 
 											 InterpreterState.offsetMode);
 				ProgramLoader.command_sequence.add(G1_out);
@@ -188,10 +194,11 @@ public enum GcommandSet {
 			if(radius > 0.0){
 				Point centerPoint = InterpreterState.getLastPosition();
 				Point circleStartPoint = centerPoint.clone();
+				VelocityPlan vp = new VelocityPlan(InterpreterState.feedRate.getWorkFeedRate());
 				circleStartPoint.shift(radius, 0.0);
 				G00_G01 G1_in = new G00_G01(centerPoint, 
 											circleStartPoint, 
-											InterpreterState.feedRate.getWorkFeedRate(), 
+											vp, 
 											MotionMode.WORK, 
 											InterpreterState.offsetMode);
 				ProgramLoader.command_sequence.add(G1_in);
@@ -199,13 +206,13 @@ public enum GcommandSet {
 											circleStartPoint,
 											centerPoint,
 											ArcDirection.COUNTERCLOCKWISE,
-											InterpreterState.feedRate.getRapidFeedRate(), 
+											vp, 
 											MotionMode.WORK, 
 											InterpreterState.offsetMode);
 				ProgramLoader.command_sequence.add(newG2);
 				G00_G01 G1_out = new G00_G01(circleStartPoint,
 											 centerPoint, 
-											 InterpreterState.feedRate.getWorkFeedRate(), 
+											 vp, 
 											 MotionMode.WORK, 
 											 InterpreterState.offsetMode);
 				ProgramLoader.command_sequence.add(G1_out);
@@ -261,10 +268,11 @@ public enum GcommandSet {
 		public void evalute(ParamExpresionList words) throws InterpreterException { 
 			Point currentPoint = InterpreterState.getLastPosition();
 			Point intermediatePoint = words.getPoint();
+			VelocityPlan vp = new VelocityPlan(InterpreterState.feedRate.getRapidFeedRate());
 			if(intermediatePoint != null){
 				G00_G01 motion1 = new G00_G01(currentPoint, 
 						  					  intermediatePoint, 
-						  					  InterpreterState.feedRate.getRapidFeedRate(), 
+						  					  vp, 
 						  					  MotionMode.FREE, 
 						  					  null);
 				ProgramLoader.command_sequence.add(motion1);
@@ -274,7 +282,7 @@ public enum GcommandSet {
 			Point homePoint  = InterpreterState.vars_.getHomePointG28();
 			G00_G01 motion2 = new G00_G01(currentPoint, 
 										  homePoint, 
-										  InterpreterState.feedRate.getRapidFeedRate(), 
+										  vp, 
 										  MotionMode.FREE, 
 										  null);
 			ProgramLoader.command_sequence.add(motion2);
@@ -287,10 +295,11 @@ public enum GcommandSet {
 		public void evalute(ParamExpresionList words) throws InterpreterException { 
 			Point currentPoint = InterpreterState.getLastPosition();
 			Point intermediatePoint = words.getPoint();
+			VelocityPlan vp = new VelocityPlan(InterpreterState.feedRate.getRapidFeedRate());
 			if(intermediatePoint != null){
 				G00_G01 motion1 = new G00_G01(currentPoint, 
 						  					  intermediatePoint, 
-						  					  InterpreterState.feedRate.getRapidFeedRate(), 
+						  					  vp, 
 						  					  MotionMode.FREE, 
 						  					  null);
 				ProgramLoader.command_sequence.add(motion1);
@@ -300,7 +309,7 @@ public enum GcommandSet {
 			Point homePoint  = InterpreterState.vars_.getHomePointG30();
 			G00_G01 motion2 = new G00_G01(currentPoint, 
 										  homePoint, 
-										  InterpreterState.feedRate.getRapidFeedRate(), 
+										  vp, 
 										  MotionMode.FREE, 
 										  null);
 			ProgramLoader.command_sequence.add(motion2);

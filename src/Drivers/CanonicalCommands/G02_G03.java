@@ -22,6 +22,7 @@ import Interpreter.State.CutterRadiusCompensation;
 
 public class G02_G03 extends G00_G01 {
 	
+	// arc specific fields
 	protected Point center_;
 	private ArcDirection arcDirection_;
 	public static final double arcTol = 0.000001;
@@ -30,14 +31,22 @@ public class G02_G03 extends G00_G01 {
 				   Point endPoint, 
 				   Point centerPoint, 
 				   ArcDirection arcDirection,
-				   double velocity,
+				   VelocityPlan vp,
 				   MotionMode mode,
 				   CutterRadiusCompensation offsetMode) throws InterpreterException {
-		super(startPoint, endPoint, velocity, mode, offsetMode);
+		super(startPoint, endPoint, vp, mode, offsetMode);
 
 		this.center_ = centerPoint;
 		this.arcDirection_ = arcDirection;
 
+	}
+
+	public ArcDirection getArcDirection() {
+		return arcDirection_;
+	}
+
+	public Point getCenter() {
+		return center_;
 	}
 
 	public double getStartRadialAngle() {
@@ -75,14 +84,6 @@ public class G02_G03 extends G00_G01 {
 		return alfa;
 	}
 		
-	public ArcDirection getArcDirection() {
-		return arcDirection_;
-	}
-
-	public Point getCenter() {
-		return center_;
-	}
-
 	public double radius(){
 		double dx = start_.getX() - center_.getX();
 		double dy = start_.getY() - center_.getY();
