@@ -95,38 +95,33 @@ public class CanonCommandSequence {
 				final double d_alfa = alfaCurrent - alfaPrev;
 				switch(command.getOffsetMode().getMode()){
 				case LEFT:
-					if(d_alfa > 0.0){
+					if(d_alfa > 0.0){ // motion direction turn left
 						// line turn left and left offset
 						if(lastMotion instanceof G00_G01){  // Straight line before
 							// calculate length shortening of new line
 							double d_l = command.getOffsetMode().getRadius() * Math.sin(d_alfa/2.0);
-							Point connectionPoint = lastMotion.getEnd().clone();
-							connectionPoint.shift(-d_l*Math.sin(alfaPrev), -d_l*Math.cos(alfaPrev));
 							// correct previous line
-							if(lastMotion.length() <= d_l) 
-								throw new InterpreterException("Previous line too short to current compensation");
-							lastMotion.setEnd(connectionPoint);
+							lastMotion.truncTail(d_l);
 							// correct current line
-							if(command.length() <= d_l) 
-								throw new InterpreterException("New line too short to current compensation");
-							command.setStart(connectionPoint);
+							command.truncHead(d_l);
 						} else {
 							// arc line before 
+							// TODO current algorithm wrong
 							G02_G03 arc = (G02_G03)lastMotion;
-							Point connectionPoint = getConnectionPoint(newCutterMotion, arc, ConnectionType.STARTEND);
+							Point connectionPoint = getConnectionPoint(command, arc, ConnectionType.STARTEND);
 							arc.setEnd(connectionPoint);
-							newCutterMotion.setStart(connectionPoint);
+							command.setStart(connectionPoint);
 						};
 					} else {
-						if(d_alfa < 0.0){
+						if((d_alfa < 0.0)&&(command.getOffsetMode().getRadius()>0.0)){
 							// line turn right and left offset
 							// linking arc with kerf offset radius needed
-							G02_G03 newArc = new G02_G03(lastMotion.getEnd(),
-									  							 	 newCutterMotion.getStart(),
+							G02_G03 link = new G02_G03(lastMotion.getEnd(),
+									  				   command.getStart(),
 									  							 	 command.getStart(),
 									  							 	 ArcDirection.COUNTERCLOCKWISE,
 									  							 	 command);
-							seq_.add(newArc);
+							seq_.add(link);
 						};
 					}
 					break;

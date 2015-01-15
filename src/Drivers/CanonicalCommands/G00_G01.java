@@ -75,6 +75,7 @@ public class G00_G01 extends CanonCommand {
 
 	public void setStart(Point p) {
 		this.start_ = p;
+		createCRCOpoints();
 	}
 
 	public Point getEnd() {
@@ -87,6 +88,7 @@ public class G00_G01 extends CanonCommand {
 
 	public void setEnd(Point p) {
 		this.end_ = p;
+		createCRCOpoints();
 	}
 
 	public MotionMode getMode() {
@@ -137,6 +139,32 @@ public class G00_G01 extends CanonCommand {
 
 	public void setOffsetMode(CutterRadiusCompensation om) throws InterpreterException {
 		this.offsetMode_ = new CutterRadiusCompensation(om.getMode(), om.getRadius());
+	}
+	
+	public void truncHead(double dl/* length change */) throws InterpreterException{
+		double l = length();
+		if(l < dl ) throw new InterpreterException("Line too short for current compensation");
+		else {
+			double alfa = getEndTangentAngle();
+			double dx = dl * Math.sin(alfa);			
+			double dy = dl * Math.cos(alfa);
+			Point newStart = new Point(this.getStart().getX()+dx,
+									   this.getStart().getY()+dy);
+			this.setStart(newStart);
+		}
+	}
+
+	public void truncTail(double dl/* length change */) throws InterpreterException{
+		double l = length();
+		if(l < dl ) throw new InterpreterException("Line too short for current compensation");
+		else {
+			double alfa = getEndTangentAngle();
+			double dx = dl * Math.sin(alfa);			
+			double dy = dl * Math.cos(alfa);
+			Point newEnd = new Point(this.getEnd().getX()-dx,
+									 this.getEnd().getY()-dy);
+			this.setEnd(newEnd);
+		}
 	}
 
 	public G00_G01 newSubLine(double lengthStart, double lengthEnd) throws InterpreterException {
