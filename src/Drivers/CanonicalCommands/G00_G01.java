@@ -24,9 +24,7 @@ public class G00_G01 extends CanonCommand {
 	
 	// straight line & arc common fields
 	protected Point start_;
-	protected Point crco_start_; // CRCO - Cutter Radius Compensation Offseted
 	protected Point end_;
-	protected Point crco_end_;
 	
 	private MotionMode mode_;
 	private VelocityPlan velocityPlan_;
@@ -47,12 +45,9 @@ public class G00_G01 extends CanonCommand {
 		setVelocityPlan(vp);
 		mode_ = m;
 		setOffsetMode(crc);
-		
-		crco_start_ = start_;
-		crco_end_ = end_;
 	}
 	
-	public void createCRCOpoints(){
+	public void applyCutterRadiusCompensation(){
 		if(offsetMode_.getMode() != CutterRadiusCompensation.mode.OFF) {
 			double kerf_offset = offsetMode_.getRadius();
 			double alfa = getStartTangentAngle();
@@ -60,48 +55,24 @@ public class G00_G01 extends CanonCommand {
 			else alfa -= Math.PI/2;
 			double dx = kerf_offset*Math.sin(alfa); 
 			double dy = kerf_offset*Math.cos(alfa);
-			crco_start_ = new Point(start_.getX()+dx, start_.getY()+dy);
-			crco_end_ = new Point(end_.getX()+dx, end_.getY()+dy);
+			start_ = new Point(start_.getX()+dx, start_.getY()+dy);
+			end_ = new Point(end_.getX()+dx, end_.getY()+dy);
 		}
 	}
 
-	public Point getStart() {
-		return start_;
-	}
+	public Point getStart() { return start_; }
 
-	public Point getCRCOstart() {
-		return crco_start_;
-	}
+	public void setStart(Point p) {	this.start_ = p; }
 
-	public void setStart(Point p) {
-		this.start_ = p;
-		createCRCOpoints();
-	}
+	public Point getEnd() {	return end_; }
 
-	public Point getEnd() {
-		return end_;
-	}
+	public void setEnd(Point p) { this.end_ = p; }
 
-	public Point getCRCOend() {
-		return crco_end_;
-	}
+	public MotionMode getMode() { return mode_; }
 
-	public void setEnd(Point p) {
-		this.end_ = p;
-		createCRCOpoints();
-	}
-
-	public MotionMode getMode() {
-		return mode_;
-	}
-
-	public double getDX(){
-		return end_.getX() - start_.getX();
-	}
+	public double getDX(){ return end_.getX() - start_.getX(); }
 		
-	public double getDY(){
-		return end_.getY() - start_.getY();
-	}
+	public double getDY(){ return end_.getY() - start_.getY(); }
 	
 	public double length(){
 		double dx = this.getDX();
@@ -109,37 +80,21 @@ public class G00_G01 extends CanonCommand {
 		return Math.sqrt(dx*dx + dy*dy);
 	}
 
-	public double getStartTangentAngle() {
-		return Math.atan2(this.getDY(), this.getDX());
-	}
+	public double getStartTangentAngle() { return Math.atan2(this.getDY(), this.getDX()); }
 		
-	public double getEndTangentAngle() {
-		return getStartTangentAngle();
-	}
+	public double getEndTangentAngle() { return getStartTangentAngle();	}
 		
-	public boolean isWorkingRun(){
-		return (this.getMode() == MotionMode.WORK);
-	}
+	public boolean isWorkingRun(){ return (this.getMode() == MotionMode.WORK); }
 
-	public boolean isFreeRun(){
-		return (this.getMode() == MotionMode.FREE);
-	}
+	public boolean isFreeRun(){	return (this.getMode() == MotionMode.FREE);	}
 
-	public CutterRadiusCompensation getOffsetMode() {
-		return offsetMode_;
-	}
+	public CutterRadiusCompensation getOffsetMode() { return offsetMode_; }
 
-	public VelocityPlan getVelocityPlan() {
-		return velocityPlan_;
-	}
+	public VelocityPlan getVelocityPlan() {	return velocityPlan_; }
 
-	private void setVelocityPlan(VelocityPlan vp) {
-		this.velocityPlan_ = new VelocityPlan(vp.getStartVel(),vp.getEndVel());
-	}
+	private void setVelocityPlan(VelocityPlan vp) {	this.velocityPlan_ = new VelocityPlan(vp.getStartVel(),vp.getEndVel()); }
 
-	public void setOffsetMode(CutterRadiusCompensation om) throws InterpreterException {
-		this.offsetMode_ = new CutterRadiusCompensation(om.getMode(), om.getRadius());
-	}
+	public void setOffsetMode(CutterRadiusCompensation om) throws InterpreterException { this.offsetMode_ = new CutterRadiusCompensation(om.getMode(), om.getRadius()); }
 	
 	public void truncHead(double dl/* length change */) throws InterpreterException{
 		double l = length();
@@ -190,8 +145,12 @@ public class G00_G01 extends CanonCommand {
 			y += (l-lengthEnd)*Math.cos(a);
 			newEnd = new Point(x,y);
 		}
-
 		return new G00_G01(newStart, newEnd, this.velocityPlan_, this.mode_, this.offsetMode_);
+	}
+
+	public void setVelocityProfile(double startVel, double endVel) {
+		this.velocityPlan_.setStartVel(startVel);
+		this.velocityPlan_.setEndVel(endVel);
 	}
 
 }

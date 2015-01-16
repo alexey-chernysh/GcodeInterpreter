@@ -27,8 +27,6 @@ import Drivers.CanonicalCommands.CanonCommand;
 import Drivers.CanonicalCommands.M9cutter;
 import Drivers.CanonicalCommands.M8cutter;
 import Drivers.CanonicalCommands.MotionMode;
-import HAL.MotionController.MCCommandArcMotion;
-import HAL.MotionController.MCCommandStraightMotion;
 import Interpreter.InterpreterException;
 import Interpreter.Motion.Point;
 import Settings.Settings;
@@ -45,10 +43,10 @@ public class CutterDriver implements GeneralDriver {
 	public void loadProgram(ArrayList<CanonCommand> sourceCommands) throws InterpreterException{
 		
 		commands_ = sourceCommands;
-		addAccelDeaccel();
+		buildVelocityProfile();
 	}
 
-	private void addAccelDeaccel() throws InterpreterException {
+	private void buildVelocityProfile() throws InterpreterException {
 
 		int size = this.commands_.size();
 		
@@ -62,71 +60,71 @@ public class CutterDriver implements GeneralDriver {
 		
 		for(int i=0; i<size; i++){
 			Object currentCommand = this.commands_.get(i);
-			boolean itsCuttingLine = currentCommand instanceof MCCommandStraightMotion;
-			boolean itsCuttingArc = currentCommand instanceof MCCommandArcMotion;
+			boolean itsCuttingLine = currentCommand instanceof G00_G01;
+			boolean itsCuttingArc = currentCommand instanceof G02_G03;
 			if(itsCuttingLine || itsCuttingArc){ 
 				// working with cutting lines and arc only
 				Object prevCuttingCommand = PreviousCutting(i);
 				Object nextCuttingCommand = NextCutting(i);
-				double neededVelocity = ((MCCommandStraightMotion)currentCommand).getVelocity();
+				double neededVelocity = ((G00_G01)currentCommand).getVelocityPlan().getStartVel();
 				if(prevCuttingCommand == null){ 
 					// first cutting after perforation - inserting slow perforation phase 
 					if(itsCuttingLine){
-						MCCommandStraightMotion currentLine = (MCCommandStraightMotion)currentCommand;
+						G00_G01 currentLine = (G00_G01)currentCommand;
 						double currentLength = currentLine.length();
 						if((perfLength < currentLength)&&(perfLength > 0.0)){
-							MCCommandStraightMotion newLine1 = currentLine.newSubLine(0, perfLength);
-							newLine1.setVelocityProfile(perforationVel,startVel, accel);
-							MCCommandStraightMotion newLine2 = currentLine.newSubLine(perfLength, currentLength);
-							newLine1.setVelocityProfile(startVel, neededVelocity, accel);
+							G00_G01 newLine1 = currentLine.newSubLine(0, perfLength);
+							newLine1.setVelocityProfile(perforationVel,startVel);
+							G00_G01 newLine2 = currentLine.newSubLine(perfLength, currentLength);
+							newLine1.setVelocityProfile(startVel, neededVelocity);
 							this.commands_.remove(i);
 							this.commands_.add(i, newLine2);
 							this.commands_.add(i, newLine1);
 							i++;
 						} else {
-							currentLine.setVelocityProfile(startVel, neededVelocity, accel);
+							currentLine.setVelocityProfile(startVel, neededVelocity);
 						}
 					} else {
 						if(itsCuttingArc){
-							MCCommandArcMotion currentArc = (MCCommandArcMotion)currentCommand;
+							G02_G03 currentArc = (G02_G03)currentCommand;
 							double currentLength = currentArc.length();
 							if((perfLength < currentLength)&&(perfLength > 0.0)){
-								MCCommandArcMotion newArc1 = currentArc.newSubArc(0, perfLength);
-								newArc1.setVelocityProfile(perforationVel,startVel, accel);
-								MCCommandArcMotion newArc2 = currentArc.newSubArc(perfLength, currentLength);
-								newArc1.setVelocityProfile(startVel, neededVelocity, accel);
+								G02_G03 newArc1 = currentArc.newSubArc(0, perfLength);
+								newArc1.setVelocityProfile(perforationVel,startVel);
+								G02_G03 newArc2 = currentArc.newSubArc(perfLength, currentLength);
+								newArc1.setVelocityProfile(startVel, neededVelocity);
 								this.commands_.remove(i);
 								this.commands_.add(i, newArc2);
 								this.commands_.add(i, newArc1);
 								i++;
 							} else {
-								currentArc.setVelocityProfile(startVel, neededVelocity, accel);
+								currentArc.setVelocityProfile(startVel, neededVelocity);
 							}
 						}				
 					}
 				} else {
 					// its no first cutting line - adjustment needed
-					MCCommandStraightMotion beforeLine = (MCCommandStraightMotion)prevCuttingCommand;
+					G00_G01 beforeLine = (G00_G01)prevCuttingCommand;
 					double angleBeforeStart = beforeLine.getEndTangentAngle();
-					double velBeforeStart = beforeLine.getEndVel();
-					MCCommandStraightMotion currentLine = (MCCommandStraightMotion)currentCommand;
+					double velBeforeStart = beforeLine.getVelocityPlan().getEndVel();
+					G00_G01 currentLine = (G00_G01)currentCommand;
 					double angleStart = currentLine.getStartTangentAngle();
 					if(Math.abs(angleStart - angleBeforeStart) < Settings.angleTol){
 						// fine case of smooth line angle adjustment.
 						// adjust velocity now
 						if(velBeforeStart == neededVelocity){
 							// velocity is equal
-							currentLine.setVelocityProfile(neededVelocity, neededVelocity, accel);
+							currentLine.setVelocityProfile(neededVelocity, neededVelocity);
 						} else {
-							currentLine.setVelocityProfile(velBeforeStart, neededVelocity, accel);
+							currentLine.setVelocityProfile(velBeforeStart, neededVelocity);
 						}
 					} else {
-						currentLine.setVelocityProfile(startVel, neededVelocity, accel);
-						((MCCommandStraightMotion)prevCuttingCommand).setEndVel(startVel);
+						currentLine.setVelocityProfile(startVel, neededVelocity);
+						((G00_G01)prevCuttingCommand).getVelocityPlan().setEndVel(startVel);
 					} 
 				}
 				if(nextCuttingCommand == null){
-					((MCCommandStraightMotion)this.commands_.get(i)).setEndVel(startVel);
+					((G00_G01)this.commands_.get(i)).getVelocityPlan().setEndVel(startVel);
 				}
 
 			};
@@ -136,18 +134,18 @@ public class CutterDriver implements GeneralDriver {
 	private Object NextCutting(int i) {
 		if((i+1) >= this.commands_.size()) return null;
 		Object next = this.commands_.get(i+1);
-		if(next instanceof MCCommandStraightMotion)
-			if(((MCCommandStraightMotion)next).getMode() == MotionMode.WORK) return next;
-		if(next instanceof MCCommandArcMotion) return next;
+		if(next instanceof G00_G01)
+			if(((G00_G01)next).getMode() == MotionMode.WORK) return next;
+		if(next instanceof G02_G03) return next;
 		return null;
 	}
 
 	private Object PreviousCutting(int i){  // command index
 		if(i <= 0) return null;
 		Object before = this.commands_.get(i-1);
-		if(before instanceof MCCommandStraightMotion)
-			if(((MCCommandStraightMotion)before).getMode() == MotionMode.WORK) return before;
-		if(before instanceof MCCommandArcMotion) return before;
+		if(before instanceof G00_G01)
+			if(((G00_G01)before).getMode() == MotionMode.WORK) return before;
+		if(before instanceof G02_G03) return before;
 		return null;
 	} 
 

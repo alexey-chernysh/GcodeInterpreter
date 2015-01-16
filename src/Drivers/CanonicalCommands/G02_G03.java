@@ -100,4 +100,37 @@ public class G02_G03 extends G00_G01 {
 		return 2.0 * Math.PI * this.radius() / Math.abs(this.angle());
 	}
 
+	public G02_G03 newSubArc(double lengthStart, double lengthEnd) throws InterpreterException {
+		Point newStart = start_;
+		Point newEnd = end_;
+		double l = this.length();
+		double r = this.radius();
+		
+		if(lengthStart > 0.0){ // change start point
+			double d_a = lengthStart/(Math.PI*r); 
+			double a = this.getStartRadialAngle();
+			if(this.arcDirection_ == ArcDirection.CLOCKWISE) a += d_a;
+			else a -= d_a;
+			double x = center_.getX() + r * Math.sin(a);
+			double y = center_.getY() + r * Math.cos(a);
+			newStart = new Point(x,y);
+		}		
+		
+		if(lengthEnd < l){  // change end point
+			double d_a = (l-lengthEnd)/(Math.PI*r); 
+			double a = this.getEndRadialAngle();
+			if(this.arcDirection_ == ArcDirection.CLOCKWISE) a -= d_a;
+			else a += d_a;
+			double x = center_.getX() + r * Math.sin(a);
+			double y = center_.getY() + r * Math.cos(a);
+			newEnd = new Point(x,y);
+		}
+		return new G02_G03(newStart, 
+						   newEnd,
+						   this.getCenter(),
+						   this.getArcDirection(),
+						   this.getVelocityPlan(),
+						   this.getOffsetMode());
+	}
+
 }

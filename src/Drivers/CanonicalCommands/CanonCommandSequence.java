@@ -18,7 +18,6 @@ package Drivers.CanonicalCommands;
 
 import java.util.ArrayList;
 
-import Drivers.Cutter.CutterTorchOnOff;
 import Interpreter.InterpreterException;
 import Interpreter.Motion.Point;
 
@@ -33,21 +32,13 @@ public class CanonCommandSequence {
 	public void add(CanonCommand command) throws InterpreterException{
 		if(command.getType() == CanonCommand.type.MOTION){
 			if(command instanceof G00_G01){
-				if(!((G00_G01) command).isWorkingRun()){
-					addFreeMotion((G00_G01) command);
-				} else {
-					addCuttingStraightMotion((G00_G01) command);
-				}
+				if(((G00_G01) command).isFreeRun())	addFreeMotion((G00_G01) command);
+				else addCuttingStraightMotion((G00_G01) command);
 			} else {
-				if(command instanceof G02_G03) {
-					addCuttingArcMotion((G02_G03)command);
-				} else {
-					throw new InterpreterException("Unsupported command");
-				}
+				if(command instanceof G02_G03) addCuttingArcMotion((G02_G03)command);
+				else throw new InterpreterException("Unsupported command");
 			}
-		} else {
-			seq_.add(command);
-		}
+		} else seq_.add(command);
 	}
 	
 	public int size(){
@@ -59,16 +50,16 @@ public class CanonCommandSequence {
 	}
 
 	private void addFreeMotion(G00_G01 command) throws InterpreterException {
-		G00_G01 lastMotion = (G00_G01)findLastMotion();
+		G00_G01 lastMotion = findLastMotion();
 		if(lastMotion != null){ 
 			// last motion is straight or arc working run, link stright motion may be needed
-			Point lastEnd = lastMotion.getCRCOend();
-			Point newStart = command.getCRCOstart();
+			Point lastEnd = lastMotion.getEnd();
+			Point newStart = command.getStart();
 			if(newStart.getDistance(lastEnd) > 0.0){
 				G00_G01 link = new G00_G01(lastEnd, 
 										   newStart, 
 										   command.getVelocityPlan(), 
-										   command.getMode(), 
+										   MotionMode.FREE, 
 										   command.getOffsetMode());
 				seq_.add(link);
 			}
@@ -77,15 +68,20 @@ public class CanonCommandSequence {
 	}
 
 	private void addCuttingStraightMotion(G00_G01 command) throws InterpreterException {
-		command.createCRCOpoints();
-		G00_G01 lastMotion = (G00_G01)findLastMotion();
-		if(lastMotion != null){ // its no first move
+		Point unOffsetedStart = command.getStart().clone();
+		command.applyCutterRadiusCompensation();
+		G00_G01 lastMotion = findLastMotion();
+		if(lastMotion != null){ // its no first move 
 			if(lastMotion.isFreeRun()) {
 				// free run line should be connected to start of new motion
-				Point lastEnd = lastMotion.getCRCOend();
-				Point newStart = command.getCRCOstart();
+				Point lastEnd = lastMotion.getEnd();
+				Point newStart = command.getStart();
 				if(newStart.getDistance(lastEnd) > 0.0){
-					G00_G01 link = new G00_G01(lastEnd, newStart, command.getVelocityPlan(), command.getMode(), command.getOffsetMode());
+					G00_G01 link = new G00_G01(lastEnd, 
+											   newStart, 
+											   lastMotion.getVelocityPlan(), 
+											   MotionMode.FREE, 
+											   lastMotion.getOffsetMode());
 					seq_.add(link);
 				}
 			} else {
@@ -118,9 +114,10 @@ public class CanonCommandSequence {
 							// linking arc with kerf offset radius needed
 							G02_G03 link = new G02_G03(lastMotion.getEnd(),
 									  				   command.getStart(),
-									  							 	 command.getStart(),
-									  							 	 ArcDirection.COUNTERCLOCKWISE,
-									  							 	 command);
+									  				   unOffsetedStart,
+									  				   ArcDirection.COUNTERCLOCKWISE,
+									  				   command.getVelocityPlan(),
+									  				   command.getOffsetMode());
 							seq_.add(link);
 						};
 					}
@@ -130,10 +127,11 @@ public class CanonCommandSequence {
 						// line turn left and right offset
 						// linking arc with kerf offset radius needed
 						G02_G03 newArc = new G02_G03(lastMotion.getEnd(),
-								  								 newCutterMotion.getStart(),
-								  								 command.getStart(),
-								  								 ArcDirection.CLOCKWISE,
-								  								 command);
+													 command.getStart(),
+													 unOffsetedStart,
+													 ArcDirection.CLOCKWISE,
+													 command.getVelocityPlan(),
+													 command.getOffsetMode());
 						seq_.add(newArc);
 					} else {
 						if(d_alfa < 0.0){
@@ -141,22 +139,16 @@ public class CanonCommandSequence {
 							if(lastMotion instanceof G00_G01){  // stright line before
 								// calc length shortening of new line
 								double d_l = command.getOffsetMode().getRadius() * Math.sin(d_alfa/2.0);
-								Point connectionPoint = lastMotion.getEnd().clone();
-								connectionPoint.shift(-d_l*Math.sin(alfaPrev), -d_l*Math.cos(alfaPrev));
 								// correct previous line
-								if(lastMotion.length() <= d_l) 
-									throw new InterpreterException("Previous line too short to current compensation");
-								lastMotion.setEnd(connectionPoint);
+								lastMotion.truncTail(d_l);
 								// correct current line
-								if(newCutterMotion.length() <= d_l) 
-									throw new InterpreterException("New line too short to current compensation");
-								newCutterMotion.setStart(connectionPoint);
+								command.truncHead(d_l);
 							} else {
 								// arc line before 
 								G02_G03 arc = (G02_G03)lastMotion;
-								Point connectionPoint = getConnectionPoint(newCutterMotion, arc, ConnectionType.STARTEND);
+								Point connectionPoint = getConnectionPoint(command, arc, ConnectionType.STARTEND);
 								arc.setEnd(connectionPoint);
-								newCutterMotion.setStart(connectionPoint);
+								command.setStart(connectionPoint);
 							};
 						};
 					};
@@ -171,16 +163,26 @@ public class CanonCommandSequence {
 	}
 
 	private void addCuttingArcMotion(G02_G03 command) throws InterpreterException {
-		Object lastMotion = findLastMotion();
-		G02_G03 newArcMotion = new G02_G03(command);
+		Point unOffsetedStart = command.getStart().clone();
+		command.applyCutterRadiusCompensation();
+		G00_G01 lastMotion = findLastMotion();
 		if(lastMotion != null){ // its no first move
-			if((lastMotion instanceof G00_G01)&&(!((G00_G01)lastMotion).isWorkingRun())) {
+			if(lastMotion.isFreeRun()) {
 				// free run line should be connected to start of new motion
-				((G00_G01)lastMotion).setEnd(newArcMotion.getStart());
+				Point lastEnd = lastMotion.getEnd();
+				Point newStart = command.getStart();
+				if(newStart.getDistance(lastEnd) > 0.0){
+					G00_G01 link = new G00_G01(lastEnd, 
+											   newStart, 
+											   lastMotion.getVelocityPlan(), 
+											   MotionMode.FREE, 
+											   lastMotion.getOffsetMode());
+					seq_.add(link);
+				}
 			} else {
 				// cutting motion before this
 				G00_G01 lm = (G00_G01)lastMotion;
-				double alfaCurrent = newArcMotion.getStartTangentAngle();
+				double alfaCurrent = command.getStartTangentAngle();
 				double alfaPrev = lastMotion.getEndTangentAngle();
 				final double d_alfa = alfaCurrent - alfaPrev;
 				switch(command.getOffsetMode().getMode()){
@@ -188,26 +190,27 @@ public class CanonCommandSequence {
 					if(d_alfa > 0.0){
 						// line turn left and left offset
 						if(lastMotion instanceof G00_G01){  // Straight line before
-							Point connectionPoint = getConnectionPoint(lm, newArcMotion, ConnectionType.ENDSTART);
+							Point connectionPoint = getConnectionPoint(lm, command, ConnectionType.ENDSTART);
 							lastMotion.setEnd(connectionPoint);
-							newArcMotion.setStart(connectionPoint);
+							command.setStart(connectionPoint);
 						} else {
 							// arc line before 
 							G02_G03 arc = (G02_G03)lastMotion;
-							Point connectionPoint = getConnectionPoint(arc, newArcMotion);
+							Point connectionPoint = getConnectionPoint(arc, command);
 							arc.setEnd(connectionPoint);
-							newArcMotion.setStart(connectionPoint);
+							command.setStart(connectionPoint);
 						};
 					} else {
 						if(d_alfa < 0.0){
 							// line turn right and left offset
 							// linking arc with kerf offset radius needed
-							G02_G03 newArc = new G02_G03(lastMotion.getEnd(),
-									  								 newArcMotion.getStart(),
-									  								 command.getStart(),
-									  								 ArcDirection.COUNTERCLOCKWISE,
-									  								 command);
-							seq_.add(newArc);
+							G02_G03 link = new G02_G03(lastMotion.getEnd(),
+									  					command.getStart(),
+									  					unOffsetedStart,
+									  					ArcDirection.COUNTERCLOCKWISE,
+									  					command.getVelocityPlan(),
+									  					command.getOffsetMode());
+							seq_.add(link);
 						};
 					}
 					break;
@@ -216,23 +219,24 @@ public class CanonCommandSequence {
 						// line turn left and right offset
 						// linking arc with kerf offset radius needed
 						G02_G03 newArc = new G02_G03(lastMotion.getEnd(),
-								  								 newArcMotion.getStart(),
-								  								 command.getStart(),
-								  								 ArcDirection.CLOCKWISE,
-								  								 command);
+														command.getStart(),
+														unOffsetedStart,
+								  						ArcDirection.CLOCKWISE,
+									  					command.getVelocityPlan(),
+									  					command.getOffsetMode());
 						seq_.add(newArc);
 					} else {
 						if(d_alfa < 0.0){
 							// line turn right and right offset
 							if(lastMotion instanceof G00_G01){  // stright line before
-								Point connectionPoint = getConnectionPoint(lm, newArcMotion, ConnectionType.ENDSTART);
+								Point connectionPoint = getConnectionPoint(lm, command, ConnectionType.ENDSTART);
 								lastMotion.setEnd(connectionPoint);
-								newArcMotion.setStart(connectionPoint);
+								command.setStart(connectionPoint);
 							} else { // arc line before 
 								G02_G03 arc = (G02_G03)lastMotion;
-								Point connectionPoint = getConnectionPoint(arc, newArcMotion);
+								Point connectionPoint = getConnectionPoint(arc, command);
 								arc.setEnd(connectionPoint);
-								newArcMotion.setStart(connectionPoint);
+								command.setStart(connectionPoint);
 							};
 						};
 					};
@@ -243,15 +247,15 @@ public class CanonCommandSequence {
 				}
 			}
 		}
-		seq_.add(newArcMotion);
+		seq_.add(command);
 	}
 	
-	private Object findLastMotion() {
+	private G00_G01 findLastMotion() {
 		int size = seq_.size();
 		for(int i = (size-1); i>0; i--){
 			Object command = seq_.get(i);
-			if(command instanceof G00_G01) return command;
-			if(command instanceof G02_G03) return command;
+			if(command instanceof G00_G01) return (G00_G01)command;
+			if(command instanceof G02_G03) return (G02_G03)command;
 		}
 		return null;
 	}
