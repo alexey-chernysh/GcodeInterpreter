@@ -32,9 +32,8 @@ public class G02_G03 extends G00_G01 {
 				   Point centerPoint, 
 				   ArcDirection arcDirection,
 				   VelocityPlan vp,
-				   MotionMode mode,
 				   CutterRadiusCompensation offsetMode) throws InterpreterException {
-		super(startPoint, endPoint, vp, mode, offsetMode);
+		super(startPoint, endPoint, vp, MotionMode.WORK, offsetMode);
 
 		this.center_ = centerPoint;
 		this.arcDirection_ = arcDirection;

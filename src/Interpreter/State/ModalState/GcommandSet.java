@@ -78,7 +78,6 @@ public enum GcommandSet {
 										centerPoint,
 										ArcDirection.CLOCKWISE,
 										vp, 
-										MotionMode.WORK, 
 										InterpreterState.offsetMode);
 			ProgramLoader.command_sequence.add(newG2);
 			InterpreterState.setLastPosition(endPoint);
@@ -99,7 +98,6 @@ public enum GcommandSet {
 										centerPoint,
 										ArcDirection.COUNTERCLOCKWISE,
 										vp, 
-										MotionMode.WORK, 
 										InterpreterState.offsetMode);
 			ProgramLoader.command_sequence.add(newG3);
 			InterpreterState.setLastPosition(endPoint);
@@ -174,7 +172,6 @@ public enum GcommandSet {
 											centerPoint,
 											ArcDirection.CLOCKWISE,
 											vp, 
-											MotionMode.WORK, 
 											InterpreterState.offsetMode);
 				ProgramLoader.command_sequence.add(newG2);
 				G00_G01 G1_out = new G00_G01(circleStartPoint,
@@ -207,7 +204,6 @@ public enum GcommandSet {
 											centerPoint,
 											ArcDirection.COUNTERCLOCKWISE,
 											vp, 
-											MotionMode.WORK, 
 											InterpreterState.offsetMode);
 				ProgramLoader.command_sequence.add(newG2);
 				G00_G01 G1_out = new G00_G01(circleStartPoint,
