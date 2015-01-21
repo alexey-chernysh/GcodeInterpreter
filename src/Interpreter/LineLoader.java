@@ -322,15 +322,15 @@ public class LineLoader extends CommandLineLoader {
 				McommandSet m_command = this.McommandByNumber(currentCommand.getCurrentValue());
 				switch(m_command){
 				case M0:
-					if(this.M1_M2_M3 == McommandSet.MDUMMY) this.M1_M2_M3 = McommandSet.M1;
+					if(this.M1_M2_M3 == McommandSet.MDUMMY) this.M1_M2_M3 = McommandSet.M0;
 					else throw new InterpreterException("Twice stopping command in same string");
 					break;
 				case M1:
-					if(this.M1_M2_M3 == McommandSet.MDUMMY) this.M1_M2_M3 = McommandSet.M2;
+					if(this.M1_M2_M3 == McommandSet.MDUMMY) this.M1_M2_M3 = McommandSet.M1;
 					else throw new InterpreterException("Twice stopping command in same string");
 					break;
 				case M2:
-					if(this.M1_M2_M3 == McommandSet.MDUMMY) this.M1_M2_M3 = McommandSet.M3;
+					if(this.M1_M2_M3 == McommandSet.MDUMMY) this.M1_M2_M3 = McommandSet.M2;
 					else throw new InterpreterException("Twice stopping command in same string");
 					break;
 				case M3:

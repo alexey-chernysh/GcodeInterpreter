@@ -24,7 +24,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-import Drivers.CanonicalCommands.CanonCommand;
 import Drivers.CanonicalCommands.CanonCommandSequence;
 import Interpreter.State.InterpreterState;
 
@@ -36,7 +35,7 @@ public class ProgramLoader {
 	public static InterpreterState interpreterState;
 	public static CanonCommandSequence command_sequence;
 	
-	public  ProgramLoader(String fn) throws InterpreterException{
+	public ProgramLoader(String fn) throws InterpreterException{
 		
 		fileName_ = fn;
 		lineArray = new ArrayList<LineLoader>();
@@ -86,7 +85,7 @@ public class ProgramLoader {
 
 	private void evalute() {
 		try {
-			this.moduleArray.getMain().evalute();
+			ProgramLoader.moduleArray.getMain().evalute();
 		} catch (InterpreterException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

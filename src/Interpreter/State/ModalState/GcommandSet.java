@@ -43,7 +43,7 @@ public enum GcommandSet {
 										endPoint, 
 										vp, 
 										MotionMode.FREE, 
-										null);
+										InterpreterState.zeroOffsetMode);
 			ProgramLoader.command_sequence.add(newG0);
 			InterpreterState.setLastPosition(endPoint);
 		}
