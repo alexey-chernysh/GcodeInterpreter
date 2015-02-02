@@ -444,17 +444,17 @@ public enum GcommandSet {
 			G21.evalute(words);
 		}
 	}, 
-	G73(73.0, GcommandModalGroupSet.G_GROUP1_MOTION), // Canned cycle - peck drilling
-	G80(80.0, GcommandModalGroupSet.G_GROUP1_MOTION), // Cancel motion mode (including canned cycles)
-	G81(81.0, GcommandModalGroupSet.G_GROUP1_MOTION), // Canned cycle - drilling
-	G82(82.0, GcommandModalGroupSet.G_GROUP1_MOTION), // Canned cycle - drilling with dwell
-	G83(83.0, GcommandModalGroupSet.G_GROUP1_MOTION), // Canned cycle - peck drilling
-	G84(84.0, GcommandModalGroupSet.G_GROUP1_MOTION), // Canned cycle - right hand rigid tapping
-	G85(85.0, GcommandModalGroupSet.G_GROUP1_MOTION), // Canned cycle - boring
-	G86(86.0, GcommandModalGroupSet.G_GROUP1_MOTION), // Canned cycle - boring
-	G87(87.0, GcommandModalGroupSet.G_GROUP1_MOTION), // Canned cycle - boring
-	G88(88.0, GcommandModalGroupSet.G_GROUP1_MOTION), // Canned cycle - boring
-	G89(89.0, GcommandModalGroupSet.G_GROUP1_MOTION), // Canned cycle - boring
+	G73(73.0, GcommandModalGroupSet.G_GROUP9_CANNED_CYCLES), // Canned cycle - peck drilling
+	G80(80.0, GcommandModalGroupSet.G_GROUP9_CANNED_CYCLES), // Cancel motion mode (including canned cycles)
+	G81(81.0, GcommandModalGroupSet.G_GROUP9_CANNED_CYCLES), // Canned cycle - drilling
+	G82(82.0, GcommandModalGroupSet.G_GROUP9_CANNED_CYCLES), // Canned cycle - drilling with dwell
+	G83(83.0, GcommandModalGroupSet.G_GROUP9_CANNED_CYCLES), // Canned cycle - peck drilling
+	G84(84.0, GcommandModalGroupSet.G_GROUP9_CANNED_CYCLES), // Canned cycle - right hand rigid tapping
+	G85(85.0, GcommandModalGroupSet.G_GROUP9_CANNED_CYCLES), // Canned cycle - boring
+	G86(86.0, GcommandModalGroupSet.G_GROUP9_CANNED_CYCLES), // Canned cycle - boring
+	G87(87.0, GcommandModalGroupSet.G_GROUP9_CANNED_CYCLES), // Canned cycle - boring
+	G88(88.0, GcommandModalGroupSet.G_GROUP9_CANNED_CYCLES), // Canned cycle - boring
+	G89(89.0, GcommandModalGroupSet.G_GROUP9_CANNED_CYCLES), // Canned cycle - boring
 	G90(90.0, GcommandModalGroupSet.G_GROUP3_DISTANCE_MODE){ // Absolute distance mode
 		@Override
 		public void evalute(ParamExpresionList words) throws InterpreterException { 

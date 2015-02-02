@@ -21,7 +21,6 @@ import Interpreter.Expression.ParamExpresionList;
 import Interpreter.Expression.Tokens.TokenParameter;
 import Interpreter.Motion.Point;
 import Interpreter.State.InterpreterState;
-import Interpreter.State.CutterRadiusCompensation;
 
 public class ModalState {
 	
@@ -48,6 +47,7 @@ public class ModalState {
 		set(GcommandModalGroupSet.G_GROUP6_UNITS, GcommandSet.G21);
 		set(GcommandModalGroupSet.G_GROUP7_CUTTER_RADIUS_COMPENSATION, GcommandSet.G40);
 		set(GcommandModalGroupSet.G_GROUP8_TOOL_LENGHT_OFFSET, GcommandSet.G49);
+		set(GcommandModalGroupSet.G_GROUP9_CANNED_CYCLES, GcommandSet.G80);
 		set(GcommandModalGroupSet.G_GROUP10_CANNED_CYCLES_RETURN_MODE, GcommandSet.G98);
 		set(GcommandModalGroupSet.G_GROUP12_OFFSET_SELECTION, GcommandSet.G54);
 		set(GcommandModalGroupSet.G_GROUP13_PATH_CONTROL_MODE, GcommandSet.G61);
@@ -110,11 +110,12 @@ public class ModalState {
 	}
 
 	public Point getTargetPoint(Point refPoint, ParamExpresionList words) throws InterpreterException {
-		double x, y;
+		double x = 0;
+		double y = 0;
 		if(words.hasXYZ()){
 			x = words.get(TokenParameter.X);
 			y = words.get(TokenParameter.Y);
-		} else throw new InterpreterException("Insuficient parameters in command line");
+		};// else throw new InterpreterException("Insuficient parameters in command line");
 		Point resultPoint = refPoint.clone();
 		if(InterpreterState.modalState.isPolar()){
 			// TODO polar coordinate needed

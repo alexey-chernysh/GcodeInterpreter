@@ -25,7 +25,7 @@ public class GcodeInterpreter {
 
 	public static void main(String[] args) {
 		try {
-			program = new ProgramLoader("D:/Gcode/KKZtest.cnc");
+			program = new ProgramLoader("D:/Gcode/circular_pocket.txt");
 		} catch (InterpreterException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

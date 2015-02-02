@@ -17,7 +17,7 @@
 package Interpreter.State.ModalState;
 
 public enum GcommandModalGroupSet {
-	G_GROUP1_MOTION,  // G00, G01, G02, G03, G73, G80, G81, G82, G84, G85, G86, G87, G88, G89
+	G_GROUP1_MOTION,  // G00, G01, G02, G03
 	G_GROUP2_PLANE,  // G17, G18, G19 plane selection
 	G_GROUP3_DISTANCE_MODE,  // G90, G91 distance mode
 	G_GROUP4_ARC_DISTANCE_MODE, // Arc IJK Distance Mode
@@ -25,6 +25,7 @@ public enum GcommandModalGroupSet {
 	G_GROUP6_UNITS,  // G20, G21, G70, G71 units
 	G_GROUP7_CUTTER_RADIUS_COMPENSATION,  // G40, G41, G42 cutter radius compensation
 	G_GROUP8_TOOL_LENGHT_OFFSET,  // G43, G49 tool length offset
+	G_GROUP9_CANNED_CYCLES, // G73, G80, G81, G82, G84, G85, G86, G87, G88, G89
 	G_GROUP10_CANNED_CYCLES_RETURN_MODE, // G98, G99 return mode in canned cycles
 	G_GROUP12_OFFSET_SELECTION, // G54, G55, G56, G57, G58, G59, G59.xxx coordinate system selection
 	G_GROUP13_PATH_CONTROL_MODE, // G61, G61.1, G64 path control mode

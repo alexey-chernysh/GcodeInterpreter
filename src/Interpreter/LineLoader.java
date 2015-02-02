@@ -48,6 +48,7 @@ public class LineLoader extends CommandLineLoader {
 	private GcommandSet G54___G59   = GcommandSet.GDUMMY;
 	private GcommandSet G61_G64     = GcommandSet.GDUMMY;
 	private GcommandSet G68_G69     = GcommandSet.GDUMMY;
+	private GcommandSet G80_G89     = GcommandSet.GDUMMY;
 	private GcommandSet G90_G91     = GcommandSet.GDUMMY;
 	private GcommandSet G90_1_G91_1 = GcommandSet.GDUMMY;
 	private GcommandSet G93_G94_G95 = GcommandSet.GDUMMY;
@@ -231,48 +232,48 @@ public class LineLoader extends CommandLineLoader {
 					else throw new InterpreterException("Twice units change command in same string");
 					break;
 				case G73:
-					if(this.G_MOTION == GcommandSet.GDUMMY) this.G_MOTION = GcommandSet.G73;
-					else throw new InterpreterException("Twice motion command in same string");
+					if(this.G80_G89 == GcommandSet.GDUMMY) this.G80_G89 = GcommandSet.G73;
+					else throw new InterpreterException("Twice canned cycle command in same string");
 					break;
 				case G80:
-					if(this.G_MOTION == GcommandSet.GDUMMY) this.G_MOTION = GcommandSet.G80;
-					else throw new InterpreterException("Twice motion command in same string");
+					if(this.G80_G89 == GcommandSet.GDUMMY) this.G80_G89 = GcommandSet.G80;
+					else throw new InterpreterException("Twice canned cycle command in same string");
 					break;
 				case G81:
-					if(this.G_MOTION == GcommandSet.GDUMMY) this.G_MOTION = GcommandSet.G81;
-					else throw new InterpreterException("Twice motion command in same string");
+					if(this.G80_G89 == GcommandSet.GDUMMY) this.G80_G89 = GcommandSet.G81;
+					else throw new InterpreterException("Twice canned cycle command in same string");
 					break;
 				case G82:
-					if(this.G_MOTION == GcommandSet.GDUMMY) this.G_MOTION = GcommandSet.G82;
-					else throw new InterpreterException("Twice motion command in same string");
+					if(this.G80_G89 == GcommandSet.GDUMMY) this.G80_G89 = GcommandSet.G82;
+					else throw new InterpreterException("Twice canned cycle command in same string");
 					break;
 				case G83:
-					if(this.G_MOTION == GcommandSet.GDUMMY) this.G_MOTION = GcommandSet.G83;
-					else throw new InterpreterException("Twice motion command in same string");
+					if(this.G80_G89 == GcommandSet.GDUMMY) this.G80_G89 = GcommandSet.G83;
+					else throw new InterpreterException("Twice canned cycle command in same string");
 					break;
 				case G84:
-					if(this.G_MOTION == GcommandSet.GDUMMY) this.G_MOTION = GcommandSet.G84;
-					else throw new InterpreterException("Twice motion command in same string");
+					if(this.G80_G89 == GcommandSet.GDUMMY) this.G80_G89 = GcommandSet.G84;
+					else throw new InterpreterException("Twice canned cycle command in same string");
 					break;
 				case G85:
-					if(this.G_MOTION == GcommandSet.GDUMMY) this.G_MOTION = GcommandSet.G85;
-					else throw new InterpreterException("Twice motion command in same string");
+					if(this.G80_G89 == GcommandSet.GDUMMY) this.G80_G89 = GcommandSet.G85;
+					else throw new InterpreterException("Twice canned cycle command in same string");
 					break;
 				case G86:
-					if(this.G_MOTION == GcommandSet.GDUMMY) this.G_MOTION = GcommandSet.G86;
-					else throw new InterpreterException("Twice motion command in same string");
+					if(this.G80_G89 == GcommandSet.GDUMMY) this.G80_G89 = GcommandSet.G86;
+					else throw new InterpreterException("Twice canned cycle command in same string");
 					break;
 				case G87:
-					if(this.G_MOTION == GcommandSet.GDUMMY) this.G_MOTION = GcommandSet.G87;
-					else throw new InterpreterException("Twice motion command in same string");
+					if(this.G80_G89 == GcommandSet.GDUMMY) this.G80_G89 = GcommandSet.G87;
+					else throw new InterpreterException("Twice canned cycle command in same string");
 					break;
 				case G88:
-					if(this.G_MOTION == GcommandSet.GDUMMY) this.G_MOTION = GcommandSet.G88;
-					else throw new InterpreterException("Twice motion command in same string");
+					if(this.G80_G89 == GcommandSet.GDUMMY) this.G80_G89 = GcommandSet.G88;
+					else throw new InterpreterException("Twice canned cycle command in same string");
 					break;
 				case G89:
-					if(this.G_MOTION == GcommandSet.GDUMMY) this.G_MOTION = GcommandSet.G89;
-					else throw new InterpreterException("Twice motion command in same string");
+					if(this.G80_G89 == GcommandSet.GDUMMY) this.G80_G89 = GcommandSet.G89;
+					else throw new InterpreterException("Twice canned cycle command in same string");
 					break;
 				case G90:
 					if(this.G90_G91 == GcommandSet.GDUMMY) this.G90_G91 = GcommandSet.G90;
@@ -550,6 +551,6 @@ public class LineLoader extends CommandLineLoader {
 	}
 
 	public boolean isProgramEnd() {
-		return (this.M1_M2_M3 == McommandSet.M2);
+		return ((this.M1_M2_M3 == McommandSet.M2)||(this.M1_M2_M3 == McommandSet.M30));
 	}
 }
