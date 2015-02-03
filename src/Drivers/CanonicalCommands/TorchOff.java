@@ -16,11 +16,10 @@
 
 package Drivers.CanonicalCommands;
 
-public class M8cutter extends CanonCommand { 
-	
-	// cutter ON = initial positioning + ignition + perforation
+public class TorchOff extends CanonCommand { 
+	// cutter OFF = turn torch off + lift torch up for free motion
 
-	public M8cutter() { 
+	public TorchOff() {
 		super(CanonCommand.type.WAIT_STATE_CHANGE);
 	}
 

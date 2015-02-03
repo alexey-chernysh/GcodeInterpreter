@@ -109,50 +109,55 @@ public class ModalState {
 		return (this.getGModalState(GcommandModalGroupSet.G_GROUP3_DISTANCE_MODE) == GcommandSet.G90);
 	}
 
+	private boolean isArcCenterRelative() {
+		return (this.getGModalState(GcommandModalGroupSet.G_GROUP4_ARC_DISTANCE_MODE) == GcommandSet.G91_1);
+	}
+
 	public Point getTargetPoint(Point refPoint, ParamExpresionList words) throws InterpreterException {
-		double x = 0;
-		double y = 0;
-		if(words.hasXYZ()){
-			x = words.get(TokenParameter.X);
-			y = words.get(TokenParameter.Y);
-		};// else throw new InterpreterException("Insuficient parameters in command line");
 		Point resultPoint = refPoint.clone();
 		if(InterpreterState.modalState.isPolar()){
-			// TODO polar coordinate needed
+			throw new InterpreterException("Polar coorfimates mode not realized yet!");
 		} else {
-			x = InterpreterState.modalState.toMM(x);
-			y = InterpreterState.modalState.toMM(y);
-			if(!InterpreterState.modalState.isAbsolute()){
-				x += refPoint.getX();
-				y += refPoint.getY();
-			};
 			// TODO axis rotation needed
-			resultPoint.setX(x);
-			resultPoint.setY(y);
-		};
+			if(words.has(TokenParameter.X)){
+				double x_param = 0;
+				x_param = words.get(TokenParameter.X);
+				x_param = InterpreterState.modalState.toMM(x_param);
+				if(!InterpreterState.modalState.isAbsolute()) x_param += refPoint.getX();
+				resultPoint.setX(x_param);
+			};
+			if(words.has(TokenParameter.Y)){
+				double y_param = 0;
+				y_param = words.get(TokenParameter.Y);
+				y_param = InterpreterState.modalState.toMM(y_param);
+				if(!InterpreterState.modalState.isAbsolute()) y_param += refPoint.getY();
+				resultPoint.setY(y_param);
+			};
+		}
 		return resultPoint;
 	}
 
 	public Point getCenterPoint(Point refPoint, ParamExpresionList words) throws InterpreterException {
-		double x, y;
-		if(words.hasXYZ()){
-			x = words.get(TokenParameter.X);
-			y = words.get(TokenParameter.Y);
-		} else throw new InterpreterException("Insuficient parameters in command line");
 		Point resultPoint = refPoint.clone();
 		if(InterpreterState.modalState.isPolar()){
-			// TODO polar coordinate needed
+			throw new InterpreterException("Arc motion incompatible with polar coorfimates mode!");
 		} else {
-			x = InterpreterState.modalState.toMM(x);
-			y = InterpreterState.modalState.toMM(y);
-			if(!InterpreterState.modalState.isAbsolute()){
-				x += refPoint.getX();
-				y += refPoint.getY();
-			};
 			// TODO axis rotation needed
-			resultPoint.setX(x);
-			resultPoint.setY(y);
-		};
+			if(words.has(TokenParameter.I)){
+				double i_param = 0;
+				i_param = words.get(TokenParameter.I);
+				i_param = InterpreterState.modalState.toMM(i_param);
+				if(InterpreterState.modalState.isArcCenterRelative()) i_param += refPoint.getX();
+				resultPoint.setX(i_param);
+			};
+			if(words.has(TokenParameter.J)){
+				double j_param = 0;
+				j_param = words.get(TokenParameter.J);
+				j_param = InterpreterState.modalState.toMM(j_param);
+				if(InterpreterState.modalState.isArcCenterRelative()) j_param += refPoint.getY();
+				resultPoint.setY(j_param);
+			};
+		}
 		return resultPoint;
 	}
 

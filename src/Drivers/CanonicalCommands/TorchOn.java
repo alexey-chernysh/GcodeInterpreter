@@ -16,10 +16,11 @@
 
 package Drivers.CanonicalCommands;
 
-public class M9cutter extends CanonCommand { 
-	// cutter OFF = turn torch off + lift torch up for free motion
+public class TorchOn extends CanonCommand { 
+	
+	// cutter ON = initial positioning + ignition + perforation
 
-	public M9cutter() {
+	public TorchOn() { 
 		super(CanonCommand.type.WAIT_STATE_CHANGE);
 	}
 
